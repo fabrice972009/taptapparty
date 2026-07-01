@@ -207,7 +207,7 @@
       align-items: center;
     }
     .next-event-img {
-      aspect-ratio: 16/7;
+      aspect-ratio: 4/5;
       background: var(--surface2);
       border-radius: 3px;
       overflow: hidden;
@@ -217,8 +217,9 @@
       color: var(--muted);
       font-size: 13px;
       letter-spacing: 1px;
+      max-width: 320px;
     }
-    .next-event-img img { width: 100%; height: 100%; object-fit: cover; }
+    .next-event-img img { width: 100%; height: 100%; object-fit: contain; }
     .next-event-info { }
     .event-date-line {
       font-size: 13px;
@@ -633,8 +634,8 @@
 
 <!-- Hero Text Below Video -->
 <div style="text-align:center; padding: 6px 24px 16px; border-bottom: 1px solid rgba(255,255,255,0.05);">
-  <p style="font-size:11px; letter-spacing:5px; text-transform:uppercase; color:var(--gold); margin-bottom:14px; font-weight:500;">DJ Bullet &amp; Friends Present</p>
-  <p style="font-size:clamp(16px,2vw,20px); color:rgba(240,237,230,0.75); max-width:480px; margin:0 auto 36px; line-height:1.7;">Once a month. Haitian music, food, art &amp; people. By DJ Bullet &amp; Friends.</p>
+  <p style="font-size:11px; letter-spacing:5px; text-transform:uppercase; color:var(--gold); margin-bottom:14px; font-weight:500;">DJ Bullet &amp; Friends</p>
+  <p style="font-size:clamp(16px,2vw,20px); color:rgba(240,237,230,0.75); max-width:480px; margin:0 auto 36px; line-height:1.7;">Once a month. Haitian music, food, art &amp; people.</p>
   <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
     <a href="events.html" class="btn-primary">Next Event →</a>
     <a href="about.html" class="btn-outline">Our Story</a>
@@ -649,16 +650,17 @@
     <p class="section-eyebrow" style="margin-bottom:28px;">Next Up</p>
     <div class="next-event-inner">
 
-      <!-- Featured Event Left -->
-      <div class="featured-event">
-        <div class="next-event-img">[ EVENT PHOTO ]</div>
-        <div class="featured-info">
-          <div class="event-date-line">Friday, July 3, 2026</div>
-          <div class="event-name">Tap Tap Miami<br><span style="color:var(--red)">4th of July Edition</span></div>
-          <div class="event-details">
-            <div class="event-detail-row"><span class="dot"></span>Miami, FL</div>
-            <div class="event-detail-row"><span class="dot"></span>DJ Bullet &amp; Friends</div>
-          </div>
+      <!-- Featured Flyer -->
+      <div class="next-event-img"><img src="event-july3.png" alt="Tap Tap Miami July 3"></div>
+
+      <!-- Featured Info Middle -->
+      <div class="featured-info">
+        <div class="event-date-line">Friday, July 3, 2026</div>
+        <div class="event-name">Tap Tap Miami<br><span style="color:var(--red)">4th of July Edition</span></div>
+        <div class="event-details">
+          <div class="event-detail-row"><span class="dot"></span>Miami, FL · 2335 N Miami Ave</div>
+          <div class="event-detail-row"><span class="dot"></span>9PM – 3AM</div>
+          <div class="event-detail-row"><span class="dot"></span>DJ Bullet &amp; Friends</div>
         </div>
       </div>
 
@@ -709,8 +711,8 @@
 <style>
   .next-event-inner {
     display: grid;
-    grid-template-columns: 1fr 280px;
-    gap: 48px;
+    grid-template-columns: auto 1fr 280px;
+    gap: 40px;
     align-items: start;
   }
   .featured-event { display: flex; flex-direction: column; gap: 20px; }
@@ -804,35 +806,42 @@
 <!-- About -->
 <section class="about-section">
   <div class="about-inner">
-    <div class="about-img"><img src="emblem.png" alt="Tap Tap Party emblem"></div>
+    <div class="about-img-wrap">
+      <div class="about-img"><img src="emblem.png" alt="Tap Tap Party emblem"></div>
+      <div class="about-stats-row">
+        <div class="stat-inline"><span class="stat-num">10+</span><span class="stat-lbl">Cities</span></div>
+        <span class="stat-pipe">|</span>
+        <div class="stat-inline"><span class="stat-num">3+</span><span class="stat-lbl">Years Running</span></div>
+        <span class="stat-pipe">|</span>
+        <div class="stat-inline"><span class="stat-num">50+</span><span class="stat-lbl">Events</span></div>
+        <span class="stat-pipe">|</span>
+        <div class="stat-inline"><span class="stat-num">1</span><span class="stat-lbl">🇭🇹 Culture</span></div>
+      </div>
+    </div>
     <div class="about-text">
       <p class="section-eyebrow">Who We Are</p>
       <h2>CELEBRATING<br>HAITIAN<br><span class="red">CULTURE.</span></h2>
       <p>
         Tap Tap Party is Miami's premier monthly Haitian cultural experience. We bring together the diaspora and everyone who loves Haitian music, food, art, and people — once a month, every month. DJ Bullet &amp; Friends set the soundtrack while Miami dances.
       </p>
-      <a href="about.html" class="btn-sm-outline">Learn More</a>
-      <div class="about-stats">
-        <div>
-          <div class="stat-num">10+</div>
-          <div class="stat-lbl">Cities</div>
-        </div>
-        <div>
-          <div class="stat-num">3+</div>
-          <div class="stat-lbl">Years Running</div>
-        </div>
-        <div>
-          <div class="stat-num">50+</div>
-          <div class="stat-lbl">Events</div>
-        </div>
-        <div>
-          <div class="stat-num">1</div>
-          <div class="stat-lbl">🇭🇹 Culture</div>
-        </div>
-      </div>
+      <a href="about.html" class="btn-sm-outline" style="display:inline-block; margin-top:8px;">Learn More</a>
     </div>
   </div>
 </section>
+
+<style>
+  .about-img-wrap { display: flex; flex-direction: column; gap: 16px; }
+  .about-stats-row {
+    display: flex; align-items: center; justify-content: center;
+    gap: 12px; flex-wrap: wrap;
+    padding: 14px 0;
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+  .stat-inline { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .stat-inline .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--gold); line-height: 1; }
+  .stat-inline .stat-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; }
+  .stat-pipe { color: rgba(255,255,255,0.15); font-size: 18px; }
+</style>
 
 <!-- Stripe -->
 
