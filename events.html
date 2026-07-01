@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Events — Tap Tap Party</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    :root {
+      --bg: #080808;
+      --red: #D42027;
+      --blue: #003A8C;
+      --gold: #F5C518;
+      --white: #F0EDE6;
+      --surface: #111111;
+      --surface2: #1A1A1A;
+      --muted: #666;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 16px; line-height: 1.6; }
+
+    /* ── STRIPE ── */
+    .tt-stripe { display: flex; height: 6px; width: 100%; }
+    .tt-stripe span { flex: 1; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 6px; left: 0; right: 0;
+      z-index: 200;
+      background: rgba(8,8,8,0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 0 48px;
+      height: 64px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .nav-logo { text-decoration: none; }
+    .nav-logo img { height: 40px; width: auto; display: block; }
+    .nav-links { display: flex; gap: 32px; list-style: none; align-items: center; justify-content: center; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none; font-size: 12px;
+      font-weight: 500; letter-spacing: 1px; text-transform: uppercase; transition: color 0.2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--white); }
+    .nav-cta {
+      background: var(--red); color: var(--white);
+      padding: 10px 22px; border-radius: 2px;
+      font-size: 12px; font-weight: 600; letter-spacing: 1px;
+      text-transform: uppercase; text-decoration: none; transition: opacity 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+    .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--white); border-radius: 1px; }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      padding: 140px 48px 80px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .section-eyebrow {
+      font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 12px; font-weight: 500;
+    }
+    .page-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(64px, 10vw, 120px);
+      letter-spacing: 4px; line-height: 0.9;
+    }
+    .page-title span { color: var(--red); }
+
+    /* ── NEXT UP ── */
+    .next-up {
+      padding: 0 48px 80px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .next-up-inner {
+      max-width: 1000px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 64px; align-items: center;
+    }
+    .event-img {
+      aspect-ratio: 4/3;
+      background: var(--surface2);
+      border-radius: 3px; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted); font-size: 13px; letter-spacing: 1px;
+    }
+    .event-img img { width: 100%; height: 100%; object-fit: cover; }
+    .event-tag {
+      display: inline-block;
+      background: var(--red);
+      color: var(--white);
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: 5px 12px; border-radius: 2px;
+      margin-bottom: 16px;
+    }
+    .event-date { font-size: 13px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+    .event-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(36px, 4vw, 54px);
+      letter-spacing: 2px; line-height: 1.05; margin-bottom: 20px;
+    }
+    .event-details { display: flex; flex-direction: column; gap: 8px; margin-bottom: 28px; }
+    .event-detail-row { display: flex; align-items: center; gap: 10px; font-size: 14px; color: rgba(240,237,230,0.65); }
+    .event-detail-row span.dot { width: 4px; height: 4px; background: var(--red); border-radius: 50%; flex-shrink: 0; }
+    .ticket-box {
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 3px; padding: 24px;
+      margin-bottom: 0;
+    }
+    .ticket-box h4 { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+    .ticket-tiers { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+    .ticket-tier {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 16px;
+      background: var(--surface2);
+      border-radius: 2px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .ticket-tier:hover { border-color: rgba(255,255,255,0.12); }
+    .ticket-tier.selected { border-color: var(--red); }
+    .tier-name { font-size: 14px; font-weight: 500; }
+    .tier-price { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--gold); letter-spacing: 1px; }
+    .tier-desc { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .qty-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .qty-row label { font-size: 13px; color: var(--muted); }
+    .qty-select {
+      background: var(--surface2); border: 1px solid rgba(255,255,255,0.1);
+      color: var(--white); padding: 8px 12px; border-radius: 2px;
+      font-family: 'DM Sans', sans-serif; font-size: 14px; cursor: pointer;
+    }
+    .btn-primary {
+      display: block; width: 100%;
+      background: var(--red); color: var(--white);
+      padding: 16px; text-align: center;
+      font-size: 13px; font-weight: 600; letter-spacing: 1.5px;
+      text-transform: uppercase; text-decoration: none;
+      border-radius: 2px; border: none; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: opacity 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+    .stripe-note { font-size: 11px; color: var(--muted); text-align: center; margin-top: 10px; }
+
+    /* ── ALL EVENTS ── */
+    .all-events {
+      padding: 80px 48px;
+      max-width: 1000px; margin: 0 auto;
+    }
+    .events-list { display: flex; flex-direction: column; gap: 0; }
+    .event-row {
+      display: grid;
+      grid-template-columns: 100px 1fr auto;
+      gap: 32px; align-items: center;
+      padding: 24px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      transition: background 0.2s;
+    }
+    .event-row:first-child { border-top: 1px solid rgba(255,255,255,0.06); }
+    .event-row.past { opacity: 0.4; }
+    /* ── CITY FILTERS ── */
+    .city-filters {
+      display: flex; flex-wrap: wrap; gap: 10px;
+      margin-bottom: 36px;
+    }
+    .city-btn {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--muted);
+      padding: 9px 20px;
+      font-size: 12px; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase;
+      border-radius: 2px; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.2s;
+    }
+    .city-btn:hover { border-color: rgba(255,255,255,0.3); color: var(--white); }
+    .city-btn.active { background: var(--red); border-color: var(--red); color: var(--white); }
+    .events-section-label {
+      font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 4px; font-weight: 500;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .toggle-past {
+      background: none; border: 1px solid rgba(255,255,255,0.1);
+      color: var(--muted); padding: 4px 12px; font-size: 11px;
+      letter-spacing: 1px; text-transform: uppercase;
+      cursor: pointer; border-radius: 2px; font-family: 'DM Sans', sans-serif;
+      transition: all 0.2s;
+    }
+    .toggle-past:hover { color: var(--white); border-color: rgba(255,255,255,0.3); }
+    .event-row.hidden { display: none; }
+    .event-row-date {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 14px; letter-spacing: 2px;
+      color: var(--muted); line-height: 1.3;
+    }
+    .event-row-date .month { font-size: 11px; letter-spacing: 3px; color: var(--gold); }
+    .event-row-info .name { font-size: 16px; font-weight: 500; margin-bottom: 4px; }
+    .event-row-info .location { font-size: 13px; color: var(--muted); }
+    .event-row-info .badge {
+      display: inline-block; font-size: 10px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 2px; margin-left: 8px;
+      background: rgba(245,197,24,0.12); color: var(--gold);
+    }
+    .event-row-action a {
+      border: 1px solid rgba(240,237,230,0.15);
+      color: var(--white); padding: 9px 20px;
+      font-size: 11px; font-weight: 600; letter-spacing: 1.5px;
+      text-transform: uppercase; text-decoration: none;
+      border-radius: 2px; white-space: nowrap;
+      transition: border-color 0.2s;
+    }
+    .event-row-action a:hover { border-color: var(--white); }
+    .event-row.past .event-row-action a {
+      color: var(--muted); cursor: default; pointer-events: none;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 800px) {
+      nav { padding: 0 20px; height: 56px; top: 6px; }
+      .nav-logo img { height: 32px; }
+      .nav-links { display: none; }
+      .nav-cta { display: none; }
+      .nav-hamburger { display: flex; z-index: 300; position: relative; }
+
+      .page-header { padding: 100px 20px 40px; }
+      .page-title { font-size: 72px; }
+
+      .next-up { padding: 0 20px 48px; }
+      .next-up-inner { grid-template-columns: 1fr; gap: 28px; }
+      .event-img { aspect-ratio: 16/9; }
+      .event-name { font-size: 32px; }
+      .ticket-box { padding: 20px; }
+      .tier-price { font-size: 20px; }
+
+      .all-events { padding: 48px 20px; }
+      .event-row {
+        grid-template-columns: 72px 1fr;
+        gap: 14px;
+        padding: 18px 0;
+      }
+      .event-row-action { display: none; }
+      .event-row-info .name { font-size: 14px; }
+      .event-row-info .badge { display: none; }
+
+      footer { padding: 32px 20px; }
+      footer > div { flex-direction: column; gap: 20px; align-items: center; text-align: center; }
+    }
+
+    /* ── MOBILE MENU ── */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(8,8,8,0.98);
+      z-index: 190;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      padding: 80px 24px 40px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 48px;
+      letter-spacing: 4px;
+      color: var(--white);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .mobile-menu a:hover { color: var(--red); }
+    .mobile-menu .mobile-cta {
+      margin-top: 16px;
+      background: var(--red);
+      color: var(--white) !important;
+      padding: 16px 48px;
+      border-radius: 2px;
+      font-size: 32px !important;
+    }
+    .mobile-menu .mobile-socials {
+      margin-top: 16px;
+      display: flex;
+      gap: 16px;
+    }
+    .mobile-menu .mobile-socials a {
+      font-size: 14px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 10px 20px;
+      border-radius: 2px;
+    }
+    .nav-hamburger.is-open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .nav-hamburger.is-open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.is-open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+    .nav-hamburger span { transition: transform 0.2s, opacity 0.2s; }
+  </style>
+</head>
+<body>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="events.html" onclick="closeMenu()">Events</a>
+  <a href="gallery.html" onclick="closeMenu()">Gallery</a>
+  <a href="community.html" onclick="closeMenu()">Community</a>
+  <a href="about.html" onclick="closeMenu()">About</a>
+  <a href="contact.html" onclick="closeMenu()">Contact</a>
+  <a href="events.html" class="mobile-cta" onclick="closeMenu()">Get Tickets</a>
+  <div class="mobile-socials">
+    <a href="https://instagram.com/itstaptapmiami" target="_blank">Instagram</a>
+  </div>
+</div>
+
+
+<div class="tt-stripe" aria-hidden="true">
+  <span style="background:#003A8C"></span>
+  <span style="background:#D42027"></span>
+</div>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="logo.png" alt="Tap Tap Party">
+  </a>
+  <ul class="nav-links">
+    <li><a href="events.html" class="active">Events</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="community.html">Community</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="events.html" class="nav-cta">Get Tickets</a>
+  <button class="nav-hamburger" aria-label="Open menu" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Page Header -->
+<div class="page-header">
+  <p class="section-eyebrow">DJ Bullet &amp; Friends Present</p>
+  <h1 class="page-title">2026<br><span>EVENTS</span></h1>
+</div>
+
+<div class="tt-stripe" aria-hidden="true">
+  <span style="background:#003A8C"></span>
+  <span style="background:#D42027"></span>
+</div>
+
+<!-- Next Up -->
+<section class="next-up" style="padding-top:64px;">
+  <div class="next-up-inner">
+    <div class="event-img">[ EVENT PHOTO ]</div>
+    <div>
+      <span class="event-tag">Next Up</span>
+      <div class="event-date">Thursday, July 3, 2026</div>
+      <div class="event-name">Tap Tap Party<br>4th of July Edition</div>
+      <div class="event-details">
+        <div class="event-detail-row"><span class="dot"></span>Miami, FL</div>
+        <div class="event-detail-row"><span class="dot"></span>DJ Bullet &amp; Friends</div>
+        <div class="event-detail-row"><span class="dot"></span>Doors open at 9 PM</div>
+      </div>
+
+      <div class="ticket-box">
+        <h4>Select Tickets</h4>
+        <div class="ticket-tiers">
+          <div class="ticket-tier selected" data-price="2000" onclick="selectTier(this, 'General Admission', 2000)">
+            <div>
+              <div class="tier-name">General Admission</div>
+              <div class="tier-desc">Entry + full party access</div>
+            </div>
+            <div class="tier-price">$20</div>
+          </div>
+          <div class="ticket-tier" data-price="4000" onclick="selectTier(this, 'VIP', 4000)">
+            <div>
+              <div class="tier-name">VIP</div>
+              <div class="tier-desc">Priority entry + VIP area access</div>
+            </div>
+            <div class="tier-price">$40</div>
+          </div>
+        </div>
+        <div class="qty-row">
+          <label>Quantity</label>
+          <select class="qty-select" id="qty">
+            <option>1</option><option>2</option><option>3</option>
+            <option>4</option><option>5</option><option>6</option>
+          </select>
+        </div>
+        <button class="btn-primary" onclick="handleCheckout()">Buy Tickets</button>
+        <p class="stripe-note">🔒 Secure checkout powered by Stripe</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="tt-stripe" aria-hidden="true">
+  <span style="background:#003A8C"></span>
+  <span style="background:#D42027"></span>
+</div>
+
+<!-- All Events -->
+<section class="all-events">
+  <p class="section-eyebrow" style="margin-bottom:8px;">Full Schedule</p>
+  <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,5vw,56px);letter-spacing:2px;margin-bottom:32px;">2026 TOUR</h2>
+
+  <!-- City Filters -->
+  <div class="city-filters" id="cityFilters">
+    <button class="city-btn active" onclick="filterCity('all', this)">All Cities</button>
+    <button class="city-btn" onclick="filterCity('miami', this)">Miami</button>
+    <button class="city-btn" onclick="filterCity('london', this)">London</button>
+    <button class="city-btn" onclick="filterCity('new-york', this)">New York</button>
+  </div>
+
+  <!-- UPCOMING -->
+  <div class="events-section-label">Upcoming</div>
+  <div class="events-list" id="upcomingList">
+
+    <div class="event-row" data-city="miami">
+      <div class="event-row-date"><div class="month">JUL</div>3</div>
+      <div class="event-row-info">
+        <div class="name">Tap Tap Miami <span class="badge">4th of July</span></div>
+        <div class="location">Miami, FL</div>
+      </div>
+      <div class="event-row-action"><a href="#next-up">Get Tickets</a></div>
+    </div>
+
+    <div class="event-row" data-city="london">
+      <div class="event-row-date"><div class="month">AUG</div>30</div>
+      <div class="event-row-info">
+        <div class="name">Tap Tap London</div>
+        <div class="location">London, UK</div>
+      </div>
+      <div class="event-row-action"><a href="#">Get Tickets</a></div>
+    </div>
+
+    <div class="event-row" data-city="new-york">
+      <div class="event-row-date"><div class="month">SEP</div>5</div>
+      <div class="event-row-info">
+        <div class="name">Tap Tap New York <span class="badge">Labor Day</span></div>
+        <div class="location">New York, NY</div>
+      </div>
+      <div class="event-row-action"><a href="#">Get Tickets</a></div>
+    </div>
+
+    <div class="event-row" data-city="miami">
+      <div class="event-row-date"><div class="month">OCT</div>11</div>
+      <div class="event-row-info">
+        <div class="name">Tap Tap Miami <span class="badge">Carnival</span></div>
+        <div class="location">Miami, FL</div>
+      </div>
+      <div class="event-row-action"><a href="#">Get Tickets</a></div>
+    </div>
+
+    <div class="event-row" data-city="miami">
+      <div class="event-row-date"><div class="month">NOV</div>29</div>
+      <div class="event-row-info">
+        <div class="name">Tap Tap Miami</div>
+        <div class="location">Miami, FL</div>
+      </div>
+      <div class="event-row-action"><a href="#">Get Tickets</a></div>
+    </div>
+
+    <div class="event-row" data-city="miami">
+      <div class="event-row-date"><div class="month">DEC</div>20</div>
+      <div class="event-row-info">
+        <div class="name">Tap Tap Miami</div>
+        <div class="location">Miami, FL</div>
+      </div>
+      <div class="event-row-action"><a href="#">Get Tickets</a></div>
+    </div>
+
+  </div>
+
+  <!-- PAST -->
+  <div class="events-section-label past-label" style="margin-top:48px;">
+    <span>Past Events</span>
+    <button class="toggle-past" onclick="togglePast(this)">Show ↓</button>
+  </div>
+  <div class="events-list past-list" id="pastList" style="display:none;">
+
+    <div class="event-row past" data-city="jersey-city">
+      <div class="event-row-date"><div class="month">JAN</div>16</div>
+      <div class="event-row-info">
+        <div class="name">Tap Tap Jersey City</div>
+        <div class="location">Jersey City, NJ</div>
+      </div>
+      <div class="event-row-action"><a href="#">Sold Out</a></div>
+    </div>
+
+    <div class="event-row past" data-city="miami">
+      <div class="event-row-date"><div class="month">JAN</div>18</div>
+      <div class="event-row-info">
+        <div class="name">Tap Tap Miami</div>
+        <div class="location">Miami, FL</div>
+      </div>
+      <div class="event-row-action"><a href="#">Sold Out</a></div>
+    </div>
+
+    <div class="event-row past" data-city="miami">
+      <div class="event-row-date"><div class="month">FEB</div>22</div>
+      <div class="event-row-info">
+        <div class="name">Tap Tap Miami</div>
+        <div class="location">Miami, FL</div>
+      </div>
+      <div class="event-row-action"><a href="#">Sold Out</a></div>
+    </div>
+
+    <div class="event-row past" data-city="toronto">
+      <div class="event-row-date"><div class="month">MAR</div>28</div>
+      <div class="event-row-info">
+        <div class="name">Tap Tap Toronto <span class="badge">World Cup Group Game</span></div>
+        <div class="location">Toronto, CA</div>
+      </div>
+      <div class="event-row-action"><a href="#">Sold Out</a></div>
+    </div>
+
+    <div class="event-row past" data-city="miami">
+      <div class="event-row-date"><div class="month">MAR</div>29</div>
+      <div class="event-row-info">
+        <div class="name">Tap Tap Miami — 3 Years <span class="badge">Anniversary</span></div>
+        <div class="location">Miami, FL</div>
+      </div>
+      <div class="event-row-action"><a href="#">Sold Out</a></div>
+    </div>
+
+    <div class="event-row past" data-city="montreal">
+      <div class="event-row-date"><div class="month">APR</div>4</div>
+      <div class="event-row-info">
+        <div class="name">Tap Tap Montreal</div>
+        <div class="location">Montreal, CA</div>
+      </div>
+      <div class="event-row-action"><a href="#">Sold Out</a></div>
+    </div>
+
+    <div class="event-row past" data-city="paris">
+      <div class="event-row-date"><div class="month">MAY</div>8</div>
+      <div class="event-row-info">
+        <div class="name">Tap Tap Paris <span class="badge">Rescheduled</span></div>
+        <div class="location">Paris, FR</div>
+      </div>
+      <div class="event-row-action"><a href="#">Sold Out</a></div>
+    </div>
+
+    <div class="event-row past" data-city="miami">
+      <div class="event-row-date"><div class="month">MAY</div>17</div>
+      <div class="event-row-info">
+        <div class="name">Tap Tap Miami <span class="badge">Flag Day</span></div>
+        <div class="location">Miami, FL</div>
+      </div>
+      <div class="event-row-action"><a href="#">Sold Out</a></div>
+    </div>
+
+    <div class="event-row past" data-city="boston">
+      <div class="event-row-date"><div class="month">JUN</div>12</div>
+      <div class="event-row-info">
+        <div class="name">Tap Tap Boston <span class="badge">World Cup Tour</span></div>
+        <div class="location">Boston, MA — MIXX 360</div>
+      </div>
+      <div class="event-row-action"><a href="#">Sold Out</a></div>
+    </div>
+
+    <div class="event-row past" data-city="miami">
+      <div class="event-row-date"><div class="month">JUN</div>14</div>
+      <div class="event-row-info">
+        <div class="name">Tap Tap Miami <span class="badge">World Cup Tour</span></div>
+        <div class="location">Miami, FL</div>
+      </div>
+      <div class="event-row-action"><a href="#">Sold Out</a></div>
+    </div>
+
+    <div class="event-row past" data-city="philadelphia">
+      <div class="event-row-date"><div class="month">JUN</div>19</div>
+      <div class="event-row-info">
+        <div class="name">Tap Tap Philadelphia <span class="badge">World Cup Tour</span></div>
+        <div class="location">Philadelphia, PA — ROAR</div>
+      </div>
+      <div class="event-row-action"><a href="#">Sold Out</a></div>
+    </div>
+
+    <div class="event-row past" data-city="atlanta">
+      <div class="event-row-date"><div class="month">JUN</div>24</div>
+      <div class="event-row-info">
+        <div class="name">Tap Tap Atlanta <span class="badge">World Cup Tour</span></div>
+        <div class="location">Atlanta, GA — District</div>
+      </div>
+      <div class="event-row-action"><a href="#">Sold Out</a></div>
+    </div>
+
+  </div>
+</section>
+
+<div class="tt-stripe" aria-hidden="true">
+  <span style="background:#003A8C"></span>
+  <span style="background:#D42027"></span>
+</div>
+
+<footer style="padding:40px 48px;border-top:1px solid rgba(255,255,255,0.05);">
+  <div style="max-width:1000px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;">
+    <img src="logo.png" alt="Tap Tap Party" style="height:32px;width:auto;">
+    <p style="font-size:13px;color:var(--muted);">© 2026 Tap Tap Party. All rights reserved.</p>
+    <a href="https://instagram.com/itstaptapmiami" target="_blank" rel="noopener"
+      style="width:36px;height:36px;border:1px solid rgba(255,255,255,0.1);border-radius:2px;display:flex;align-items:center;justify-content:center;color:var(--muted);text-decoration:none;font-size:12px;font-weight:600;">IG</a>
+  </div>
+</footer>
+
+<script>
+  function filterCity(city, btn) {
+    document.querySelectorAll('.city-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('#upcomingList .event-row').forEach(row => {
+      if (city === 'all' || row.dataset.city === city) {
+        row.classList.remove('hidden');
+      } else {
+        row.classList.add('hidden');
+      }
+    });
+  }
+
+  function togglePast(btn) {
+    const list = document.getElementById('pastList');
+    const isHidden = list.style.display === 'none';
+    list.style.display = isHidden ? 'flex' : 'none';
+    list.style.flexDirection = 'column';
+    btn.textContent = isHidden ? 'Hide ↑' : 'Show ↓';
+  }
+
+  function selectTier(el, name, price) {
+    document.querySelectorAll('.ticket-tier').forEach(t => t.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedTier = { name, price };
+  }
+
+  async function handleCheckout() {
+    const qty = parseInt(document.getElementById('qty').value);
+    const total = (selectedTier.price * qty / 100).toFixed(2);
+
+    // Placeholder until Stripe keys are connected
+    alert(`Stripe not yet connected.\n\nOrder summary:\n${qty}x ${selectedTier.name} = $${total}\n\nAdd your Stripe publishable key to activate checkout.`);
+
+    // Once Stripe is set up, replace above with:
+    // const stripe = Stripe('YOUR_PUBLISHABLE_KEY');
+    // const response = await fetch('/create-checkout-session', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ tier: selectedTier.name, price: selectedTier.price, qty })
+    // });
+    // const session = await response.json();
+    // stripe.redirectToCheckout({ sessionId: session.id });
+  }
+</script>
+
+
+<script>
+  function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    const btn = document.querySelector('.nav-hamburger');
+    menu.classList.toggle('open');
+    btn.classList.toggle('is-open');
+    document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+  }
+  function closeMenu() {
+    document.getElementById('mobileMenu').classList.remove('open');
+    document.querySelector('.nav-hamburger').classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+</script>
+
+</body>
+</html>
