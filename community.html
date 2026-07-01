@@ -172,10 +172,15 @@
     .socials a:hover { border-color: var(--white); color: var(--white); }
 
     @media (max-width: 800px) {
-      nav { padding: 0 20px; height: 56px; display: flex; justify-content: space-between; }
+      nav { padding: 0 20px; height: 56px; display: flex; justify-content: space-between; align-items: center; }
+      .nav-logo { position: absolute; left: 50%; transform: translateX(-50%); }
       .nav-logo img { height: 32px; }
       .nav-links { display: none; }
       .nav-cta { display: none; }
+
+      .nav-cta-group { display: none; }
+      .mobile-nav-bar { display: block; }
+      .nav-logo { position: absolute; left: 50%; transform: translateX(-50%); }
       .nav-hamburger { display: flex; z-index: 300; position: relative; margin-left: auto; }
       .page-header { padding: 100px 20px 40px; }
       .submit-section { padding: 0 20px 56px; }
@@ -186,6 +191,41 @@
       footer { padding: 32px 20px; }
       footer > div { flex-direction: column; gap: 16px; text-align: center; align-items: center; }
     }
+
+    .nav-cta-group { display: flex; gap: 10px; align-items: center; }
+    .nav-cta-secondary {
+      background: transparent;
+      color: var(--white) !important;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 10px 18px; border-radius: 2px;
+      font-size: 12px; font-weight: 600; letter-spacing: 1px;
+      text-transform: uppercase; text-decoration: none; transition: border-color 0.2s;
+    }
+    .nav-cta-secondary:hover { border-color: var(--white); }
+
+    /* Mobile horizontal nav bar */
+    .mobile-nav-bar {
+      display: none;
+      position: fixed;
+      top: 62px; left: 0; right: 0;
+      z-index: 199;
+      background: rgba(8,8,8,0.95);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 0 16px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .mobile-nav-bar a {
+      display: inline-block;
+      padding: 12px 16px;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase;
+      color: var(--muted); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .mobile-nav-bar a:hover, .mobile-nav-bar a.active { color: var(--white); }
+    .mobile-nav-bar a.active { border-bottom: 2px solid var(--red); }
   </style>
 </head>
 <body>
@@ -196,7 +236,10 @@
 <a href="community.html" onclick="closeMenu()">Community</a>
   <a href="about.html" onclick="closeMenu()">About</a>
   <a href="contact.html" onclick="closeMenu()">Contact</a>
-  <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" class="mobile-cta" onclick="closeMenu()">Get Tickets</a>
+  <div style="display:flex;gap:12px;margin-top:8px;">
+    <a href="events.html" onclick="closeMenu()" style="font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--white);border:1px solid rgba(255,255,255,0.2);padding:12px 20px;border-radius:2px;text-decoration:none;">Upcoming Events</a>
+    <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" onclick="closeMenu()" style="font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--white);background:var(--red);padding:12px 20px;border-radius:2px;text-decoration:none;">Buy Tickets</a>
+  </div>
 </div>
 
 
@@ -209,7 +252,10 @@
     <li><a href="about.html">About</a></li>
     <li><a href="contact.html">Contact</a></li>
   </ul>
-  <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" class="nav-cta">Get Tickets</a>
+  <div class="nav-cta-group">
+    <a href="events.html" class="nav-cta nav-cta-secondary">Upcoming Events</a>
+    <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" class="nav-cta">Buy Tickets</a>
+  </div>
   <button class="nav-hamburger" aria-label="Open menu" onclick="toggleMenu()">
     <span></span><span></span><span></span>
   </button>
