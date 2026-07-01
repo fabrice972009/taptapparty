@@ -49,9 +49,9 @@
       flex-direction: column; align-items: center; justify-content: center; gap: 32px; padding: 80px 24px 40px;
     }
     .mobile-menu.open { display: flex; }
-    .mobile-menu a { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 3px; color: var(--white); text-decoration: none; }
+    .mobile-menu a { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 3px; color: var(--white); text-decoration: none; }
     .mobile-menu a:hover { color: var(--red); }
-    .mobile-menu .mobile-cta { background: var(--red); color: var(--white) !important; padding: 13px 36px; border-radius: 2px; font-size: 22px !important; }
+    .mobile-menu .mobile-cta { background: var(--red); color: var(--white) !important; padding: 13px 36px; border-radius: 2px; font-size: 16px !important; }
 
     /* HERO */
     .about-hero {
@@ -194,15 +194,17 @@
       footer { padding: 32px 20px; }
       footer > div { flex-direction: column; gap: 16px; text-align: center; align-items: center; }
 
-      /* Mobile footer overrides */
-      footer { padding: 40px 20px 28px; }
-      .footer-inner { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 20px; }
-      .footer-top { flex-direction: column; align-items: center; gap: 20px; width: 100%; }
-      .footer-top > div:first-child { display: flex; flex-direction: column; align-items: center; }
-      .footer-cols { display: none; }
-      .footer-mobile-links { display: flex !important; flex-wrap: wrap; justify-content: center; gap: 8px 14px; }
-      .footer-mobile-tickets { display: flex !important; justify-content: center; gap: 16px; }
-      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; align-items: center; }
+
+      /* ── MOBILE FOOTER ── */
+      footer { padding: 32px 20px 24px; }
+      .footer-inner { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0; }
+      .footer-top { flex-direction: column; align-items: center; gap: 0; width: 100%; }
+      .footer-top > div:first-child { display: flex; flex-direction: column; align-items: center; margin-bottom: 12px; }
+      .footer-top > div:first-child img { height: 28px !important; mix-blend-mode: screen; }
+      .footer-cols { display: none !important; }
+      .footer-mobile-links { display: flex !important; }
+      .footer-mobile-tickets { display: flex !important; }
+      .footer-bottom { flex-direction: column; gap: 10px; align-items: center; margin-top: 20px; }
     }
   </style>
 </head>
