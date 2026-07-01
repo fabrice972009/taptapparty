@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tap Tap Party — Miami's Haitian Culture Experience</title>
+  <title>TapTap Party — DJ Bullet & Friends | Haitian Culture, Music & Art</title>
+  <meta name="description" content="TapTap — Where the diaspora comes alive. DJ Bullet & Friends present a monthly Haitian culture experience. Music, food, art & people. Miami, New York, London and beyond.">
+  <meta property="og:title" content="TapTap Party — DJ Bullet & Friends | Haitian Culture, Music & Art">
+  <meta property="og:description" content="Once a month. Haitian music, food, art & people. DJ Bullet & Friends.">
+  <meta property="og:image" content="logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -524,6 +528,8 @@
       .g-item { aspect-ratio: 1; }
 
       .newsletter-section { padding: 56px 20px; }
+      .reviews-peek { padding: 56px 20px !important; }
+      .reviews-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
       .newsletter-form { flex-direction: column; }
       .newsletter-form input {
         border-right: 1px solid rgba(255,255,255,0.1);
@@ -594,9 +600,9 @@
 
 <!-- Mobile Menu -->
 <div class="mobile-menu" id="mobileMenu">
+  <a href="index.html" onclick="closeMenu()">Home</a>
   <a href="events.html" onclick="closeMenu()">Events</a>
-  <a href="gallery.html" onclick="closeMenu()">Gallery</a>
-  <a href="community.html" onclick="closeMenu()">Community</a>
+<a href="community.html" onclick="closeMenu()">Community</a>
   <a href="about.html" onclick="closeMenu()">About</a>
   <a href="contact.html" onclick="closeMenu()">Contact</a>
   <a href="events.html" class="mobile-cta" onclick="closeMenu()">Get Tickets</a>
@@ -609,11 +615,11 @@
 <!-- Nav -->
 <nav>
   <a href="index.html" class="nav-logo">
-    <img src="logo.png" alt="Tap Tap Party" style="height: 40px; width: auto; display: block;">
+    <img src="logo.png" alt="Tap Tap Party" style="height: 40px; width: auto; display: block; mix-blend-mode: screen;">
   </a>
   <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
     <li><a href="events.html">Events</a></li>
-    <li><a href="gallery.html">Gallery</a></li>
     <li><a href="community.html">Community</a></li>
     <li><a href="about.html">About</a></li>
     <li><a href="contact.html">Contact</a></li>
@@ -641,7 +647,7 @@
 <!-- Hero Text Below Video -->
 <div style="text-align:center; padding: 6px 24px 16px; border-bottom: 1px solid rgba(255,255,255,0.05);">
   <p style="font-size:11px; letter-spacing:5px; text-transform:uppercase; color:var(--gold); margin-bottom:14px; font-weight:500;">DJ Bullet &amp; Friends</p>
-  <p style="font-size:clamp(16px,2vw,20px); color:rgba(240,237,230,0.75); max-width:480px; margin:0 auto 36px; line-height:1.7;">Once a month. Haitian music, food, art &amp; people.</p>
+  <p style="font-size:clamp(16px,2vw,20px); color:rgba(240,237,230,0.75); max-width:480px; margin:0 auto 36px; line-height:1.7;">TapTap — Where the diaspora comes alive.</p>
   <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
     <a href="events.html" class="btn-primary">Next Event →</a>
     <a href="about.html" class="btn-outline">Our Story</a>
@@ -651,14 +657,14 @@
 <!-- Stripe -->
 
 <!-- VIBE VIDEO -->
+<div style="text-align:center; padding: 48px 24px 24px;">
+  <p style="font-family:'Bebas Neue',sans-serif; font-size:clamp(32px,5vw,52px); letter-spacing:4px; color:var(--white);">This Is TapTap 🇭🇹</p>
+</div>
 <section class="vibe-section">
   <video class="vibe-video" id="vibeVideo" autoplay muted loop playsinline>
     <source src="vibe.mp4" type="video/mp4">
   </video>
   <div class="vibe-overlay"></div>
-  <div class="vibe-controls">
-    <button class="vibe-mute" onclick="toggleVibeMute(this)">🔇</button>
-  </div>
 </section>
 
 <style>
@@ -815,8 +821,6 @@
     <span class="city-item">Montreal</span>
     <span class="cities-dot">·</span>
     <span class="city-item">Philadelphia</span>
-    <span class="cities-dot">·</span>
-    <span class="city-item">Jersey City</span>
   </div>
 </div>
 
@@ -898,26 +902,164 @@
 <!-- Stripe -->
 
 
-<!-- Gallery Preview -->
+<!-- Gallery Slideshow -->
 <section class="gallery-section">
   <div class="gallery-head">
     <div>
       <p class="section-eyebrow">The Vibes</p>
       <h2 class="section-title">GALLERY</h2>
     </div>
-    <a href="gallery.html" class="btn-sm-outline">See All →</a>
+    <a href="community.html" class="btn-sm-outline">Share Your Photo →</a>
   </div>
-  <div class="gallery-grid">
-    <div class="g-item"><div class="g-overlay"></div></div>
-    <div class="g-item"><div class="g-overlay"></div></div>
-    <div class="g-item"><div class="g-overlay"></div></div>
-    <div class="g-item"><div class="g-overlay"></div></div>
-    <div class="g-item"><div class="g-overlay"></div></div>
+
+  <!-- Slideshow -->
+  <div style="position:relative; max-width:1000px; margin:0 auto; overflow:hidden; border-radius:3px; background:var(--surface2);">
+    <div id="slideshowTrack" style="display:flex; transition:transform 0.6s ease; will-change:transform;"></div>
+    <button onclick="slideGallery(-1)" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);background:rgba(8,8,8,0.7);border:1px solid rgba(255,255,255,0.15);color:var(--white);width:36px;height:36px;border-radius:50%;font-size:16px;cursor:pointer;z-index:10;">‹</button>
+    <button onclick="slideGallery(1)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:rgba(8,8,8,0.7);border:1px solid rgba(255,255,255,0.15);color:var(--white);width:36px;height:36px;border-radius:50%;font-size:16px;cursor:pointer;z-index:10;">›</button>
+    <div id="slideDots" style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10;"></div>
   </div>
 </section>
 
-<!-- Stripe -->
+<script>
+  // BASE PHOTOS — always available
+  const basePhotos = [
+    'assets/gallery/photo1.jpg','assets/gallery/photo2.jpg','assets/gallery/photo3.jpg',
+    'assets/gallery/photo4.jpg','assets/gallery/photo5.jpg','assets/gallery/photo6.jpg',
+    'assets/gallery/photo7.jpg','assets/gallery/photo8.jpg','assets/gallery/photo9.jpg',
+    'assets/gallery/photo10.jpg','assets/gallery/photo11.jpg','assets/gallery/photo12.jpg',
+    'assets/gallery/photo13.jpg','assets/gallery/photo14.jpg','assets/gallery/photo15.jpg',
+    'assets/gallery/photo16.jpg','assets/gallery/photo17.jpg','assets/gallery/photo18.jpg',
+  ];
 
+  // COMMUNITY APPROVED PHOTOS — from localStorage (Supabase later)
+  function getApprovedPhotos() {
+    try {
+      return JSON.parse(localStorage.getItem('tt_approved_photos') || '[]');
+    } catch { return []; }
+  }
+
+  // COMMUNITY APPROVED REVIEWS — from localStorage (Supabase later)
+  function getApprovedReviews() {
+    try {
+      return JSON.parse(localStorage.getItem('tt_approved_reviews') || '[]');
+    } catch { return []; }
+  }
+
+  // Build slideshow from base + approved community photos
+  const communityPhotos = getApprovedPhotos().map(p => p.dataUrl);
+  const allPhotos = [...basePhotos, ...communityPhotos];
+  const shuffled = allPhotos.sort(() => Math.random() - 0.5);
+
+  const track = document.getElementById('slideshowTrack');
+  const dotsEl = document.getElementById('slideDots');
+  let currentSlide = 0;
+  let autoSlide;
+
+  shuffled.forEach((src, i) => {
+    const slide = document.createElement('div');
+    slide.style.cssText = 'min-width:100%;height:420px;flex-shrink:0;';
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = 'Tap Tap Party';
+    img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+    img.onerror = () => slide.style.display = 'none';
+    slide.appendChild(img);
+    track.appendChild(slide);
+
+    const dot = document.createElement('span');
+    dot.style.cssText = `width:7px;height:7px;border-radius:50%;background:${i===0?'var(--white)':'rgba(255,255,255,0.3)'};cursor:pointer;transition:background 0.2s;`;
+    dot.onclick = () => goToSlide(i);
+    dotsEl.appendChild(dot);
+  });
+
+  function goToSlide(n) {
+    currentSlide = (n + shuffled.length) % shuffled.length;
+    track.style.transform = `translateX(-${currentSlide * 100}%)`;
+    document.querySelectorAll('#slideDots span').forEach((d, i) => {
+      d.style.background = i === currentSlide ? 'var(--white)' : 'rgba(255,255,255,0.3)';
+    });
+  }
+
+  function slideGallery(dir) {
+    clearInterval(autoSlide);
+    goToSlide(currentSlide + dir);
+    startAuto();
+  }
+
+  function startAuto() {
+    autoSlide = setInterval(() => goToSlide(currentSlide + 1), 4000);
+  }
+  startAuto();
+</script>
+
+<!-- REVIEWS SNEAK PEEK -->
+<section class="reviews-peek" style="padding: 80px 48px; border-bottom: 1px solid rgba(255,255,255,0.05); background: var(--surface);">
+  <div style="max-width:1000px; margin:0 auto;">
+    <p class="section-eyebrow" style="margin-bottom:8px;">What They Say</p>
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,5vw,56px);letter-spacing:2px;margin-bottom:40px;">THE PEOPLE SPEAK</h2>
+
+    <!-- Review slideshow -->
+    <div style="position:relative; overflow:hidden;">
+      <div id="reviewTrack" style="display:flex; transition:transform 0.5s ease;"></div>
+      <button onclick="slideReview(-1)" style="position:absolute;left:0;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;padding:8px;">‹</button>
+      <button onclick="slideReview(1)" style="position:absolute;right:0;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;padding:8px;">›</button>
+    </div>
+    <div style="text-align:center; margin-top:32px;">
+      <a href="community.html" class="btn-sm-outline">See All Reviews →</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  // BASE REVIEWS — always shown
+  const baseReviews = [
+    { stars: 5, text: '"DJ Bullet is on another level. The way he reads the crowd is a masterclass. You don\'t just hear the music at TapTap, you feel it in your chest."', name: 'Jerry R.', event: 'Miami, March 2026', initials: 'JR', color: 'var(--red)' },
+    { stars: 5, text: '"P-Dous is the heart of TapTap. He\'s not just a host, he\'s the soul of the party. The way he connects with everyone and keeps the culture front and center — absolute legend."', name: 'Kenza F.', event: 'Miami, May 2026', initials: 'KF', color: '#2a1a2a' },
+    { stars: 5, text: '"I\'m not even Haitian and TapTap is my favorite party of the year. The culture, the fashion, the music — you feel the love the second you walk in."', name: 'Sophia C.', event: 'Atlanta, June 2026', initials: 'SC', color: 'var(--gold)' },
+    { stars: 5, text: '"Ted Bounce had the whole room going crazy. That man does not stop — the energy he brings on stage is unmatched. I was sweating from the first drop to the last track."', name: 'Christelle B.', event: 'Atlanta, June 2026', initials: 'CB', color: 'var(--blue)' },
+    { stars: 5, text: '"DJ K9 came in and completely flipped the energy. Nobody wanted to leave. Pure talent on the decks — TapTap always brings the best out."', name: 'Daniel L.', event: 'Boston, June 2026', initials: 'DL', color: '#1a3a1a' },
+  ];
+
+  const approvedReviews = getApprovedReviews();
+  const allReviews = [...baseReviews, ...approvedReviews.map(r => ({
+    stars: r.rating, text: `"${r.text}"`, name: r.name, event: r.event || 'TapTap Party', initials: r.name.substring(0,2).toUpperCase(), color: 'var(--red)'
+  }))];
+
+  const reviewTrack = document.getElementById('reviewTrack');
+  let currentReview = 0;
+  let autoReview;
+
+  allReviews.forEach(r => {
+    const slide = document.createElement('div');
+    slide.style.cssText = 'min-width:100%;padding:0 40px;box-sizing:border-box;';
+    slide.innerHTML = `
+      <div style="background:var(--surface2);border:1px solid rgba(255,255,255,0.06);border-radius:3px;padding:32px;display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start;">
+        <div style="width:48px;height:48px;border-radius:50%;background:${r.color};display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;color:${r.color==='var(--gold)'?'#080808':'var(--white)'};flex-shrink:0;">${r.initials}</div>
+        <div>
+          <div style="color:var(--gold);font-size:15px;margin-bottom:10px;">${'★'.repeat(r.stars)}</div>
+          <p style="font-size:15px;color:rgba(240,237,230,0.8);line-height:1.75;margin-bottom:12px;font-style:italic;">${r.text}</p>
+          <p style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">${r.name} · ${r.event}</p>
+        </div>
+      </div>`;
+    reviewTrack.appendChild(slide);
+  });
+
+  function slideReview(dir) {
+    clearInterval(autoReview);
+    currentReview = (currentReview + dir + allReviews.length) % allReviews.length;
+    reviewTrack.style.transform = `translateX(-${currentReview * 100}%)`;
+    startAutoReview();
+  }
+
+  function startAutoReview() {
+    autoReview = setInterval(() => {
+      currentReview = (currentReview + 1) % allReviews.length;
+      reviewTrack.style.transform = `translateX(-${currentReview * 100}%)`;
+    }, 5000);
+  }
+  startAutoReview();
+</script>
 
 <!-- Newsletter -->
 <section class="newsletter-section">
@@ -944,7 +1086,7 @@
   <div class="footer-inner">
     <div class="footer-top">
       <div>
-        <img src="logo.png" alt="Tap Tap Party" style="height: 36px; width: auto; display: block; margin-bottom: 8px;">
+        <img src="logo.png" alt="Tap Tap Party" style="height: 36px; width: auto; display: block; margin-bottom: 8px; mix-blend-mode: screen;">
         <div class="footer-tag">Once a month. Every month. 🇭🇹</div>
       </div>
       <div class="footer-cols">
@@ -952,8 +1094,7 @@
           <h4>Pages</h4>
           <ul>
             <li><a href="events.html">Events</a></li>
-            <li><a href="gallery.html">Gallery</a></li>
-            <li><a href="community.html">Community</a></li>
+                    <li><a href="community.html">Community</a></li>
             <li><a href="about.html">About</a></li>
             <li><a href="contact.html">Contact</a></li>
           </ul>
@@ -978,12 +1119,6 @@
 
 
 <script>
-  function toggleVibeMute(btn) {
-    const v = document.getElementById('vibeVideo');
-    v.muted = !v.muted;
-    btn.textContent = v.muted ? '🔇' : '🔊';
-  }
-
   function toggleMenu() {
     const btn = document.querySelector('.nav-hamburger');
     menu.classList.toggle('open');

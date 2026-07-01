@@ -41,7 +41,7 @@
       border-bottom: 1px solid rgba(255,255,255,0.05);
     }
     .nav-logo { text-decoration: none; }
-    .nav-logo img { height: 40px; width: auto; display: block; }
+    .nav-logo img { height: 40px; width: auto; display: block; mix-blend-mode: screen; }
     .nav-links { display: flex; gap: 32px; list-style: none; align-items: center; justify-content: center; }
     .nav-links a {
       color: var(--muted); text-decoration: none; font-size: 12px;
@@ -86,13 +86,13 @@
       gap: 64px; align-items: center;
     }
     .event-img {
-      aspect-ratio: 4/3;
+      aspect-ratio: 3/4;
       background: var(--surface2);
       border-radius: 3px; overflow: hidden;
       display: flex; align-items: center; justify-content: center;
       color: var(--muted); font-size: 13px; letter-spacing: 1px;
     }
-    .event-img img { width: 100%; height: 100%; object-fit: cover; }
+    .event-img img { width: 100%; height: 100%; object-fit: contain; background: var(--surface2); }
     .event-tag {
       display: inline-block;
       background: var(--red);
@@ -314,9 +314,9 @@
 
 <!-- Mobile Menu -->
 <div class="mobile-menu" id="mobileMenu">
+  <a href="index.html" onclick="closeMenu()">Home</a>
   <a href="events.html" onclick="closeMenu()">Events</a>
-  <a href="gallery.html" onclick="closeMenu()">Gallery</a>
-  <a href="community.html" onclick="closeMenu()">Community</a>
+<a href="community.html" onclick="closeMenu()">Community</a>
   <a href="about.html" onclick="closeMenu()">About</a>
   <a href="contact.html" onclick="closeMenu()">Contact</a>
   <a href="events.html" class="mobile-cta" onclick="closeMenu()">Get Tickets</a>
@@ -336,8 +336,8 @@
     <img src="logo.png" alt="Tap Tap Party">
   </a>
   <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
     <li><a href="events.html" class="active">Events</a></li>
-    <li><a href="gallery.html">Gallery</a></li>
     <li><a href="community.html">Community</a></li>
     <li><a href="about.html">About</a></li>
     <li><a href="contact.html">Contact</a></li>
@@ -350,8 +350,8 @@
 
 <!-- Page Header -->
 <div class="page-header">
-  <p class="section-eyebrow">DJ Bullet &amp; Friends</p>
-  <h1 class="page-title">2026<br><span>EVENTS</span></h1>
+  <p class="section-eyebrow">DJ Bullet &amp; Friends Present</p>
+  <h1 class="page-title">UPCOMING<br><span>EVENTS</span></h1>
 </div>
 
 <div class="tt-stripe" aria-hidden="true">
@@ -362,45 +362,18 @@
 <!-- Next Up -->
 <section class="next-up" style="padding-top:64px;">
   <div class="next-up-inner">
-    <div class="event-img">[ EVENT PHOTO ]</div>
+    <div class="event-img"><img src="event-july3b.png" alt="TapTap Miami July 3"></div>
     <div>
       <span class="event-tag">Next Up</span>
-      <div class="event-date">Thursday, July 3, 2026</div>
-      <div class="event-name">Tap Tap Party<br>4th of July Edition</div>
+      <div class="event-date">Friday, July 3, 2026</div>
+      <div class="event-name">Tap Tap Miami<br>4th of July Edition</div>
       <div class="event-details">
-        <div class="event-detail-row"><span class="dot"></span>Miami, FL</div>
+        <div class="event-detail-row"><span class="dot"></span>2335 N Miami Ave, Miami, FL</div>
         <div class="event-detail-row"><span class="dot"></span>DJ Bullet &amp; Friends</div>
         <div class="event-detail-row"><span class="dot"></span>Doors open at 9 PM</div>
       </div>
-
-      <div class="ticket-box">
-        <h4>Select Tickets</h4>
-        <div class="ticket-tiers">
-          <div class="ticket-tier selected" data-price="2000" onclick="selectTier(this, 'General Admission', 2000)">
-            <div>
-              <div class="tier-name">General Admission</div>
-              <div class="tier-desc">Entry + full party access</div>
-            </div>
-            <div class="tier-price">$20</div>
-          </div>
-          <div class="ticket-tier" data-price="4000" onclick="selectTier(this, 'VIP', 4000)">
-            <div>
-              <div class="tier-name">VIP</div>
-              <div class="tier-desc">Priority entry + VIP area access</div>
-            </div>
-            <div class="tier-price">$40</div>
-          </div>
-        </div>
-        <div class="qty-row">
-          <label>Quantity</label>
-          <select class="qty-select" id="qty">
-            <option>1</option><option>2</option><option>3</option>
-            <option>4</option><option>5</option><option>6</option>
-          </select>
-        </div>
-        <button class="btn-primary" onclick="handleCheckout()">Buy Tickets</button>
-        <p class="stripe-note">🔒 Secure checkout powered by Stripe</p>
-      </div>
+      <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" class="btn-primary" style="display:block; text-align:center; margin-top:24px;">Buy Tickets</a>
+      <p class="stripe-note" style="margin-top:10px;">🎟 taptap.eventbrite.com</p>
     </div>
   </div>
 </section>
@@ -413,7 +386,7 @@
 <!-- All Events -->
 <section class="all-events">
   <p class="section-eyebrow" style="margin-bottom:8px;">Full Schedule</p>
-  <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,5vw,56px);letter-spacing:2px;margin-bottom:32px;">2026 TOUR</h2>
+  <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,5vw,56px);letter-spacing:2px;margin-bottom:32px;">UPCOMING EVENTS</h2>
 
   <!-- City Filters -->
   <div class="city-filters" id="cityFilters">
@@ -608,7 +581,7 @@
 
 <footer style="padding:40px 48px;border-top:1px solid rgba(255,255,255,0.05);">
   <div style="max-width:1000px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;">
-    <img src="logo.png" alt="Tap Tap Party" style="height:32px;width:auto;">
+    <img src="logo.png" alt="Tap Tap Party" style="height:32px;width:auto;mix-blend-mode:screen;">
     <p style="font-size:13px;color:var(--muted);">© 2026 Tap Tap Party. All rights reserved.</p>
     <a href="https://instagram.com/itstaptapmiami" target="_blank" rel="noopener"
       style="width:36px;height:36px;border:1px solid rgba(255,255,255,0.1);border-radius:2px;display:flex;align-items:center;justify-content:center;color:var(--muted);text-decoration:none;font-size:12px;font-weight:600;">IG</a>

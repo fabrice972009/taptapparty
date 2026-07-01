@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery — Tap Tap Party</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080808;
+      --red: #D42027;
+      --blue: #003A8C;
+      --gold: #F5C518;
+      --white: #F0EDE6;
+      --surface: #111111;
+      --surface2: #1A1A1A;
+      --muted: #666;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--white); font-family: 'DM Sans', sans-serif; }
+
+    .tt-stripe { display: flex; height: 6px; width: 100%; }
+    .tt-stripe span { flex: 1; }
+
+    nav {
+      position: fixed;
+      top: 6px; left: 0; right: 0;
+      z-index: 200;
+      background: rgba(8,8,8,0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 0 48px;
+      height: 64px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .nav-logo { text-decoration: none; }
+    .nav-logo img { height: 40px; width: auto; display: block; mix-blend-mode: screen; }
+    .nav-links { display: flex; gap: 32px; list-style: none; align-items: center; justify-content: center; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 12px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--white); }
+    .nav-cta { background: var(--red); color: var(--white); padding: 10px 22px; border-radius: 2px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; transition: opacity 0.2s; }
+    .nav-cta:hover { opacity: 0.85; }
+    .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--white); border-radius: 1px; transition: transform 0.2s, opacity 0.2s; }
+    .nav-hamburger.is-open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .nav-hamburger.is-open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.is-open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    .mobile-menu {
+      display: none; position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(8,8,8,0.98); z-index: 190;
+      flex-direction: column; align-items: center; justify-content: center;
+      gap: 32px; padding: 80px 24px 40px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { font-family: 'Bebas Neue', sans-serif; font-size: 48px; letter-spacing: 4px; color: var(--white); text-decoration: none; }
+    .mobile-menu a:hover { color: var(--red); }
+    .mobile-menu .mobile-cta { background: var(--red); color: var(--white) !important; padding: 16px 48px; border-radius: 2px; font-size: 32px !important; }
+
+    /* PAGE HEADER */
+    .page-header { padding: 140px 48px 60px; max-width: 1100px; margin: 0 auto; }
+    .section-eyebrow { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; font-weight: 500; }
+    .page-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(64px, 10vw, 120px); letter-spacing: 4px; line-height: 0.9; }
+    .page-title span { color: var(--red); }
+
+    /* GALLERY GRID */
+    .gallery-wrap { padding: 0 48px 80px; max-width: 1100px; margin: 0 auto; }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .grid-item {
+      position: relative; overflow: hidden;
+      background: var(--surface2);
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .grid-item.tall { grid-row: span 2; }
+    .grid-item.wide { grid-column: span 2; }
+    .grid-item img, .grid-item video {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+    .grid-item:hover img, .grid-item:hover video { transform: scale(1.03); }
+
+    /* VIDEO SPECIFIC */
+    .grid-item.is-video .video-overlay {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 2; transition: opacity 0.2s;
+    }
+    .mute-btn {
+      position: absolute; bottom: 12px; right: 12px;
+      width: 36px; height: 36px;
+      background: rgba(8,8,8,0.7);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; z-index: 5;
+      transition: background 0.2s;
+      color: var(--white); font-size: 14px;
+    }
+    .mute-btn:hover { background: rgba(8,8,8,0.9); }
+    .video-badge {
+      position: absolute; top: 12px; left: 12px;
+      background: var(--red); color: var(--white);
+      font-size: 9px; font-weight: 600; letter-spacing: 2px;
+      text-transform: uppercase; padding: 4px 8px; border-radius: 2px;
+      z-index: 5;
+    }
+
+    /* PLACEHOLDER SIZING */
+    .grid-item { min-height: 260px; }
+    .grid-item.tall { min-height: 528px; }
+    .grid-item.wide { min-height: 260px; }
+
+    /* LIGHTBOX */
+    .lightbox {
+      display: none; position: fixed; inset: 0;
+      background: rgba(8,8,8,0.95); z-index: 1000;
+      align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox-inner { position: relative; max-width: 90vw; max-height: 90vh; }
+    .lightbox-inner img, .lightbox-inner video { max-width: 90vw; max-height: 85vh; border-radius: 3px; object-fit: contain; }
+    .lightbox-close {
+      position: fixed; top: 24px; right: 24px;
+      background: none; border: 1px solid rgba(255,255,255,0.2);
+      color: var(--white); width: 40px; height: 40px;
+      border-radius: 50%; font-size: 20px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.2s;
+    }
+    .lightbox-close:hover { border-color: var(--white); }
+
+    /* UPLOAD SECTION */
+    .upload-section {
+      padding: 80px 48px;
+      background: var(--surface);
+      border-top: 1px solid rgba(255,255,255,0.05);
+      text-align: center;
+    }
+    .upload-inner { max-width: 560px; margin: 0 auto; }
+    .upload-inner h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px, 5vw, 52px); letter-spacing: 3px; margin-bottom: 12px; }
+    .upload-inner p { color: rgba(240,237,230,0.55); font-size: 15px; margin-bottom: 32px; line-height: 1.7; }
+    .upload-box {
+      border: 1px dashed rgba(255,255,255,0.15);
+      border-radius: 3px; padding: 48px 32px;
+      margin-bottom: 20px; cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .upload-box:hover { border-color: rgba(255,255,255,0.3); }
+    .upload-box .upload-icon { font-size: 32px; margin-bottom: 12px; }
+    .upload-box p { color: var(--muted); font-size: 14px; margin: 0; }
+    .upload-box span { color: var(--white); font-weight: 500; }
+    #fileInput { display: none; }
+    .btn-primary {
+      background: var(--red); color: var(--white);
+      padding: 14px 36px; font-size: 12px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      border: none; border-radius: 2px; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; transition: opacity 0.2s;
+      text-decoration: none; display: inline-block;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+
+    /* FOOTER */
+    footer { padding: 40px 48px; border-top: 1px solid rgba(255,255,255,0.05); }
+    footer > div { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    footer p { font-size: 13px; color: var(--muted); }
+    .socials a { width: 36px; height: 36px; border: 1px solid rgba(255,255,255,0.1); border-radius: 2px; display: flex; align-items: center; justify-content: center; color: var(--muted); text-decoration: none; font-size: 12px; font-weight: 600; transition: border-color 0.2s, color 0.2s; }
+    .socials a:hover { border-color: var(--white); color: var(--white); }
+
+    @media (max-width: 800px) {
+      nav { padding: 0 20px; height: 56px; top: 6px; display: flex; justify-content: space-between; }
+      .nav-logo img { height: 32px; }
+      .nav-links { display: none; }
+      .nav-cta { display: none; }
+      .nav-hamburger { display: flex; z-index: 300; position: relative; margin-left: auto; }
+      .page-header { padding: 100px 20px 40px; }
+      .gallery-wrap { padding: 0 12px 48px; }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+      .grid-item.tall { grid-row: span 1; min-height: 200px; }
+      .grid-item.wide { grid-column: span 2; }
+      .grid-item { min-height: 180px; }
+      .upload-section { padding: 56px 20px; }
+      footer { padding: 32px 20px; }
+      footer > div { flex-direction: column; gap: 16px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html" onclick="closeMenu()">Home</a>
+  <a href="events.html" onclick="closeMenu()">Events</a>
+  <a href="gallery.html" onclick="closeMenu()">Gallery</a>
+  <a href="community.html" onclick="closeMenu()">Community</a>
+  <a href="about.html" onclick="closeMenu()">About</a>
+  <a href="contact.html" onclick="closeMenu()">Contact</a>
+  <a href="events.html" class="mobile-cta" onclick="closeMenu()">Get Tickets</a>
+</div>
+
+<div class="tt-stripe" aria-hidden="true">
+  <span style="background:#003A8C"></span>
+  <span style="background:#D42027"></span>
+</div>
+
+<nav>
+  <a href="index.html" class="nav-logo"><img src="logo.png" alt="Tap Tap Party"></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="events.html">Events</a></li>
+    <li><a href="gallery.html" class="active">Gallery</a></li>
+    <li><a href="community.html">Community</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="events.html" class="nav-cta">Get Tickets</a>
+  <button class="nav-hamburger" aria-label="Open menu" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="page-header">
+  <p class="section-eyebrow">The Vibes</p>
+  <h1 class="page-title">GAL<span>LERY</span></h1>
+</div>
+
+<div class="tt-stripe" aria-hidden="true">
+  <span style="background:#003A8C"></span>
+  <span style="background:#D42027"></span>
+</div>
+
+<!-- Gallery Grid -->
+<div class="gallery-wrap">
+  <div class="gallery-grid" id="galleryGrid">
+
+    <!-- VIDEO 1 — wide, prominent -->
+    <div class="grid-item is-video wide" id="vid1">
+      <span class="video-badge">Video</span>
+      <video id="video1" autoplay muted loop playsinline src="assets/gallery/video1.mp4" style="min-height:260px;"></video>
+      <button class="mute-btn" onclick="toggleMute('video1', this)" title="Toggle sound">🔇</button>
+    </div>
+
+    <!-- PHOTO 1 -->
+    <div class="grid-item tall" onclick="openLightbox('assets/gallery/photo1.jpg', 'photo')">
+      <img src="assets/gallery/photo1.jpg" alt="Tap Tap Party">
+    </div>
+
+    <!-- PHOTO 2 -->
+    <div class="grid-item" onclick="openLightbox('assets/gallery/photo2.jpg', 'photo')">
+      <img src="assets/gallery/photo2.jpg" alt="Tap Tap Party">
+    </div>
+
+    <!-- PHOTO 3 -->
+    <div class="grid-item" onclick="openLightbox('assets/gallery/photo3.jpg', 'photo')">
+      <img src="assets/gallery/photo3.jpg" alt="Tap Tap Party">
+    </div>
+
+    <!-- PHOTO 4 -->
+    <div class="grid-item" onclick="openLightbox('assets/gallery/photo4.jpg', 'photo')">
+      <img src="assets/gallery/photo4.jpg" alt="Tap Tap Party">
+    </div>
+
+    <!-- VIDEO 2 -->
+    <div class="grid-item is-video" id="vid2">
+      <span class="video-badge">Video</span>
+      <video id="video2" autoplay muted loop playsinline src="assets/gallery/video2.mp4" style="min-height:260px;"></video>
+      <button class="mute-btn" onclick="toggleMute('video2', this)" title="Toggle sound">🔇</button>
+    </div>
+
+    <!-- PHOTO 5 -->
+    <div class="grid-item" onclick="openLightbox('assets/gallery/photo5.jpg', 'photo')">
+      <img src="assets/gallery/photo5.jpg" alt="Tap Tap Party">
+    </div>
+
+    <!-- PHOTO 6 -->
+    <div class="grid-item wide" onclick="openLightbox('assets/gallery/photo6.jpg', 'photo')">
+      <img src="assets/gallery/photo6.jpg" alt="Tap Tap Party">
+    </div>
+
+    <!-- PHOTO 7 -->
+    <div class="grid-item" onclick="openLightbox('assets/gallery/photo7.jpg', 'photo')">
+      <img src="assets/gallery/photo7.jpg" alt="Tap Tap Party">
+    </div>
+
+    <!-- PHOTO 8 -->
+    <div class="grid-item" onclick="openLightbox('assets/gallery/photo8.jpg', 'photo')">
+      <img src="assets/gallery/photo8.jpg" alt="Tap Tap Party">
+    </div>
+
+    <!-- PHOTO 9 -->
+    <div class="grid-item" onclick="openLightbox('assets/gallery/photo9.jpg', 'photo')">
+      <img src="assets/gallery/photo9.jpg" alt="Tap Tap Party">
+    </div>
+
+    <!-- PHOTO 10 -->
+    <div class="grid-item" onclick="openLightbox('assets/gallery/photo10.jpg', 'photo')">
+      <img src="assets/gallery/photo10.jpg" alt="Tap Tap Party">
+    </div>
+
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <div class="lightbox-inner" onclick="event.stopPropagation()">
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    <img id="lightboxImg" src="" alt="" style="display:none;">
+    <video id="lightboxVideo" src="" controls style="display:none;"></video>
+  </div>
+</div>
+
+<!-- Upload / Share Section -->
+<section class="upload-section">
+  <div class="upload-inner">
+    <p class="section-eyebrow">Share The Vibes</p>
+    <h2>WERE YOU THERE?</h2>
+    <p>Share your photos and videos from the party. The best ones get featured right here.</p>
+    <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+      <div class="upload-icon">📸</div>
+      <p><span>Click to upload</span> or drag and drop<br>Photos & videos welcome</p>
+    </div>
+    <input type="file" id="fileInput" accept="image/*,video/*" multiple onchange="handleUpload(this)">
+    <a href="community.html" class="btn-primary">Visit Community Page</a>
+  </div>
+</section>
+
+<div class="tt-stripe" aria-hidden="true">
+  <span style="background:#003A8C"></span>
+  <span style="background:#D42027"></span>
+</div>
+
+<footer>
+  <div>
+    <img src="logo.png" alt="Tap Tap Party" style="height:32px;">
+    <p>© 2026 Tap Tap Party. All rights reserved.</p>
+    <div class="socials" style="display:flex;gap:12px;">
+      <a href="https://instagram.com/itstaptapmiami" target="_blank" rel="noopener">IG</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mobile menu
+  function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    const btn = document.querySelector('.nav-hamburger');
+    menu.classList.toggle('open');
+    btn.classList.toggle('is-open');
+    document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+  }
+  function closeMenu() {
+    document.getElementById('mobileMenu').classList.remove('open');
+    document.querySelector('.nav-hamburger').classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
+  // Video: 15s loop + mute toggle
+  document.querySelectorAll('.grid-item.is-video video').forEach(video => {
+    video.addEventListener('timeupdate', () => {
+      if (video.currentTime >= 15) {
+        video.currentTime = 0;
+        video.play();
+      }
+    });
+  });
+
+  function toggleMute(videoId, btn) {
+    const video = document.getElementById(videoId);
+    if (video.muted) {
+      // Unmute — play full video with sound
+      video.muted = false;
+      video.removeEventListener('timeupdate', video._loopHandler);
+      btn.textContent = '🔊';
+    } else {
+      // Mute — go back to 15s loop
+      video.muted = true;
+      video.currentTime = 0;
+      btn.textContent = '🔇';
+    }
+    event.stopPropagation();
+  }
+
+  // Lightbox
+  function openLightbox(src, type) {
+    const lb = document.getElementById('lightbox');
+    const img = document.getElementById('lightboxImg');
+    const vid = document.getElementById('lightboxVideo');
+    if (type === 'photo') {
+      img.src = src; img.style.display = 'block';
+      vid.style.display = 'none'; vid.src = '';
+    } else {
+      vid.src = src; vid.style.display = 'block';
+      img.style.display = 'none'; img.src = '';
+      vid.play();
+    }
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.getElementById('lightboxVideo').pause();
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+  // Upload handler (placeholder)
+  function handleUpload(input) {
+    const files = Array.from(input.files);
+    alert(`${files.length} file(s) selected. Upload feature coming soon — connect to Supabase storage to activate.`);
+  }
+</script>
+
+</body>
+</html>
