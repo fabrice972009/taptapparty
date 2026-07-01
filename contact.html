@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — TapTap Party</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080808;
+      --red: #D42027;
+      --blue: #003A8C;
+      --gold: #F5C518;
+      --white: #F0EDE6;
+      --surface: #111111;
+      --surface2: #1A1A1A;
+      --muted: #666;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 16px; line-height: 1.6; }
+
+    .tt-stripe { display: flex; height: 6px; width: 100%; }
+    .tt-stripe span { flex: 1; }
+
+    nav {
+      position: fixed; top: 6px; left: 0; right: 0; z-index: 200;
+      background: rgba(8,8,8,0.88); backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px); padding: 0 48px; height: 64px;
+      display: grid; grid-template-columns: auto 1fr auto; align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .nav-logo { text-decoration: none; }
+    .nav-logo img { height: 40px; width: auto; display: block; mix-blend-mode: screen; }
+    .nav-links { display: flex; gap: 32px; list-style: none; align-items: center; justify-content: center; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 12px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--white); }
+    .nav-cta { background: var(--red); color: var(--white); padding: 10px 22px; border-radius: 2px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; transition: opacity 0.2s; }
+    .nav-cta:hover { opacity: 0.85; }
+    .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--white); border-radius: 1px; transition: transform 0.2s, opacity 0.2s; }
+    .nav-hamburger.is-open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .nav-hamburger.is-open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.is-open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    .mobile-menu {
+      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(8,8,8,0.98); z-index: 190;
+      flex-direction: column; align-items: center; justify-content: center; gap: 32px; padding: 80px 24px 40px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { font-family: 'Bebas Neue', sans-serif; font-size: 48px; letter-spacing: 4px; color: var(--white); text-decoration: none; }
+    .mobile-menu a:hover { color: var(--red); }
+    .mobile-menu .mobile-cta { background: var(--red); color: var(--white) !important; padding: 16px 48px; border-radius: 2px; font-size: 32px !important; }
+
+    /* PAGE HEADER */
+    .page-header { padding: 140px 48px 60px; max-width: 1000px; margin: 0 auto; }
+    .section-eyebrow { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; font-weight: 500; }
+    .page-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(56px, 9vw, 110px); letter-spacing: 4px; line-height: 0.9; margin-bottom: 20px; }
+    .page-title span { color: var(--red); }
+    .page-subtitle { font-size: 16px; color: rgba(240,237,230,0.55); max-width: 480px; line-height: 1.7; }
+
+    /* REASON CARDS */
+    .reasons { padding: 0 48px 64px; max-width: 1000px; margin: 0 auto; }
+    .reasons-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+    .reason-card {
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 3px; padding: 28px 24px;
+      cursor: pointer; transition: border-color 0.2s;
+    }
+    .reason-card:hover, .reason-card.selected { border-color: var(--red); }
+    .reason-card.selected .reason-icon { color: var(--red); }
+    .reason-icon { font-size: 28px; margin-bottom: 12px; display: block; transition: color 0.2s; }
+    .reason-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 1px; margin-bottom: 6px; }
+    .reason-body { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    /* FORM */
+    .form-section { padding: 0 48px 80px; }
+    .form-inner { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; }
+    .form-wrap { }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; font-weight: 500; }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%; background: var(--surface2);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--white); padding: 13px 16px;
+      font-size: 14px; font-family: 'DM Sans', sans-serif;
+      border-radius: 2px; outline: none; transition: border-color 0.2s;
+      appearance: none;
+    }
+    .form-group input::placeholder, .form-group textarea::placeholder { color: var(--muted); }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: rgba(255,255,255,0.25); }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .btn-primary {
+      width: 100%; background: var(--red); color: var(--white);
+      padding: 15px; font-size: 13px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      border: none; border-radius: 2px; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; transition: opacity 0.2s;
+      margin-top: 8px;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+    .form-note { font-size: 12px; color: var(--muted); margin-top: 12px; text-align: center; }
+    .success-msg {
+      display: none; background: rgba(45,179,88,0.1);
+      border: 1px solid rgba(45,179,88,0.3);
+      border-radius: 2px; padding: 16px;
+      font-size: 14px; color: #2DB358;
+      text-align: center; margin-top: 16px;
+    }
+
+    /* INFO SIDE */
+    .contact-info { padding-top: 8px; }
+    .info-block { margin-bottom: 40px; }
+    .info-block h4 { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; font-weight: 500; }
+    .info-block p { font-size: 14px; color: rgba(240,237,230,0.65); line-height: 1.75; }
+    .info-block a { color: var(--white); text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.15); transition: border-color 0.2s; }
+    .info-block a:hover { border-color: var(--white); }
+    .social-row { display: flex; gap: 12px; margin-top: 4px; }
+    .social-btn {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 18px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 2px;
+      color: var(--white); text-decoration: none;
+      font-size: 13px; font-weight: 500;
+      transition: border-color 0.2s;
+    }
+    .social-btn:hover { border-color: var(--white); }
+
+    /* FOOTER */
+    footer { padding: 40px 48px; border-top: 1px solid rgba(255,255,255,0.05); }
+    footer > div { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    footer p { font-size: 13px; color: var(--muted); }
+    .socials { display: flex; gap: 12px; }
+    .socials a { width: 36px; height: 36px; border: 1px solid rgba(255,255,255,0.1); border-radius: 2px; display: flex; align-items: center; justify-content: center; color: var(--muted); text-decoration: none; transition: border-color 0.2s, color 0.2s; }
+    .socials a:hover { border-color: var(--white); color: var(--white); }
+
+    @media (max-width: 800px) {
+      nav { padding: 0 20px; height: 56px; display: flex; justify-content: space-between; }
+      .nav-logo img { height: 32px; }
+      .nav-links { display: none; }
+      .nav-cta { display: none; }
+      .nav-hamburger { display: flex; z-index: 300; position: relative; margin-left: auto; }
+      .page-header { padding: 100px 20px 40px; }
+      .reasons { padding: 0 20px 48px; }
+      .reasons-grid { grid-template-columns: 1fr; gap: 10px; }
+      .form-section { padding: 0 20px 56px; }
+      .form-inner { grid-template-columns: 1fr; gap: 40px; }
+      .form-row { grid-template-columns: 1fr; }
+      footer { padding: 32px 20px; }
+      footer > div { flex-direction: column; gap: 16px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html" onclick="closeMenu()">Home</a>
+  <a href="events.html" onclick="closeMenu()">Events</a>
+  <a href="community.html" onclick="closeMenu()">Community</a>
+  <a href="about.html" onclick="closeMenu()">About</a>
+  <a href="contact.html" onclick="closeMenu()">Contact</a>
+  <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" class="mobile-cta" onclick="closeMenu()">Get Tickets</a>
+</div>
+
+
+<nav>
+  <a href="index.html" class="nav-logo"><img src="logo.png" alt="Tap Tap Party"></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="events.html">Events</a></li>
+    <li><a href="community.html">Community</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html" class="active">Contact</a></li>
+  </ul>
+  <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" class="nav-cta">Get Tickets</a>
+  <button class="nav-hamburger" aria-label="Open menu" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Fixed stripe below nav -->
+<div class="tt-stripe" style="position:fixed; top:70px; left:0; right:0; z-index:199;" aria-hidden="true">
+  <span style="background:#003A8C"></span>
+  <span style="background:#D42027"></span>
+</div>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <p class="section-eyebrow">Get In Touch</p>
+  <h1 class="page-title">LET'S<br><span>TALK.</span></h1>
+  <p class="page-subtitle">Want TapTap in your city? Looking to collaborate? Have a question? We want to hear from you.</p>
+</div>
+
+
+<!-- REASON CARDS -->
+<div class="reasons" style="padding-top:56px;">
+  <div class="reasons-grid">
+    <div class="reason-card selected" onclick="selectReason(this, 'Bring TapTap To My City')">
+      <span class="reason-icon">🌍</span>
+      <div class="reason-title">Bring TapTap To My City</div>
+      <div class="reason-body">Think your city is ready for TapTap? We want to know. Tell us where you're from and let's make it happen.</div>
+    </div>
+    <div class="reason-card" onclick="selectReason(this, 'Collaborate With Us')">
+      <span class="reason-icon">🤝</span>
+      <div class="reason-title">Collaborate With Us</div>
+      <div class="reason-body">Venue, brand, artist, or media — if you see a partnership, let's talk. TapTap is always open to the right collaborations.</div>
+    </div>
+    <div class="reason-card" onclick="selectReason(this, 'General Inquiry')">
+      <span class="reason-icon">💬</span>
+      <div class="reason-title">General Inquiry</div>
+      <div class="reason-body">Something else on your mind? Any question, idea, or message — we read everything and we'll get back to you.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FORM + INFO -->
+<section class="form-section">
+  <div class="form-inner">
+
+    <div class="form-wrap">
+      <input type="hidden" id="reasonField" value="Bring TapTap To My City">
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" id="firstName" placeholder="Jean">
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" id="lastName" placeholder="Pierre">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="email" placeholder="you@example.com">
+      </div>
+      <div class="form-group">
+        <label>City / Country</label>
+        <input type="text" id="city" placeholder="e.g. London, UK">
+      </div>
+      <div class="form-group">
+        <label>Message</label>
+        <textarea id="message" placeholder="Tell us what's on your mind..."></textarea>
+      </div>
+      <button class="btn-primary" onclick="submitContact()">Send Message</button>
+      <p class="form-note">We typically respond within 48 hours 🇭🇹</p>
+      <div class="success-msg" id="successMsg">
+        ✅ Message sent! We'll be in touch soon.
+      </div>
+    </div>
+
+    <div class="contact-info">
+      <div class="info-block">
+        <h4>Follow Us</h4>
+        <div class="social-row">
+          <a href="https://instagram.com/itstaptapmiami" target="_blank" rel="noopener" class="social-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+              <circle cx="12" cy="12" r="4"/>
+              <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/>
+            </svg>
+            @itstaptapmiami
+          </a>
+        </div>
+      </div>
+
+      <div class="info-block">
+        <h4>Buy Tickets</h4>
+        <p>All tickets are available on Eventbrite.<br>
+          <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener">taptap.eventbrite.com</a>
+        </p>
+      </div>
+
+      <div class="info-block">
+        <h4>Want TapTap In Your City?</h4>
+        <p>We've already hit Miami, New York, Atlanta, Boston, Philadelphia, Toronto, Montreal, Paris and London. If you think your city is ready — tell us. Every new city we've entered has sold out on the first night.</p>
+      </div>
+
+      <div class="info-block">
+        <h4>Collaborations</h4>
+        <p>We're open to venue partnerships, brand collaborations, artist bookings, and media features. Fill out the form and select "Collaborate With Us" — we'll take it from there.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<div class="tt-stripe" aria-hidden="true">
+  <span style="background:#003A8C"></span>
+  <span style="background:#D42027"></span>
+</div>
+
+<footer>
+  <div>
+    <img src="logo.png" alt="Tap Tap Party" style="height:32px;width:auto;mix-blend-mode:screen;">
+    <p>© 2026 Tap Tap Party. All rights reserved.</p>
+    <div class="socials">
+      <a href="https://instagram.com/itstaptapmiami" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <circle cx="12" cy="12" r="4"/>
+          <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    const btn = document.querySelector('.nav-hamburger');
+    menu.classList.toggle('open');
+    btn.classList.toggle('is-open');
+    document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+  }
+  function closeMenu() {
+    document.getElementById('mobileMenu').classList.remove('open');
+    document.querySelector('.nav-hamburger').classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
+  function selectReason(card, reason) {
+    document.querySelectorAll('.reason-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    document.getElementById('reasonField').value = reason;
+  }
+
+  function submitContact() {
+    const first = document.getElementById('firstName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const message = document.getElementById('message').value.trim();
+    if (!first || !email || !message) {
+      alert('Please fill in your name, email and message.');
+      return;
+    }
+    // Placeholder — wire to Supabase or EmailJS later
+    document.getElementById('successMsg').style.display = 'block';
+    document.getElementById('firstName').value = '';
+    document.getElementById('lastName').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('city').value = '';
+    document.getElementById('message').value = '';
+  }
+</script>
+
+</body>
+</html>

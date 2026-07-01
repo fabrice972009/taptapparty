@@ -127,7 +127,7 @@
       aspect-ratio: 1; background: var(--surface2); border-radius: 2px;
       overflow: hidden; position: relative; cursor: pointer;
     }
-    .photo-wall-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+    .photo-wall-item img { width: 100%; height: 100%; object-fit: cover; object-position: center top; transition: transform 0.3s; }
     .photo-wall-item:hover img { transform: scale(1.04); }
     .photo-wall-item .submitter {
       position: absolute; bottom: 0; left: 0; right: 0;
@@ -196,13 +196,9 @@
 <a href="community.html" onclick="closeMenu()">Community</a>
   <a href="about.html" onclick="closeMenu()">About</a>
   <a href="contact.html" onclick="closeMenu()">Contact</a>
-  <a href="events.html" class="mobile-cta" onclick="closeMenu()">Get Tickets</a>
+  <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" class="mobile-cta" onclick="closeMenu()">Get Tickets</a>
 </div>
 
-<div class="tt-stripe" aria-hidden="true">
-  <span style="background:#003A8C"></span>
-  <span style="background:#D42027"></span>
-</div>
 
 <nav>
   <a href="index.html" class="nav-logo"><img src="logo.png" alt="Tap Tap Party"></a>
@@ -213,83 +209,24 @@
     <li><a href="about.html">About</a></li>
     <li><a href="contact.html">Contact</a></li>
   </ul>
-  <a href="events.html" class="nav-cta">Get Tickets</a>
+  <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" class="nav-cta">Get Tickets</a>
   <button class="nav-hamburger" aria-label="Open menu" onclick="toggleMenu()">
     <span></span><span></span><span></span>
   </button>
 </nav>
 
-<div class="page-header">
-  <p class="section-eyebrow">The People</p>
-  <h1 class="page-title">WALL OF<br><span>LOVE</span></h1>
-</div>
-
-<div class="tt-stripe" aria-hidden="true">
+<!-- Fixed stripe below nav -->
+<div class="tt-stripe" style="position:fixed; top:70px; left:0; right:0; z-index:199;" aria-hidden="true">
   <span style="background:#003A8C"></span>
   <span style="background:#D42027"></span>
 </div>
 
-<!-- SUBMIT SECTION -->
-<section class="submit-section" style="padding-top:64px;">
-  <div class="submit-inner">
+<div class="page-header">
+  <p class="section-eyebrow">The People</p>
+  <h1 class="page-title">WALL OF<br><span>LOVE</span></h1>
+  <p style="color:rgba(240,237,230,0.5);font-size:15px;margin-top:16px;max-width:480px;">Photos and reviews from the TapTap community. Share yours below.</p>
+</div>
 
-    <!-- Photo Upload -->
-    <div class="submit-card">
-      <h3>Share Your Photo 📸</h3>
-      <p>Were you at TapTap? Upload your best shot — approved photos go straight to the Wall of Love.</p>
-      <div class="form-group">
-        <label>Your Name</label>
-        <input type="text" id="photoName" placeholder="e.g. Marie">
-      </div>
-      <div class="form-group">
-        <label>Your Photo</label>
-        <div class="upload-box" onclick="document.getElementById('photoFile').click()">
-          <div class="icon">🖼️</div>
-          <p><span>Click to upload</span> your photo</p>
-        </div>
-        <input type="file" id="photoFile" accept="image/*" style="display:none" onchange="previewPhoto(this)">
-        <div class="upload-preview" id="photoPreview">
-          <img id="previewImg" src="" alt="Preview">
-        </div>
-      </div>
-      <button class="btn-primary" onclick="submitPhoto()">Submit Photo</button>
-      <p class="submit-note">Photos are reviewed before being published 🇭🇹</p>
-      <div class="success-msg" id="photoSuccess">✅ Photo submitted! We'll review it shortly.</div>
-    </div>
-
-    <!-- Feedback -->
-    <div class="submit-card">
-      <h3>Share Your Experience ✍️</h3>
-      <p>How was TapTap? Tell us about your night — your review helps the diaspora find us.</p>
-      <div class="form-group">
-        <label>Your Name</label>
-        <input type="text" id="reviewName" placeholder="e.g. Jean-Pierre">
-      </div>
-      <div class="form-group">
-        <label>Which Event?</label>
-        <input type="text" id="reviewEvent" placeholder="e.g. TapTap Miami — March 29">
-      </div>
-      <div class="form-group">
-        <label>Rating</label>
-        <div class="star-rating" id="starRating">
-          <span class="star" onclick="setRating(1)">★</span>
-          <span class="star" onclick="setRating(2)">★</span>
-          <span class="star" onclick="setRating(3)">★</span>
-          <span class="star" onclick="setRating(4)">★</span>
-          <span class="star" onclick="setRating(5)">★</span>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Your Review</label>
-        <textarea id="reviewText" placeholder="Tell us about your TapTap experience..."></textarea>
-      </div>
-      <button class="btn-primary" onclick="submitReview()">Submit Review</button>
-      <p class="submit-note">Reviews are approved before being published 🇭🇹</p>
-      <div class="success-msg" id="reviewSuccess">✅ Review submitted! We'll review it shortly.</div>
-    </div>
-
-  </div>
-</section>
 
 <!-- WALL OF LOVE -->
 <section class="wall-section">
@@ -304,27 +241,21 @@
   <div class="photo-wall" id="photoWall">
     <div class="photo-wall-item" onclick="openLightbox('assets/gallery/photo3.jpg')">
       <img src="assets/gallery/photo3.jpg" alt="Community photo">
-      <div class="submitter">Submitted by Jerry</div>
     </div>
     <div class="photo-wall-item" onclick="openLightbox('assets/gallery/photo7.jpg')">
       <img src="assets/gallery/photo7.jpg" alt="Community photo">
-      <div class="submitter">Submitted by Daniel</div>
     </div>
     <div class="photo-wall-item" onclick="openLightbox('assets/gallery/photo10.jpg')">
       <img src="assets/gallery/photo10.jpg" alt="Community photo">
-      <div class="submitter">Submitted by Sophia</div>
     </div>
     <div class="photo-wall-item" onclick="openLightbox('assets/gallery/photo14.jpg')">
       <img src="assets/gallery/photo14.jpg" alt="Community photo">
-      <div class="submitter">Submitted by Kenza</div>
     </div>
     <div class="photo-wall-item" onclick="openLightbox('assets/gallery/photo16.jpg')">
       <img src="assets/gallery/photo16.jpg" alt="Community photo">
-      <div class="submitter">Submitted by Yanick</div>
     </div>
     <div class="photo-wall-item" onclick="openLightbox('assets/gallery/photo18.jpg')">
       <img src="assets/gallery/photo18.jpg" alt="Community photo">
-      <div class="submitter">Submitted by Christelle</div>
     </div>
   </div>
 
@@ -434,8 +365,77 @@
       </div>
 
     </div>
+    <div id="seeMoreWrap" style="text-align:center; margin-top:24px; display:none;">
+      <button onclick="showAllReviews()" style="background:none; border:1px solid rgba(255,255,255,0.2); color:var(--white); padding:10px 28px; font-size:12px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; border-radius:2px; font-family:'DM Sans',sans-serif; transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--white)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)'">See More Reviews ↓</button>
+    </div>
   </div>
 
+</section>
+
+<!-- SUBMIT SECTION -->
+<section class="submit-section" style="padding-top:64px; border-top: 1px solid rgba(255,255,255,0.05);">
+  <div style="max-width:1000px; margin:0 auto 40px;">
+    <p class="section-eyebrow">Join The Wall</p>
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,5vw,56px);letter-spacing:2px;">SHARE YOUR MOMENT</h2>
+  </div>
+  <div class="submit-inner">
+
+    <!-- Photo Upload -->
+    <div class="submit-card">
+      <h3>Share Your Photo 📸</h3>
+      <p>Were you at TapTap? Upload your best shot — approved photos go straight to the Wall of Love.</p>
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" id="photoName" placeholder="e.g. Marie">
+      </div>
+      <div class="form-group">
+        <label>Your Photo</label>
+        <div class="upload-box" onclick="document.getElementById('photoFile').click()">
+          <div class="icon">🖼️</div>
+          <p><span>Click to upload</span> your photo</p>
+        </div>
+        <input type="file" id="photoFile" accept="image/*" style="display:none" onchange="previewPhoto(this)">
+        <div class="upload-preview" id="photoPreview">
+          <img id="previewImg" src="" alt="Preview">
+        </div>
+      </div>
+      <button class="btn-primary" onclick="submitPhoto()">Submit Photo</button>
+      <p class="submit-note">Photos are reviewed before being published 🇭🇹</p>
+      <div class="success-msg" id="photoSuccess">✅ Photo submitted! We'll review it shortly.</div>
+    </div>
+
+    <!-- Feedback -->
+    <div class="submit-card">
+      <h3>Share Your Experience ✍️</h3>
+      <p>How was TapTap? Tell us about your night — your review helps the diaspora find us.</p>
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" id="reviewName" placeholder="e.g. Jean-Pierre">
+      </div>
+      <div class="form-group">
+        <label>Which Event?</label>
+        <input type="text" id="reviewEvent" placeholder="e.g. TapTap Miami — March 29">
+      </div>
+      <div class="form-group">
+        <label>Rating</label>
+        <div class="star-rating" id="starRating">
+          <span class="star" onclick="setRating(1)">★</span>
+          <span class="star" onclick="setRating(2)">★</span>
+          <span class="star" onclick="setRating(3)">★</span>
+          <span class="star" onclick="setRating(4)">★</span>
+          <span class="star" onclick="setRating(5)">★</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Your Review</label>
+        <textarea id="reviewText" placeholder="Tell us about your TapTap experience..."></textarea>
+      </div>
+      <button class="btn-primary" onclick="submitReview()">Submit Review</button>
+      <p class="submit-note">Reviews are approved before being published 🇭🇹</p>
+      <div class="success-msg" id="reviewSuccess">✅ Review submitted! We'll review it shortly.</div>
+    </div>
+
+  </div>
 </section>
 
 <!-- Lightbox -->
@@ -445,6 +445,7 @@
     <img id="lightboxImg" src="" alt="">
   </div>
 </div>
+
 
 <div class="tt-stripe" aria-hidden="true">
   <span style="background:#003A8C"></span>
@@ -456,7 +457,11 @@
     <img src="logo.png" alt="Tap Tap Party" style="height:32px;width:auto;mix-blend-mode:screen;">
     <p>© 2026 Tap Tap Party. All rights reserved.</p>
     <div class="socials" style="display:flex;gap:12px;">
-      <a href="https://instagram.com/itstaptapmiami" target="_blank" rel="noopener">IG</a>
+      <a href="https://instagram.com/itstaptapmiami" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+  <circle cx="12" cy="12" r="4"/>
+  <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/>
+</svg></a>
     </div>
   </div>
 </footer>
@@ -476,7 +481,67 @@
     document.body.style.overflow = '';
   }
 
-  // Star rating
+  // Limit reviews to 5, show See More for the rest
+  function applyReviewLimit() {
+    const cards = document.querySelectorAll('#reviewWall .review-card');
+    const limit = 5;
+    let hidden = 0;
+    cards.forEach((card, i) => {
+      if (i >= limit) { card.style.display = 'none'; hidden++; }
+    });
+    if (hidden > 0) document.getElementById('seeMoreWrap').style.display = 'block';
+  }
+
+  function showAllReviews() {
+    document.querySelectorAll('#reviewWall .review-card').forEach(c => c.style.display = '');
+    document.getElementById('seeMoreWrap').style.display = 'none';
+  }
+
+  // Run after approved reviews are loaded
+  setTimeout(applyReviewLimit, 100);
+
+  // Load approved fan photos from localStorage and add to wall
+  function loadApprovedCommunityPhotos() {
+    try {
+      const approved = JSON.parse(localStorage.getItem('tt_approved_photos') || '[]');
+      const wall = document.getElementById('photoWall');
+      approved.forEach(p => {
+        const item = document.createElement('div');
+        item.className = 'photo-wall-item';
+        item.onclick = () => openLightbox(p.dataUrl);
+        item.innerHTML = `
+          <img src="${p.dataUrl}" alt="Community photo" style="width:100%;height:100%;object-fit:cover;object-position:center top;">
+          <div class="submitter">Submitted by ${p.name}</div>
+        `;
+        wall.appendChild(item);
+      });
+    } catch(e) {}
+  }
+
+  // Load approved reviews from localStorage and add to wall
+  function loadApprovedReviews() {
+    try {
+      const approved = JSON.parse(localStorage.getItem('tt_approved_reviews') || '[]');
+      const wall = document.getElementById('reviewWall');
+      approved.forEach(r => {
+        const initials = r.name.substring(0,2).toUpperCase();
+        const card = document.createElement('div');
+        card.className = 'review-card';
+        card.innerHTML = `
+          <div class="reviewer-avatar" style="background:var(--red);">${initials}</div>
+          <div>
+            <div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
+            <div class="review-text">"${r.text}"</div>
+            <div class="review-meta">${r.name} · ${r.event || 'TapTap Party'}</div>
+          </div>`;
+        wall.appendChild(card);
+      });
+    } catch(e) {}
+  }
+
+  loadApprovedCommunityPhotos();
+  loadApprovedReviews();
+  applyReviewLimit();
   let currentRating = 0;
   function setRating(n) {
     currentRating = n;

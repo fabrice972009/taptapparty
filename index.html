@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TapTap Party — DJ Bullet & Friends | Haitian Culture, Music & Art</title>
-  <meta name="description" content="TapTap — Where the diaspora comes alive. DJ Bullet & Friends present a monthly Haitian culture experience. Music, food, art & people. Miami, New York, London and beyond.">
-  <meta property="og:title" content="TapTap Party — DJ Bullet & Friends | Haitian Culture, Music & Art">
+  <title>TapTap — The Ultimate Caribbean Nightlife Experience</title>
+  <meta name="description" content="TapTap — The Ultimate Caribbean Nightlife Experience. DJ Bullet & Friends present a monthly Haitian culture experience. Music, food, art & people. Miami, New York, London and beyond.">
+  <meta property="og:title" content="TapTap — The Ultimate Caribbean Nightlife Experience">
   <meta property="og:description" content="Once a month. Haitian music, food, art & people. DJ Bullet & Friends.">
   <meta property="og:image" content="logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
@@ -523,9 +523,7 @@
 
       .gallery-section { padding: 48px 20px; }
       .gallery-head { flex-direction: column; align-items: flex-start; gap: 16px; }
-      .gallery-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
-      .g-item:first-child { grid-row: auto; aspect-ratio: 1; }
-      .g-item { aspect-ratio: 1; }
+      #galleryThree { grid-template-columns: 1fr 1fr 1fr !important; gap: 4px !important; }
 
       .newsletter-section { padding: 56px 20px; }
       .reviews-peek { padding: 56px 20px !important; }
@@ -605,7 +603,7 @@
 <a href="community.html" onclick="closeMenu()">Community</a>
   <a href="about.html" onclick="closeMenu()">About</a>
   <a href="contact.html" onclick="closeMenu()">Contact</a>
-  <a href="events.html" class="mobile-cta" onclick="closeMenu()">Get Tickets</a>
+  <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" class="mobile-cta" onclick="closeMenu()">Get Tickets</a>
   <div class="mobile-socials">
     <a href="https://instagram.com/itstaptapmiami" target="_blank">Instagram</a>
   </div>
@@ -624,7 +622,7 @@
     <li><a href="about.html">About</a></li>
     <li><a href="contact.html">Contact</a></li>
   </ul>
-  <a href="events.html" class="nav-cta">Get Tickets</a>
+  <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" class="nav-cta">Get Tickets</a>
   <button class="nav-hamburger" aria-label="Open menu" onclick="toggleMenu()">
     <span></span><span></span><span></span>
   </button>
@@ -647,7 +645,7 @@
 <!-- Hero Text Below Video -->
 <div style="text-align:center; padding: 6px 24px 16px; border-bottom: 1px solid rgba(255,255,255,0.05);">
   <p style="font-size:11px; letter-spacing:5px; text-transform:uppercase; color:var(--gold); margin-bottom:14px; font-weight:500;">DJ Bullet &amp; Friends</p>
-  <p style="font-size:clamp(16px,2vw,20px); color:rgba(240,237,230,0.75); max-width:480px; margin:0 auto 36px; line-height:1.7;">TapTap — Where the diaspora comes alive.</p>
+  <p style="font-size:clamp(16px,2vw,20px); color:rgba(240,237,230,0.75); max-width:480px; margin:0 auto 36px; line-height:1.7;">TapTap — The Ultimate Caribbean Nightlife Experience.</p>
   <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
     <a href="events.html" class="btn-primary">Next Event →</a>
     <a href="about.html" class="btn-outline">Our Story</a>
@@ -658,7 +656,7 @@
 
 <!-- VIBE VIDEO -->
 <div style="text-align:center; padding: 48px 24px 24px;">
-  <p style="font-family:'Bebas Neue',sans-serif; font-size:clamp(32px,5vw,52px); letter-spacing:4px; color:var(--white);">This Is TapTap 🇭🇹</p>
+  <p style="font-family:'DM Sans',sans-serif; font-size:clamp(14px,1.8vw,18px); letter-spacing:3px; color:rgba(240,237,230,0.6); font-weight:500;">Music. People. Culture. 🇭🇹</p>
 </div>
 <section class="vibe-section">
   <video class="vibe-video" id="vibeVideo" autoplay muted loop playsinline>
@@ -902,7 +900,7 @@
 <!-- Stripe -->
 
 
-<!-- Gallery Slideshow -->
+<!-- Gallery -->
 <section class="gallery-section">
   <div class="gallery-head">
     <div>
@@ -911,18 +909,29 @@
     </div>
     <a href="community.html" class="btn-sm-outline">Share Your Photo →</a>
   </div>
-
-  <!-- Slideshow -->
-  <div style="position:relative; max-width:1000px; margin:0 auto; overflow:hidden; border-radius:3px; background:var(--surface2);">
-    <div id="slideshowTrack" style="display:flex; transition:transform 0.6s ease; will-change:transform;"></div>
-    <button onclick="slideGallery(-1)" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);background:rgba(8,8,8,0.7);border:1px solid rgba(255,255,255,0.15);color:var(--white);width:36px;height:36px;border-radius:50%;font-size:16px;cursor:pointer;z-index:10;">‹</button>
-    <button onclick="slideGallery(1)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:rgba(8,8,8,0.7);border:1px solid rgba(255,255,255,0.15);color:var(--white);width:36px;height:36px;border-radius:50%;font-size:16px;cursor:pointer;z-index:10;">›</button>
-    <div id="slideDots" style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10;"></div>
+  <div style="max-width:1000px; margin:0 auto; position:relative;">
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; border-radius:3px; overflow:hidden;" id="galleryThree">
+      <div id="gthumb0" style="aspect-ratio:3/4; background:var(--surface2); overflow:hidden;"></div>
+      <div id="gthumb1" style="aspect-ratio:3/4; background:var(--surface2); overflow:hidden;"></div>
+      <div id="gthumb2" style="aspect-ratio:3/4; background:var(--surface2); overflow:hidden;"></div>
+    </div>
+    <!-- Controls -->
+    <div style="display:flex; align-items:center; justify-content:center; gap:16px; margin-top:16px;">
+      <button onclick="prevGallery()" style="background:none;border:1px solid rgba(255,255,255,0.15);color:var(--white);width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--white)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">‹</button>
+      <div id="galleryDots" style="display:flex;gap:6px;align-items:center;"></div>
+      <button onclick="nextGallery()" style="background:none;border:1px solid rgba(255,255,255,0.15);color:var(--white);width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--white)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">›</button>
+    </div>
   </div>
 </section>
 
 <script>
-  // BASE PHOTOS — always available
+  function getApprovedPhotos() {
+    try { return JSON.parse(localStorage.getItem('tt_approved_photos') || '[]'); } catch { return []; }
+  }
+  function getApprovedReviews() {
+    try { return JSON.parse(localStorage.getItem('tt_approved_reviews') || '[]'); } catch { return []; }
+  }
+
   const basePhotos = [
     'assets/gallery/photo1.jpg','assets/gallery/photo2.jpg','assets/gallery/photo3.jpg',
     'assets/gallery/photo4.jpg','assets/gallery/photo5.jpg','assets/gallery/photo6.jpg',
@@ -932,65 +941,60 @@
     'assets/gallery/photo16.jpg','assets/gallery/photo17.jpg','assets/gallery/photo18.jpg',
   ];
 
-  // COMMUNITY APPROVED PHOTOS — from localStorage (Supabase later)
-  function getApprovedPhotos() {
-    try {
-      return JSON.parse(localStorage.getItem('tt_approved_photos') || '[]');
-    } catch { return []; }
-  }
-
-  // COMMUNITY APPROVED REVIEWS — from localStorage (Supabase later)
-  function getApprovedReviews() {
-    try {
-      return JSON.parse(localStorage.getItem('tt_approved_reviews') || '[]');
-    } catch { return []; }
-  }
-
-  // Build slideshow from base + approved community photos
   const communityPhotos = getApprovedPhotos().map(p => p.dataUrl);
-  const allPhotos = [...basePhotos, ...communityPhotos];
-  const shuffled = allPhotos.sort(() => Math.random() - 0.5);
+  const allPhotos = [...basePhotos, ...communityPhotos].sort(() => Math.random() - 0.5);
 
-  const track = document.getElementById('slideshowTrack');
-  const dotsEl = document.getElementById('slideDots');
-  let currentSlide = 0;
-  let autoSlide;
+  // Split into groups of 3 — pad last group if needed
+  const groups = [];
+  for (let i = 0; i < allPhotos.length; i += 3) {
+    const group = allPhotos.slice(i, i + 3);
+    while (group.length < 3) {
+      // Fill with random photo already shown
+      group.push(allPhotos[Math.floor(Math.random() * i)]);
+    }
+    groups.push(group);
+  }
 
-  shuffled.forEach((src, i) => {
-    const slide = document.createElement('div');
-    slide.style.cssText = 'min-width:100%;height:420px;flex-shrink:0;';
-    const img = document.createElement('img');
-    img.src = src;
-    img.alt = 'Tap Tap Party';
-    img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
-    img.onerror = () => slide.style.display = 'none';
-    slide.appendChild(img);
-    track.appendChild(slide);
+  let currentGroup = 0;
 
-    const dot = document.createElement('span');
-    dot.style.cssText = `width:7px;height:7px;border-radius:50%;background:${i===0?'var(--white)':'rgba(255,255,255,0.3)'};cursor:pointer;transition:background 0.2s;`;
-    dot.onclick = () => goToSlide(i);
-    dotsEl.appendChild(dot);
-  });
-
-  function goToSlide(n) {
-    currentSlide = (n + shuffled.length) % shuffled.length;
-    track.style.transform = `translateX(-${currentSlide * 100}%)`;
-    document.querySelectorAll('#slideDots span').forEach((d, i) => {
-      d.style.background = i === currentSlide ? 'var(--white)' : 'rgba(255,255,255,0.3)';
+  function renderGroup(index) {
+    groups[index].forEach((src, i) => {
+      const el = document.getElementById('gthumb' + i);
+      if (!el) return;
+      el.innerHTML = '';
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = 'Tap Tap Party';
+      img.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:center top;display:block;';
+      img.onerror = () => el.style.display = 'none';
+      el.appendChild(img);
+    });
+    // Update dots
+    document.querySelectorAll('#galleryDots span').forEach((d, i) => {
+      d.style.background = i === index ? 'var(--white)' : 'rgba(255,255,255,0.3)';
     });
   }
 
-  function slideGallery(dir) {
-    clearInterval(autoSlide);
-    goToSlide(currentSlide + dir);
-    startAuto();
+  function nextGallery() {
+    currentGroup = (currentGroup + 1) % groups.length;
+    renderGroup(currentGroup);
   }
 
-  function startAuto() {
-    autoSlide = setInterval(() => goToSlide(currentSlide + 1), 4000);
+  function prevGallery() {
+    currentGroup = (currentGroup - 1 + groups.length) % groups.length;
+    renderGroup(currentGroup);
   }
-  startAuto();
+
+  // Build dots
+  const dotsEl = document.getElementById('galleryDots');
+  groups.forEach((_, i) => {
+    const dot = document.createElement('span');
+    dot.style.cssText = `width:7px;height:7px;border-radius:50%;cursor:pointer;transition:background 0.2s;background:${i===0?'var(--white)':'rgba(255,255,255,0.3)'};`;
+    dot.onclick = () => { currentGroup = i; renderGroup(i); };
+    dotsEl.appendChild(dot);
+  });
+
+  renderGroup(0);
 </script>
 
 <!-- REVIEWS SNEAK PEEK -->
@@ -1102,7 +1106,7 @@
         <div class="footer-col">
           <h4>Tickets</h4>
           <ul>
-            <li><a href="events.html">Buy Tickets</a></li>
+            <li><a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener">Buy Tickets</a></li>
             <li><a href="events.html">Upcoming Events</a></li>
           </ul>
         </div>
@@ -1111,7 +1115,11 @@
     <div class="footer-bottom">
       <p>© 2026 Tap Tap Party. All rights reserved.</p>
       <div class="socials">
-        <a href="https://instagram.com/itstaptapmiami" target="_blank" rel="noopener">IG</a>
+        <a href="https://instagram.com/itstaptapmiami" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+  <circle cx="12" cy="12" r="4"/>
+  <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/>
+</svg></a>
       </div>
     </div>
   </div>
@@ -1120,6 +1128,7 @@
 
 <script>
   function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
     const btn = document.querySelector('.nav-hamburger');
     menu.classList.toggle('open');
     btn.classList.toggle('is-open');

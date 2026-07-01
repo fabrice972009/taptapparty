@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — TapTap Party</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080808;
+      --red: #D42027;
+      --blue: #003A8C;
+      --gold: #F5C518;
+      --white: #F0EDE6;
+      --surface: #111111;
+      --surface2: #1A1A1A;
+      --muted: #666;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 16px; line-height: 1.6; }
+
+    .tt-stripe { display: flex; height: 6px; width: 100%; }
+    .tt-stripe span { flex: 1; }
+
+    nav {
+      position: fixed; top: 6px; left: 0; right: 0; z-index: 200;
+      background: rgba(8,8,8,0.88); backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px); padding: 0 48px; height: 64px;
+      display: grid; grid-template-columns: auto 1fr auto; align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .nav-logo { text-decoration: none; }
+    .nav-logo img { height: 40px; width: auto; display: block; mix-blend-mode: screen; }
+    .nav-links { display: flex; gap: 32px; list-style: none; align-items: center; justify-content: center; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 12px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--white); }
+    .nav-cta { background: var(--red); color: var(--white); padding: 10px 22px; border-radius: 2px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; transition: opacity 0.2s; }
+    .nav-cta:hover { opacity: 0.85; }
+    .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--white); border-radius: 1px; transition: transform 0.2s, opacity 0.2s; }
+    .nav-hamburger.is-open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .nav-hamburger.is-open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.is-open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    .mobile-menu {
+      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(8,8,8,0.98); z-index: 190;
+      flex-direction: column; align-items: center; justify-content: center; gap: 32px; padding: 80px 24px 40px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { font-family: 'Bebas Neue', sans-serif; font-size: 48px; letter-spacing: 4px; color: var(--white); text-decoration: none; }
+    .mobile-menu a:hover { color: var(--red); }
+    .mobile-menu .mobile-cta { background: var(--red); color: var(--white) !important; padding: 16px 48px; border-radius: 2px; font-size: 32px !important; }
+
+    /* HERO */
+    .about-hero {
+      padding: 160px 48px 100px;
+      max-width: 1000px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 80px; align-items: center;
+    }
+    .hero-eyebrow { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; font-weight: 500; }
+    .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(56px, 8vw, 96px); letter-spacing: 3px; line-height: 0.92; margin-bottom: 28px; }
+    .hero-title span { color: var(--red); }
+    .hero-body { color: rgba(240,237,230,0.65); font-size: 16px; line-height: 1.85; }
+    .hero-img { background: transparent; border-radius: 3px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .hero-img img { width: 100%; height: auto; object-fit: contain; mix-blend-mode: screen; }
+
+    /* SECTIONS */
+    .section { padding: 80px 48px; border-top: 1px solid rgba(255,255,255,0.05); }
+    .section-inner { max-width: 1000px; margin: 0 auto; }
+    .section-eyebrow { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; font-weight: 500; }
+    .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px, 5vw, 60px); letter-spacing: 2px; margin-bottom: 32px; }
+    .section-title span { color: var(--red); }
+    .section-body { color: rgba(240,237,230,0.65); font-size: 16px; line-height: 1.85; max-width: 680px; }
+    .section-body p { margin-bottom: 20px; }
+    .section-body p:last-child { margin-bottom: 0; }
+
+    /* ORIGIN — two col */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+    .pull-quote {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(28px, 3.5vw, 44px);
+      letter-spacing: 2px;
+      line-height: 1.1;
+      color: var(--white);
+      border-left: 3px solid var(--red);
+      padding-left: 24px;
+    }
+    .pull-quote em { color: var(--gold); font-style: normal; }
+
+    /* STATS ROW */
+    .stats-row {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 3px; overflow: hidden;
+      margin-top: 48px;
+    }
+    .stat-box {
+      padding: 32px 24px;
+      border-right: 1px solid rgba(255,255,255,0.07);
+      text-align: center;
+    }
+    .stat-box:last-child { border-right: none; }
+    .stat-box .num { font-family: 'Bebas Neue', sans-serif; font-size: 52px; color: var(--gold); line-height: 1; }
+    .stat-box .lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; margin-top: 4px; }
+
+    /* TEAM */
+    .team-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 40px; }
+    .team-card {
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 3px; padding: 28px;
+    }
+    .team-card .role { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .team-card .name { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 2px; margin-bottom: 10px; }
+    .team-card .bio { font-size: 14px; color: rgba(240,237,230,0.6); line-height: 1.7; }
+
+    /* CITIES */
+    .cities-flow { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
+    .city-pill {
+      padding: 9px 18px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 2px;
+      font-size: 13px; font-weight: 500;
+      color: rgba(240,237,230,0.7);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .city-pill:hover { border-color: var(--red); color: var(--white); }
+
+    /* BOUYON QUOTE */
+    .bouyon-section {
+      padding: 80px 48px;
+      background: var(--surface);
+      border-top: 1px solid rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      text-align: center;
+    }
+    .bouyon-quote {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(28px, 4vw, 52px);
+      letter-spacing: 3px;
+      line-height: 1.15;
+      max-width: 800px;
+      margin: 0 auto 16px;
+    }
+    .bouyon-quote span { color: var(--red); }
+    .bouyon-attr { font-size: 13px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+
+    /* CTA */
+    .about-cta {
+      padding: 80px 48px; text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .about-cta h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(40px, 6vw, 72px); letter-spacing: 3px; margin-bottom: 12px; }
+    .about-cta h2 span { color: var(--red); }
+    .about-cta p { color: var(--muted); font-size: 15px; margin-bottom: 32px; }
+    .btn-primary {
+      background: var(--red); color: var(--white);
+      padding: 15px 40px; font-size: 13px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      text-decoration: none; border-radius: 2px; display: inline-block;
+      transition: opacity 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+
+    /* FOOTER */
+    footer { padding: 40px 48px; border-top: 1px solid rgba(255,255,255,0.05); }
+    footer > div { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    footer p { font-size: 13px; color: var(--muted); }
+    .socials { display: flex; gap: 12px; }
+    .socials a { width: 36px; height: 36px; border: 1px solid rgba(255,255,255,0.1); border-radius: 2px; display: flex; align-items: center; justify-content: center; color: var(--muted); text-decoration: none; font-size: 12px; transition: border-color 0.2s, color 0.2s; }
+    .socials a:hover { border-color: var(--white); color: var(--white); }
+
+    @media (max-width: 800px) {
+      nav { padding: 0 20px; height: 56px; display: flex; justify-content: space-between; }
+      .nav-logo img { height: 32px; }
+      .nav-links { display: none; }
+      .nav-cta { display: none; }
+      .nav-hamburger { display: flex; z-index: 300; position: relative; margin-left: auto; }
+      .about-hero { grid-template-columns: 1fr; padding: 120px 20px 60px; gap: 40px; }
+      .hero-img { display: none; }
+      .section { padding: 56px 20px; }
+      .two-col { grid-template-columns: 1fr; gap: 32px; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .stat-box:nth-child(2) { border-right: none; }
+      .stat-box:nth-child(3) { border-top: 1px solid rgba(255,255,255,0.07); }
+      .stat-box:nth-child(4) { border-top: 1px solid rgba(255,255,255,0.07); }
+      .team-grid { grid-template-columns: 1fr; }
+      .bouyon-section { padding: 56px 20px; }
+      .about-cta { padding: 56px 20px; }
+      footer { padding: 32px 20px; }
+      footer > div { flex-direction: column; gap: 16px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html" onclick="closeMenu()">Home</a>
+  <a href="events.html" onclick="closeMenu()">Events</a>
+  <a href="community.html" onclick="closeMenu()">Community</a>
+  <a href="about.html" onclick="closeMenu()">About</a>
+  <a href="contact.html" onclick="closeMenu()">Contact</a>
+  <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" class="mobile-cta" onclick="closeMenu()">Get Tickets</a>
+</div>
+
+
+<nav>
+  <a href="index.html" class="nav-logo"><img src="logo.png" alt="Tap Tap Party"></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="events.html">Events</a></li>
+    <li><a href="community.html">Community</a></li>
+    <li><a href="about.html" class="active">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" class="nav-cta">Get Tickets</a>
+  <button class="nav-hamburger" aria-label="Open menu" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Fixed stripe below nav -->
+<div class="tt-stripe" style="position:fixed; top:70px; left:0; right:0; z-index:199;" aria-hidden="true">
+  <span style="background:#003A8C"></span>
+  <span style="background:#D42027"></span>
+</div>
+
+<!-- HERO -->
+<div class="about-hero">
+  <div>
+    <p class="hero-eyebrow">Our Story</p>
+    <h1 class="hero-title">BORN FROM<br>THE<br><span>CULTURE.</span></h1>
+    <p class="hero-body">
+      TapTap started with a simple question: why isn't there a party made for Haitians? Three years later, the answer has traveled to over 10 cities, sold out every first night in every new market, and built one of the most vibrant Haitian cultural experiences in the world.
+    </p>
+  </div>
+  <div class="hero-img">
+    <img src="emblem.png" alt="TapTap emblem">
+  </div>
+</div>
+
+
+<!-- ORIGIN -->
+<section class="section">
+  <div class="section-inner">
+    <p class="section-eyebrow">How It Started</p>
+    <div class="two-col">
+      <div>
+        <h2 class="section-title">THE IDEA OF<br>THE <span>TAP TAP</span></h2>
+        <div class="section-body">
+          <p>
+            It started with a phone call. DJ Bullet and his partner Jones got a call from Jason — who runs Shrine on Saturdays — about a growing wave of Haitians showing up every week looking for something that felt like home. The question became clear: why isn't there a party built for us?
+          </p>
+          <p>
+            Together, they came up with TapTap — named after the iconic Haitian tap tap bus that carries people from point A to point B. The idea was simple: once you walk in, you're on the bus. A packed, electric environment where we take you on a ride from the first beat to the very last drop.
+          </p>
+          <p>
+            What started in Miami quickly became something much bigger — a movement that Haitians across the world had been waiting for without knowing it.
+          </p>
+        </div>
+      </div>
+      <div class="pull-quote">
+        "ONCE YOU COME IN, WE'RE TAKING YOU ON A <em>RIDE</em> FROM WHEN YOU ARRIVE ALL THE WAY TO THE END."
+        <div style="margin-top:20px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;letter-spacing:1px;color:var(--muted);">— DJ BULLET</div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-box"><div class="num">3+</div><div class="lbl">Years Running</div></div>
+      <div class="stat-box"><div class="num">50+</div><div class="lbl">Events</div></div>
+      <div class="stat-box"><div class="num">10+</div><div class="lbl">Cities</div></div>
+      <div class="stat-box"><div class="num">1</div><div class="lbl">🇭🇹 Culture</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- THE EXPERIENCE -->
+<section class="section" style="background:var(--surface);">
+  <div class="section-inner">
+    <p class="section-eyebrow">The Experience</p>
+    <div class="two-col">
+      <div>
+        <h2 class="section-title">NOT YOUR<br>TYPICAL <span>PARTY.</span></h2>
+        <div class="section-body">
+          <p>
+            TapTap was built on the idea that the Haitian experience deserved better venues, better production, and a bigger stage. We moved away from the typical Haitian restaurant or fading club and into spaces that elevated the entire experience — big LED walls, live stages, cabanas, and rooms that felt like events.
+          </p>
+          <p>
+            The music is the heart of it all. Kompa, labadai, afrobeats, hip-hop — whatever brings people together. TapTap isn't just a Haitian party. It's a Caribbean party, an everybody party. The culture is Haitian, but the doors are open to all.
+          </p>
+        </div>
+      </div>
+      <div>
+        <h2 class="section-title">THE<br><span>MUSIC.</span></h2>
+        <div class="section-body">
+          <p>
+            DJ Bullet built a family of DJs who work together to create a journey through the night — the music builds, the energy rises, the crowd moves as one. From Paris to New York, from Orlando to Toronto, every night features a curated lineup that honors Haitian sound while embracing the full Caribbean spectrum.
+          </p>
+          <p>
+            And wherever TapTap travels, we bring in local Haitian DJs to perform with us — because support and unity are part of what this is about.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM / PERFORMERS -->
+<section class="section">
+  <div class="section-inner">
+    <p class="section-eyebrow">Notable Past Performers</p>
+    <h2 class="section-title">DJ BULLET<br><span>&amp; FRIENDS.</span></h2>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:48px; margin-bottom:56px;">
+
+      <!-- DJs & Hosts -->
+      <div>
+        <p style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;font-weight:500;">DJs & Hosts</p>
+        <div style="display:flex;flex-direction:column;gap:0;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+            <span style="font-size:15px;font-weight:500;">DJ Bullet</span>
+            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Founder · DJ</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+            <span style="font-size:15px;font-weight:500;">P-Dous</span>
+            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Host</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+            <span style="font-size:15px;font-weight:500;">DJ K9</span>
+            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">DJ</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+            <span style="font-size:15px;font-weight:500;">Yo! Babou</span>
+            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">DJ</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+            <span style="font-size:15px;font-weight:500;">Ted Bounce</span>
+            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">DJ</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+            <span style="font-size:15px;font-weight:500;">Magic Kenny</span>
+            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">DJ</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+            <span style="font-size:15px;font-weight:500;">DJ Stakz</span>
+            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">DJ</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;">
+            <span style="font-size:15px;font-weight:500;">Jason Panton</span>
+            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">DJ</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notable Artists -->
+      <div>
+        <p style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;font-weight:500;">Notable Artists</p>
+        <div style="display:flex;flex-direction:column;gap:0;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+            <span style="font-size:15px;font-weight:500;">Fatima</span>
+            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Artist</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+            <span style="font-size:15px;font-weight:500;">Arly Larivière</span>
+            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Artist</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+            <span style="font-size:15px;font-weight:500;">Richard Cave</span>
+            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Artist</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+            <span style="font-size:15px;font-weight:500;">Alan Cave</span>
+            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Artist</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+            <span style="font-size:15px;font-weight:500;">Tonymix</span>
+            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Artist</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+            <span style="font-size:15px;font-weight:500;">Baky</span>
+            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Artist</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;">
+            <span style="font-size:15px;font-weight:500;">Skyla Tylaa</span>
+            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Artist</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- BOUYON QUOTE -->
+<div class="bouyon-section">
+  <h2 class="bouyon-quote">
+    "EVERYBODY PLAYS A ROLE IN BRINGING SOMETHING TO THIS POT — TO THIS <span>BOUYON.</span> AND ADDING THAT FLAVOR."
+  </h2>
+  <p class="bouyon-attr">— DJ Bullet, TapTap 3 Year Anniversary</p>
+</div>
+
+<!-- CITIES -->
+<section class="section" style="background:var(--surface);">
+  <div class="section-inner">
+    <p class="section-eyebrow">The Tour</p>
+    <h2 class="section-title">WHERE WE'VE<br><span>BEEN.</span></h2>
+    <div class="section-body">
+      <p>Every first night in a new city has sold out. From Miami to Paris, from Toronto to Atlanta — wherever Haitians are, TapTap shows up. The support of the diaspora across the world is what drives this forward.</p>
+    </div>
+    <div class="cities-flow" style="flex-wrap:nowrap; overflow-x:auto; padding-bottom:4px;">
+      <span class="city-pill">🇺🇸 Miami</span>
+      <span class="city-pill">🇺🇸 Atlanta</span>
+      <span class="city-pill">🇺🇸 New York</span>
+      <span class="city-pill">🇺🇸 Boston</span>
+      <span class="city-pill">🇺🇸 Philadelphia</span>
+      <span class="city-pill">🇨🇦 Toronto</span>
+      <span class="city-pill">🇨🇦 Montreal</span>
+      <span class="city-pill">🇫🇷 Paris</span>
+      <span class="city-pill">🇬🇧 London</span>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="about-cta">
+  <h2>JOIN US ON<br>THE <span>NEXT RIDE.</span></h2>
+  <p>Once a month. Every month. 🇭🇹</p>
+  <a href="events.html" class="btn-primary">See Upcoming Events</a>
+</div>
+
+
+<div class="tt-stripe" aria-hidden="true">
+  <span style="background:#003A8C"></span>
+  <span style="background:#D42027"></span>
+</div>
+
+<footer>
+  <div>
+    <img src="logo.png" alt="Tap Tap Party" style="height:32px;width:auto;mix-blend-mode:screen;">
+    <p>© 2026 Tap Tap Party. All rights reserved.</p>
+    <div class="socials">
+      <a href="https://instagram.com/itstaptapmiami" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <circle cx="12" cy="12" r="4"/>
+          <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    const btn = document.querySelector('.nav-hamburger');
+    menu.classList.toggle('open');
+    btn.classList.toggle('is-open');
+    document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+  }
+  function closeMenu() {
+    document.getElementById('mobileMenu').classList.remove('open');
+    document.querySelector('.nav-hamburger').classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+</script>
+
+</body>
+</html>
