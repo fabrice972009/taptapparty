@@ -493,7 +493,7 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 800px) {
-      nav { padding: 0 20px; height: 56px; top: 6px; display: flex; justify-content: space-between; align-items: center; }
+      nav { padding: 0 20px; height: 56px; top: 6px; display: flex; justify-content: space-between; }
       .nav-logo img { height: 32px; }
       .nav-links { display: none; }
       .nav-cta { display: none; }
@@ -533,21 +533,13 @@
         border-right: 1px solid rgba(255,255,255,0.1);
         border-bottom: none;
         border-radius: 2px 2px 0 0;
-  
-      /* ── MOBILE FOOTER ── */
-      footer { padding: 32px 20px 24px; }
-      .footer-inner { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0; }
-      .footer-top { flex-direction: column; align-items: center; gap: 0; width: 100%; }
-      .footer-top > div:first-child { display: flex; flex-direction: column; align-items: center; margin-bottom: 12px; }
-      .footer-top > div:first-child img { height: 28px !important; mix-blend-mode: screen; }
-      .footer-cols { display: none !important; }
-      .footer-mobile-links { display: flex !important; }
-      .footer-mobile-tickets { display: flex !important; }
-      .footer-bottom { flex-direction: column; gap: 10px; align-items: center; margin-top: 20px; }
-    }
+      }
       .newsletter-form button { border-radius: 0 0 2px 2px; padding: 14px; }
 
-
+      footer { padding: 40px 20px 28px; }
+      .footer-top { flex-direction: column; gap: 36px; align-items: center; text-align: center; }
+      .footer-cols { flex-direction: column; gap: 28px; align-items: center; text-align: center; }
+      .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
 
       .sched-pill { font-size: 12px; padding: 8px 14px; }
     }
@@ -568,7 +560,7 @@
     .mobile-menu.open { display: flex; }
     .mobile-menu a {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 24px;
+      font-size: 48px;
       letter-spacing: 4px;
       color: var(--white);
       text-decoration: none;
@@ -581,7 +573,7 @@
       color: var(--white) !important;
       padding: 16px 48px;
       border-radius: 2px;
-      font-size: 16px !important;
+      font-size: 32px !important;
     }
     .mobile-menu .mobile-socials {
       margin-top: 16px;
@@ -1119,20 +1111,22 @@
           </ul>
         </div>
       </div>
-    <!-- Mobile footer nav (hidden on desktop) -->
-    <div class="footer-mobile-links" style="display:none; flex-wrap:wrap; justify-content:center; gap:8px 12px; margin:4px 0 12px;">
-      <a href="events.html" style="font-size:13px;color:rgba(240,237,230,0.65);text-decoration:none;">Events</a>
-      <span style="color:rgba(255,255,255,0.2);">|</span>
-      <a href="community.html" style="font-size:13px;color:rgba(240,237,230,0.65);text-decoration:none;">Community</a>
-      <span style="color:rgba(255,255,255,0.2);">|</span>
-      <a href="about.html" style="font-size:13px;color:rgba(240,237,230,0.65);text-decoration:none;">About</a>
-      <span style="color:rgba(255,255,255,0.2);">|</span>
-      <a href="contact.html" style="font-size:13px;color:rgba(240,237,230,0.65);text-decoration:none;">Contact</a>
     </div>
-    <div class="footer-mobile-tickets" style="display:none; justify-content:center; align-items:center; gap:14px; margin-bottom:4px;">
-      <a href="events.html" style="font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(240,237,230,0.7);text-decoration:none;">Upcoming Events</a>
+
+    <!-- Mobile footer links (hidden on desktop via CSS) -->
+    <div class="footer-mobile-links" style="display:none; flex-wrap:wrap; justify-content:center; gap:8px 14px; margin: 12px 0 8px;">
+      <a href="events.html" style="font-size:13px;color:rgba(240,237,230,0.6);text-decoration:none;">Events</a>
       <span style="color:rgba(255,255,255,0.2);">|</span>
-      <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" style="font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#D42027;text-decoration:none;">Buy Tickets</a>
+      <a href="community.html" style="font-size:13px;color:rgba(240,237,230,0.6);text-decoration:none;">Community</a>
+      <span style="color:rgba(255,255,255,0.2);">|</span>
+      <a href="about.html" style="font-size:13px;color:rgba(240,237,230,0.6);text-decoration:none;">About</a>
+      <span style="color:rgba(255,255,255,0.2);">|</span>
+      <a href="contact.html" style="font-size:13px;color:rgba(240,237,230,0.6);text-decoration:none;">Contact</a>
+    </div>
+    <div class="footer-mobile-tickets" style="display:none; justify-content:center; align-items:center; gap:14px; margin-bottom: 8px;">
+      <a href="events.html" style="font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(240,237,230,0.7);text-decoration:none;">Upcoming Events</a>
+      <span style="color:rgba(255,255,255,0.2);">|</span>
+      <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" style="font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#D42027;text-decoration:none;">Buy Tickets</a>
     </div>
     <div class="footer-bottom">
       <p>© 2026 Tap Tap Party. All rights reserved.</p>
