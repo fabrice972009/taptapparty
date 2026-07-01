@@ -434,61 +434,7 @@
       padding: 64px 48px 40px;
       border-top: 1px solid rgba(255,255,255,0.05);
     }
-    .footer-inner { max-width: 1000px; margin: 0 auto; }
-    .footer-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 56px;
-    }
-    .footer-logo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 32px;
-      letter-spacing: 4px;
-    }
-    .footer-logo span { color: var(--gold); }
-    .footer-tag { font-size: 13px; color: var(--muted); margin-top: 6px; }
-    .footer-cols { display: flex; gap: 64px; }
-    .footer-col h4 {
-      font-size: 11px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 18px;
-      font-weight: 500;
-    }
-    .footer-col ul { list-style: none; }
-    .footer-col li { margin-bottom: 10px; }
-    .footer-col a {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 14px;
-      transition: color 0.2s;
-    }
-    .footer-col a:hover { color: var(--white); }
-    .footer-bottom {
-      border-top: 1px solid rgba(255,255,255,0.05);
-      padding-top: 28px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .footer-bottom p { font-size: 13px; color: var(--muted); }
-    .socials { display: flex; gap: 12px; }
-    .socials a {
-      width: 36px; height: 36px;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 2px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 12px;
-      font-weight: 600;
-      transition: border-color 0.2s, color 0.2s;
-    }
-    .socials a:hover { border-color: var(--white); color: var(--white); }
+
 
     /* ── RESPONSIVE ── */
     @media (max-width: 800px) {
@@ -665,7 +611,7 @@
 
 <!-- Hero -->
 <section class="hero">
-  <video class="hero-video" autoplay muted loop playsinline>
+  <video class="hero-video" autoplay muted loop playsinline webkit-playsinline x-webkit-airplay="deny">
     <source src="hero.mp4" type="video/mp4">
   </video>
   <div class="hero-overlay"></div>
@@ -688,7 +634,7 @@
   <p style="font-family:'DM Sans',sans-serif; font-size:clamp(14px,1.8vw,18px); letter-spacing:3px; color:rgba(240,237,230,0.6); font-weight:500;">Music. People. Culture. 🇭🇹</p>
 </div>
 <section class="vibe-section">
-  <video class="vibe-video" id="vibeVideo" autoplay muted loop playsinline>
+  <video class="vibe-video" id="vibeVideo" autoplay muted loop playsinline webkit-playsinline x-webkit-airplay="deny">
     <source src="vibe.mp4" type="video/mp4">
   </video>
   <div class="vibe-overlay"></div>
