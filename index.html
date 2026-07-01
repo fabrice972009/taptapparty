@@ -3,19 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TapTap Party — DJ Bullet & Friends | Haitian Culture, Music & Art</title>
-  <meta name="description" content="Once a month. Haitian music, food, art & people. DJ Bullet & Friends.">
-  <meta property="og:title" content="TapTap Party — DJ Bullet & Friends | Haitian Culture, Music & Art">
+  <title>TapTap — The Ultimate Caribbean Nightlife Experience</title>
+  <meta name="description" content="TapTap — The Ultimate Caribbean Nightlife Experience. DJ Bullet & Friends present a monthly Haitian culture experience. Music, food, art & people. Miami, New York, London and beyond.">
+  <meta property="og:title" content="TapTap — The Ultimate Caribbean Nightlife Experience">
   <meta property="og:description" content="Once a month. Haitian music, food, art & people. DJ Bullet & Friends.">
-  <meta property="og:image" content="https://taptapparty.vercel.app/og-image.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://taptapparty.vercel.app">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="TapTap Party — DJ Bullet & Friends | Haitian Culture, Music & Art">
-  <meta name="twitter:description" content="Once a month. Haitian music, food, art & people. DJ Bullet & Friends.">
-  <meta name="twitter:image" content="https://taptapparty.vercel.app/og-image.png">
+  <meta property="og:image" content="logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -547,9 +539,10 @@
     /* ── FOOTER ── */
     .site-footer { border-top: 1px solid rgba(255,255,255,0.05); padding: 56px 48px 36px; }
     .site-footer-inner { max-width: 1000px; margin: 0 auto; }
+    .footer-top-wrap { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
     .footer-logo { height: 36px; width: auto; display: block; mix-blend-mode: screen; margin-bottom: 6px; }
-    .footer-tagline { font-size: 13px; color: #666; margin-bottom: 40px; }
-    .footer-desktop-cols { display: flex; gap: 64px; margin-bottom: 40px; }
+    .footer-tagline { font-size: 13px; color: #666; }
+    .footer-desktop-cols { display: flex; gap: 64px; }
     .footer-dcol h4 { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #F5C518; margin-bottom: 16px; font-weight: 500; }
     .footer-dcol ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
     .footer-dcol a { color: #666; text-decoration: none; font-size: 14px; transition: color 0.2s; }
@@ -564,6 +557,7 @@
       .site-footer { padding: 32px 20px 24px; }
       .footer-tagline { margin-bottom: 20px; }
       .site-footer-inner { display: flex; flex-direction: column; align-items: center; text-align: center; }
+      .footer-top-wrap { flex-direction: column; align-items: center; }
       .footer-logo { margin: 0 auto 6px; }
       .footer-desktop-cols { display: none; }
       .footer-mobile-row { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 20px; }
@@ -915,13 +909,20 @@
     try { return JSON.parse(localStorage.getItem('tt_approved_reviews') || '[]'); } catch { return []; }
   }
 
-  const basePhotos = [
+    const basePhotos = [
     'assets/gallery/photo1.jpg','assets/gallery/photo2.jpg','assets/gallery/photo3.jpg',
     'assets/gallery/photo4.jpg','assets/gallery/photo5.jpg','assets/gallery/photo6.jpg',
     'assets/gallery/photo7.jpg','assets/gallery/photo8.jpg','assets/gallery/photo9.jpg',
     'assets/gallery/photo10.jpg','assets/gallery/photo11.jpg','assets/gallery/photo12.jpg',
     'assets/gallery/photo13.jpg','assets/gallery/photo14.jpg','assets/gallery/photo15.jpg',
     'assets/gallery/photo16.jpg','assets/gallery/photo17.jpg','assets/gallery/photo18.jpg',
+    'assets/gallery/photo19.jpg','assets/gallery/photo20.jpg','assets/gallery/photo21.jpg',
+    'assets/gallery/photo22.jpg','assets/gallery/photo23.jpg','assets/gallery/photo24.jpg',
+    'assets/gallery/photo25.jpg','assets/gallery/photo26.jpg','assets/gallery/photo27.jpg',
+    'assets/gallery/photo28.jpg','assets/gallery/photo29.jpg','assets/gallery/photo30.jpg',
+    'assets/gallery/photo31.jpg','assets/gallery/photo32.jpg','assets/gallery/photo33.jpg',
+    'assets/gallery/photo34.jpg','assets/gallery/photo35.jpg','assets/gallery/photo36.jpg',
+    'assets/gallery/photo37.jpg','assets/gallery/photo38.jpg','assets/gallery/photo39.jpg',
   ];
 
   const communityPhotos = getApprovedPhotos().map(p => p.dataUrl);
@@ -1024,7 +1025,7 @@
       <div style="background:var(--surface2);border:1px solid rgba(255,255,255,0.06);border-radius:3px;padding:32px;display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start;">
         <div style="width:48px;height:48px;border-radius:50%;background:${r.color};display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;color:${r.color==='var(--gold)'?'#080808':'var(--white)'};flex-shrink:0;">${r.initials}</div>
         <div>
-          <div style="color:var(--gold);font-size:15px;margin-bottom:10px;">${'★'.repeat(r.stars)}</div>
+          <div style="color:var(--gold);font-size:15px;margin-bottom:10px;">${'★'.repeat(Math.floor(r.stars))}${r.stars % 1 ? '½' : ''}</div>
           <p style="font-size:15px;color:rgba(240,237,230,0.8);line-height:1.75;margin-bottom:12px;font-style:italic;">${r.text}</p>
           <p style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">${r.name} · ${r.event}</p>
         </div>
@@ -1087,27 +1088,32 @@
 
 <footer class="site-footer">
   <div class="site-footer-inner">
-    <img src="logo.png" alt="Tap Tap Party" class="footer-logo">
-    <p class="footer-tagline">Once a month. Every month. 🇭🇹</p>
+    <div class="footer-top-wrap">
+      <div>
+        <img src="logo.png" alt="Tap Tap Party" class="footer-logo">
+        <p class="footer-tagline">Once a month. Every month. 🇭🇹</p>
+      </div>
+      <!-- Desktop columns -->
+      <div class="footer-desktop-cols">
+        <div class="footer-dcol">
+          <h4>Pages</h4>
+          <ul>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="community.html">Community</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-dcol">
+          <h4>Tickets</h4>
+          <ul>
+            <li><a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener">Buy Tickets</a></li>
+            <li><a href="events.html">Upcoming Events</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
 
-    <!-- Desktop columns -->
-    <div class="footer-desktop-cols">
-      <div class="footer-dcol">
-        <h4>Pages</h4>
-        <ul>
-          <li><a href="events.html">Events</a></li>
-          <li><a href="community.html">Community</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="contact.html">Contact</a></li>
-        </ul>
-      </div>
-      <div class="footer-dcol">
-        <h4>Tickets</h4>
-        <ul>
-          <li><a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener">Buy Tickets</a></li>
-          <li><a href="events.html">Upcoming Events</a></li>
-        </ul>
-      </div>
     </div>
 
     <!-- Mobile links -->
