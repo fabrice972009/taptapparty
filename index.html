@@ -901,10 +901,11 @@
     <a href="community.html" class="btn-sm-outline">Share Your Photo →</a>
   </div>
   <div style="max-width:1000px; margin:0 auto; position:relative;">
-    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; border-radius:3px; overflow:hidden;" id="galleryThree">
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:8px; border-radius:3px; overflow:hidden;" id="galleryThree">
       <div id="gthumb0" style="aspect-ratio:3/4; background:var(--surface2); overflow:hidden;"></div>
       <div id="gthumb1" style="aspect-ratio:3/4; background:var(--surface2); overflow:hidden;"></div>
       <div id="gthumb2" style="aspect-ratio:3/4; background:var(--surface2); overflow:hidden;"></div>
+      <div id="gthumb3" style="aspect-ratio:3/4; background:var(--surface2); overflow:hidden;"></div>
     </div>
     <!-- Controls -->
     <div style="display:flex; align-items:center; justify-content:center; gap:16px; margin-top:16px;">
@@ -1030,13 +1031,13 @@
   const communityPhotos = getApprovedPhotos().map(p => p.dataUrl);
   const allPhotos = [...basePhotos, ...communityPhotos].sort(() => Math.random() - 0.5);
 
-  // Split into groups of 3 — pad last group if needed
+  // Split into groups of 4 — pad last group if needed
   const groups = [];
-  for (let i = 0; i < allPhotos.length; i += 3) {
-    const group = allPhotos.slice(i, i + 3);
-    while (group.length < 3) {
+  for (let i = 0; i < allPhotos.length; i += 4) {
+    const group = allPhotos.slice(i, i + 4);
+    while (group.length < 4) {
       // Fill with random photo already shown
-      group.push(allPhotos[Math.floor(Math.random() * i)]);
+      group.push(allPhotos[Math.floor(Math.random() * Math.max(i, 1))]);
     }
     groups.push(group);
   }
