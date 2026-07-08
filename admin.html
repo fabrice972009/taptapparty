@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TapTap Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080808;
+      --surface: #111;
+      --surface2: #1a1a1a;
+      --red: #D42027;
+      --blue: #003A8C;
+      --gold: #F5C518;
+      --white: #F0EDE6;
+      --muted: #666;
+      --green: #2DB358;
+      --sidebar: 220px;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:var(--bg); color:var(--white); font-family:'DM Sans',sans-serif; font-size:14px; }
+
+    /* LOGIN */
+    #loginScreen {
+      min-height:100vh; display:flex; align-items:center; justify-content:center;
+      background:var(--bg);
+    }
+    .login-box {
+      background:var(--surface); border:1px solid rgba(255,255,255,0.07);
+      border-radius:4px; padding:48px 40px; width:100%; max-width:400px;
+    }
+    .login-logo { font-family:'DM Sans',sans-serif; font-weight:700; font-size:24px; letter-spacing:2px; color:var(--gold); margin-bottom:8px; }
+    .login-sub { font-size:12px; color:var(--muted); margin-bottom:32px; }
+    .login-error { background:rgba(212,32,39,0.1); border:1px solid rgba(212,32,39,0.3); color:#ff6b6b; padding:10px 14px; border-radius:3px; font-size:13px; margin-bottom:16px; display:none; }
+    .field-label { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+    .field-input { width:100%; background:var(--surface2); border:1px solid rgba(255,255,255,0.08); color:var(--white); padding:11px 14px; font-size:14px; font-family:'DM Sans',sans-serif; border-radius:2px; outline:none; transition:border-color 0.2s; margin-bottom:16px; }
+    .field-input:focus { border-color:rgba(255,255,255,0.2); }
+    .btn-login { width:100%; background:var(--red); color:var(--white); border:none; padding:13px; font-size:13px; font-weight:600; letter-spacing:1px; cursor:pointer; border-radius:2px; font-family:'DM Sans',sans-serif; transition:opacity 0.2s; }
+    .btn-login:hover { opacity:0.85; }
+
+    /* LAYOUT */
+    #appScreen { display:none; min-height:100vh; }
+    .sidebar {
+      position:fixed; top:0; left:0; bottom:0; width:var(--sidebar);
+      background:var(--surface); border-right:1px solid rgba(255,255,255,0.06);
+      display:flex; flex-direction:column; z-index:100;
+    }
+    .sidebar-brand { padding:24px 20px; border-bottom:1px solid rgba(255,255,255,0.06); }
+    .sidebar-brand-name { font-weight:700; font-size:15px; color:var(--gold); letter-spacing:1px; }
+    .sidebar-brand-sub { font-size:11px; color:var(--muted); margin-top:2px; }
+    .sidebar-nav { flex:1; padding:16px 0; }
+    .nav-item {
+      display:flex; align-items:center; gap:10px; padding:11px 20px;
+      color:var(--muted); cursor:pointer; transition:color 0.2s, background 0.2s;
+      font-size:13px; font-weight:500; border-left:2px solid transparent;
+    }
+    .nav-item:hover { color:var(--white); background:rgba(255,255,255,0.03); }
+    .nav-item.active { color:var(--white); border-left-color:var(--red); background:rgba(255,255,255,0.04); }
+    .nav-item .badge {
+      margin-left:auto; background:var(--red); color:var(--white);
+      font-size:10px; font-weight:700; padding:2px 7px; border-radius:20px; min-width:20px; text-align:center;
+    }
+    .nav-icon { font-size:16px; width:18px; text-align:center; }
+    .sidebar-footer { padding:16px 20px; border-top:1px solid rgba(255,255,255,0.06); }
+    .btn-logout { width:100%; background:none; border:1px solid rgba(255,255,255,0.1); color:var(--muted); padding:9px; font-size:12px; font-weight:600; letter-spacing:1px; cursor:pointer; border-radius:2px; font-family:'DM Sans',sans-serif; transition:all 0.2s; }
+    .btn-logout:hover { border-color:var(--red); color:var(--red); }
+
+    /* MAIN */
+    .main { margin-left:var(--sidebar); padding:32px 40px; min-height:100vh; }
+    .page { display:none; }
+    .page.active { display:block; }
+    .page-title { font-size:22px; font-weight:700; margin-bottom:4px; }
+    .page-sub { font-size:13px; color:var(--muted); margin-bottom:32px; }
+
+    /* STATS CARDS */
+    .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:32px; }
+    .stat-card { background:var(--surface); border:1px solid rgba(255,255,255,0.06); border-radius:3px; padding:20px; }
+    .stat-card .num { font-size:32px; font-weight:700; color:var(--gold); line-height:1; }
+    .stat-card .lbl { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-top:4px; }
+
+    /* TABLES / CARDS */
+    .section-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+    .section-head h3 { font-size:15px; font-weight:600; }
+    .empty-state { background:var(--surface); border:1px solid rgba(255,255,255,0.06); border-radius:3px; padding:48px; text-align:center; color:var(--muted); font-size:13px; }
+    .item-card { background:var(--surface); border:1px solid rgba(255,255,255,0.06); border-radius:3px; padding:16px 20px; margin-bottom:8px; display:flex; gap:16px; align-items:flex-start; }
+    .item-photo { width:64px; height:64px; object-fit:cover; border-radius:2px; flex-shrink:0; background:var(--surface2); }
+    .item-info { flex:1; min-width:0; }
+    .item-name { font-weight:600; font-size:13px; margin-bottom:2px; }
+    .item-meta { font-size:12px; color:var(--muted); margin-bottom:6px; }
+    .item-text { font-size:13px; color:rgba(240,237,230,0.7); line-height:1.5; }
+    .item-actions { display:flex; gap:8px; align-items:center; flex-shrink:0; }
+    .btn-approve { background:rgba(45,179,88,0.12); border:1px solid rgba(45,179,88,0.3); color:var(--green); padding:7px 14px; font-size:12px; font-weight:600; cursor:pointer; border-radius:2px; font-family:'DM Sans',sans-serif; transition:all 0.2s; }
+    .btn-approve:hover { background:rgba(45,179,88,0.2); }
+    .btn-reject { background:rgba(212,32,39,0.1); border:1px solid rgba(212,32,39,0.3); color:#ff6b6b; padding:7px 14px; font-size:12px; font-weight:600; cursor:pointer; border-radius:2px; font-family:'DM Sans',sans-serif; transition:all 0.2s; }
+    .btn-reject:hover { background:rgba(212,32,39,0.2); }
+    .btn-remove { background:none; border:1px solid rgba(255,255,255,0.1); color:var(--muted); padding:7px 14px; font-size:12px; font-weight:600; cursor:pointer; border-radius:2px; font-family:'DM Sans',sans-serif; transition:all 0.2s; }
+    .btn-remove:hover { border-color:var(--red); color:var(--red); }
+    .stars { color:var(--gold); font-size:13px; }
+
+    /* EVENTS */
+    .event-form { background:var(--surface); border:1px solid rgba(255,255,255,0.06); border-radius:3px; padding:24px; margin-bottom:24px; }
+    .form-row2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .form-group { margin-bottom:14px; }
+    .form-group label { display:block; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+    .form-group input, .form-group select, .form-group textarea { width:100%; background:var(--surface2); border:1px solid rgba(255,255,255,0.08); color:var(--white); padding:10px 14px; font-size:13px; font-family:'DM Sans',sans-serif; border-radius:2px; outline:none; transition:border-color 0.2s; }
+    .form-group input:focus, .form-group select:focus { border-color:rgba(255,255,255,0.2); }
+    .form-group select option { background:var(--surface2); }
+    .btn-add { background:var(--red); color:var(--white); border:none; padding:10px 24px; font-size:12px; font-weight:600; letter-spacing:1px; cursor:pointer; border-radius:2px; font-family:'DM Sans',sans-serif; }
+    .event-row { background:var(--surface); border:1px solid rgba(255,255,255,0.06); border-radius:3px; padding:14px 20px; margin-bottom:8px; display:flex; align-items:center; gap:16px; }
+    .event-row .next-badge { background:var(--red); color:var(--white); font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; }
+    .event-date { font-size:12px; color:var(--gold); font-weight:600; width:80px; flex-shrink:0; }
+    .event-name { flex:1; font-weight:600; font-size:13px; }
+    .event-city { font-size:12px; color:var(--muted); }
+    .btn-setnext { background:none; border:1px solid rgba(245,197,24,0.3); color:var(--gold); padding:5px 10px; font-size:11px; cursor:pointer; border-radius:2px; font-family:'DM Sans',sans-serif; }
+    .btn-setnext:hover { background:rgba(245,197,24,0.1); }
+
+    /* NEWSLETTER */
+    .sub-row { background:var(--surface); border:1px solid rgba(255,255,255,0.06); border-radius:3px; padding:12px 20px; margin-bottom:6px; display:flex; align-items:center; justify-content:space-between; }
+    .sub-email { font-size:13px; font-weight:500; }
+    .sub-date { font-size:11px; color:var(--muted); }
+    .btn-export { background:none; border:1px solid rgba(255,255,255,0.1); color:var(--white); padding:9px 20px; font-size:12px; font-weight:600; cursor:pointer; border-radius:2px; font-family:'DM Sans',sans-serif; transition:all 0.2s; }
+    .btn-export:hover { border-color:var(--white); }
+
+    /* TOAST */
+    .toast { position:fixed; bottom:24px; right:24px; background:var(--surface); border:1px solid rgba(255,255,255,0.1); border-radius:3px; padding:12px 20px; font-size:13px; font-weight:500; z-index:999; opacity:0; transition:opacity 0.3s; pointer-events:none; }
+    .toast.show { opacity:1; }
+    .toast.success { border-color:rgba(45,179,88,0.4); color:var(--green); }
+    .toast.error { border-color:rgba(212,32,39,0.4); color:#ff6b6b; }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">TAP TAP</div>
+    <div class="login-sub">Admin Dashboard</div>
+    <div class="login-error" id="loginError">Invalid email or password.</div>
+    <div class="field-label">Email</div>
+    <input class="field-input" type="email" id="loginEmail" placeholder="admin@itstaptap.com">
+    <div class="field-label">Password</div>
+    <input class="field-input" type="password" id="loginPassword" placeholder="••••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="btn-login" onclick="doLogin()">Sign In</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="appScreen">
+  <div class="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-name">TAP TAP</div>
+      <div class="sidebar-brand-sub">Admin Panel</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-item active" onclick="showPage('dashboard')"><span class="nav-icon">📊</span> Dashboard</div>
+      <div class="nav-item" onclick="showPage('pending')" id="navPending"><span class="nav-icon">⏳</span> Pending <span class="badge" id="pendingBadge">0</span></div>
+      <div class="nav-item" onclick="showPage('approved')"><span class="nav-icon">✅</span> Approved</div>
+      <div class="nav-item" onclick="showPage('events')"><span class="nav-icon">📅</span> Events</div>
+      <div class="nav-item" onclick="showPage('newsletter')"><span class="nav-icon">📧</span> Newsletter</div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="logout()">Sign Out</button>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="pageDashboard">
+      <div class="page-title">Dashboard</div>
+      <div class="page-sub">Overview of TapTap community activity</div>
+      <div class="stats-row">
+        <div class="stat-card"><div class="num" id="statPending">0</div><div class="lbl">Pending</div></div>
+        <div class="stat-card"><div class="num" id="statApproved">0</div><div class="lbl">Approved</div></div>
+        <div class="stat-card"><div class="num" id="statEvents">0</div><div class="lbl">Events</div></div>
+        <div class="stat-card"><div class="num" id="statSubs">0</div><div class="lbl">Subscribers</div></div>
+      </div>
+      <div style="background:var(--surface);border:1px solid rgba(255,255,255,0.06);border-radius:3px;padding:24px;">
+        <h3 style="font-size:14px;font-weight:600;margin-bottom:12px;color:var(--gold);">Quick Links</h3>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <a href="index.html" target="_blank" style="color:var(--muted);font-size:13px;text-decoration:none;border:1px solid rgba(255,255,255,0.08);padding:8px 16px;border-radius:2px;">🏠 Home</a>
+          <a href="events.html" target="_blank" style="color:var(--muted);font-size:13px;text-decoration:none;border:1px solid rgba(255,255,255,0.08);padding:8px 16px;border-radius:2px;">📅 Events</a>
+          <a href="community.html" target="_blank" style="color:var(--muted);font-size:13px;text-decoration:none;border:1px solid rgba(255,255,255,0.08);padding:8px 16px;border-radius:2px;">👥 Community</a>
+          <a href="https://instagram.com/itstaptapmiami" target="_blank" style="color:var(--muted);font-size:13px;text-decoration:none;border:1px solid rgba(255,255,255,0.08);padding:8px 16px;border-radius:2px;">📸 Instagram</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PENDING -->
+    <div class="page" id="pagePending">
+      <div class="page-title">Pending Submissions</div>
+      <div class="page-sub">Review and approve or reject community submissions</div>
+
+      <div class="section-head"><h3>📸 Photos</h3></div>
+      <div id="pendingPhotos"><div class="empty-state">No pending photos</div></div>
+
+      <div class="section-head" style="margin-top:32px;"><h3>✍️ Reviews</h3></div>
+      <div id="pendingReviews"><div class="empty-state">No pending reviews</div></div>
+    </div>
+
+    <!-- APPROVED -->
+    <div class="page" id="pageApproved">
+      <div class="page-title">Approved Content</div>
+      <div class="page-sub">All content currently live on the community page</div>
+
+      <div class="section-head"><h3>📸 Photos</h3></div>
+      <div id="approvedPhotos"><div class="empty-state">No approved photos yet</div></div>
+
+      <div class="section-head" style="margin-top:32px;"><h3>✍️ Reviews</h3></div>
+      <div id="approvedReviews"><div class="empty-state">No approved reviews yet</div></div>
+    </div>
+
+    <!-- EVENTS -->
+    <div class="page" id="pageEvents">
+      <div class="page-title">Events</div>
+      <div class="page-sub">Add, edit, or remove events. Set the Next Up event on the landing page.</div>
+
+      <div class="event-form">
+        <h3 style="font-size:14px;font-weight:600;margin-bottom:16px;">Add New Event</h3>
+        <div class="form-row2">
+          <div class="form-group">
+            <label>Event Name</label>
+            <input type="text" id="evtName" placeholder="e.g. TapTap Miami">
+          </div>
+          <div class="form-group">
+            <label>City</label>
+            <input type="text" id="evtCity" placeholder="e.g. Miami, FL">
+          </div>
+        </div>
+        <div class="form-row2">
+          <div class="form-group">
+            <label>Date</label>
+            <input type="date" id="evtDate">
+          </div>
+          <div class="form-group">
+            <label>Venue</label>
+            <input type="text" id="evtVenue" placeholder="e.g. Trill Social Miami">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Ticket Link</label>
+          <input type="text" id="evtLink" placeholder="http://Taptap.eventbrite.com">
+        </div>
+        <div class="form-group">
+          <label>Party Flyer / Cover Photo</label>
+          <div id="flyerUploadBox" onclick="document.getElementById('evtFlyer').click()" style="border:1px dashed rgba(255,255,255,0.15);border-radius:2px;padding:24px;text-align:center;cursor:pointer;color:var(--muted);font-size:13px;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">
+            📸 Click to upload flyer
+          </div>
+          <input type="file" id="evtFlyer" accept="image/*" style="display:none" onchange="previewFlyer(this)">
+          <img id="flyerPreview" src="" alt="Flyer preview" style="display:none;width:100%;max-height:200px;object-fit:contain;margin-top:10px;border-radius:2px;border:1px solid rgba(255,255,255,0.08);">
+        </div>
+        <button class="btn-add" onclick="addEvent()">Add Event</button>
+      </div>
+
+      <div class="section-head"><h3>All Events</h3></div>
+      <div id="eventsList"><div class="empty-state">No events added yet</div></div>
+    </div>
+
+    <!-- NEWSLETTER -->
+    <div class="page" id="pageNewsletter">
+      <div class="page-title">Newsletter Subscribers</div>
+      <div class="page-sub">All emails collected from the newsletter signup</div>
+      <div class="section-head">
+        <h3 id="subCount">0 subscribers</h3>
+        <button class="btn-export" onclick="exportCSV()">Export CSV</button>
+      </div>
+      <div id="subsList"><div class="empty-state">No subscribers yet</div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── AUTH ──
+  const CREDS = { email: 'admin@itstaptap.com', pass: 'Bullet2026!!' };
+
+  function doLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass  = document.getElementById('loginPassword').value;
+    const err   = document.getElementById('loginError');
+    if (email === CREDS.email && pass === CREDS.pass) {
+      err.style.display = 'none';
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('appScreen').style.display = 'block';
+      seedIfNeeded();
+      loadAll();
+    } else {
+      err.style.display = 'block';
+    }
+  }
+
+  function logout() {
+    document.getElementById('appScreen').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('loginEmail').value = '';
+    document.getElementById('loginPassword').value = '';
+  }
+
+  // ── NAVIGATION ──
+  function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page' + name.charAt(0).toUpperCase() + name.slice(1)).classList.add('active');
+    event.currentTarget.classList.add('active');
+  }
+
+  // ── DATA ──
+  function get(key) { try { return JSON.parse(localStorage.getItem(key) || '[]'); } catch { return []; } }
+  function set(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+
+  // Seed existing hardcoded content on first load
+  function seedIfNeeded() {
+    if (localStorage.getItem('tt_seeded')) return;
+
+    // Seed existing approved reviews
+    const reviews = [
+      { name: 'Jerry R.', event: 'TapTap Miami, March 2026', text: "DJ Bullet is built different. The way he transitions between kompa, afrobeats and hip-hop is seamless. You don't just hear the music at TapTap — you feel it in your chest the whole night.", rating: 5, date: 'Mar 29, 2026' },
+      { name: 'Nia', event: 'TapTap Miami, May 2026', text: "P-Dous on the mic is something else. He keeps the whole crowd locked in and makes everyone feel like they belong. He's the soul of TapTap for real.", rating: 5, date: 'May 17, 2026' },
+      { name: 'Jade', event: 'TapTap Atlanta, June 2026', text: "I'm not even Haitian and TapTap is my favorite party of the year. The culture, the fashion, the music — you feel the love the second you walk in.", rating: 5, date: 'Jun 24, 2026' },
+      { name: 'XTO', event: 'TapTap Miami, May 2026', text: "Ted Bounce had the whole room shaking. Nonstop energy from the first drop to the last track. I was sweating the entire set and loved every second.", rating: 5, date: 'May 17, 2026' },
+      { name: 'Yuri', event: 'TapTap Boston, June 2026', text: "DJ K9 came in and completely flipped the energy. Nobody wanted to leave. Pure talent on the decks — TapTap always brings the best out.", rating: 4.5, date: 'Jun 12, 2026' },
+      { name: 'JO', event: 'TapTap Miami 3 Years, March 2026', text: "Flew in from New York just for this. Worth every penny. The Haitian flag was waving all night. The 3 year anniversary was something truly special.", rating: 5, date: 'Mar 29, 2026' },
+      { name: 'Nal de Bash', event: 'TapTap Philadelphia, June 2026', text: "Brought my whole crew from Philly and they haven't stopped talking about it. The flag drop moment had everyone going crazy. This is what Haitian culture looks like in 2026.", rating: 5, date: 'Jun 19, 2026' },
+      { name: 'Tp', event: 'TapTap Miami, May 2026', text: "Discovered TapTap through a friend, now I haven't missed one since. The vibe is always right, the crowd is the most welcoming energy you'll find anywhere.", rating: 4.5, date: 'May 17, 2026' },
+      { name: 'Marie-Josée', event: 'TapTap Atlanta, June 2026', text: "First time at TapTap and I already bought tickets for the next one. The energy in the room was unlike anything I've experienced.", rating: 5, date: 'Jun 24, 2026' },
+    ];
+    set('tt_approved_reviews', reviews);
+
+    // Seed approved photos (URL references from gallery)
+    const photos = Array.from({length: 6}, (_, i) => ({
+      name: ['Sophia', 'Jerry', 'Daniel', 'Kenza', 'Yanick', 'Christelle'][i],
+      dataUrl: `assets/gallery/photo${[3,7,10,14,16,18][i]}.jpg`,
+      date: 'Admin'
+    }));
+    set('tt_approved_photos', photos);
+
+    // Seed all events
+    const events = [
+      { name: 'Tap Tap London', city: 'London, UK', date: '2026-08-30', venue: 'TBA', link: 'http://Taptap.eventbrite.com', flyer: null, isNext: true },
+      { name: 'Tap Tap New York', city: 'New York, NY', date: '2026-09-05', venue: 'TBA', link: 'http://Taptap.eventbrite.com', flyer: null, isNext: false },
+      { name: 'Tap Tap Miami', city: 'Miami, FL', date: '2026-10-11', venue: 'TBA', link: 'http://Taptap.eventbrite.com', flyer: null, isNext: false },
+      { name: 'Tap Tap Miami', city: 'Miami, FL', date: '2026-11-29', venue: 'TBA', link: 'http://Taptap.eventbrite.com', flyer: null, isNext: false },
+      { name: 'Tap Tap Miami', city: 'Miami, FL', date: '2026-12-20', venue: 'TBA', link: 'http://Taptap.eventbrite.com', flyer: null, isNext: false },
+    ];
+    set('tt_events', events);
+    localStorage.setItem('tt_seeded', '1');
+  }
+
+  function loadAll() {
+    loadPending();
+    loadApproved();
+    loadEvents();
+    loadNewsletter();
+    updateStats();
+  }
+
+  function updateStats() {
+    const pending = get('tt_pending_photos').length + get('tt_pending_reviews').length;
+    const approved = get('tt_approved_photos').length + get('tt_approved_reviews').length;
+    document.getElementById('statPending').textContent = pending;
+    document.getElementById('statApproved').textContent = approved;
+    document.getElementById('statEvents').textContent = get('tt_events').length;
+    document.getElementById('statSubs').textContent = get('tt_newsletter').length;
+    document.getElementById('pendingBadge').textContent = pending;
+    document.getElementById('pendingBadge').style.display = pending > 0 ? 'inline' : 'none';
+  }
+
+  // ── PENDING ──
+  function loadPending() {
+    const photos  = get('tt_pending_photos');
+    const reviews = get('tt_pending_reviews');
+    const pEl = document.getElementById('pendingPhotos');
+    const rEl = document.getElementById('pendingReviews');
+
+    pEl.innerHTML = photos.length === 0 ? '<div class="empty-state">No pending photos</div>' :
+      photos.map((p, i) => `
+        <div class="item-card" id="pp${i}">
+          <img class="item-photo" src="${p.dataUrl || ''}" onerror="this.style.display='none'">
+          <div class="item-info">
+            <div class="item-name">${p.name}</div>
+            <div class="item-meta">${p.event || 'TapTap Party'}</div>
+          </div>
+          <div class="item-actions">
+            <button class="btn-approve" onclick="approvePhoto(${i})">Approve</button>
+            <button class="btn-reject" onclick="rejectPhoto(${i})">Reject</button>
+          </div>
+        </div>`).join('');
+
+    rEl.innerHTML = reviews.length === 0 ? '<div class="empty-state">No pending reviews</div>' :
+      reviews.map((r, i) => `
+        <div class="item-card" id="pr${i}">
+          <div class="item-info">
+            <div class="item-name">${r.name} <span class="stars">${'★'.repeat(r.rating || 5)}</span></div>
+            <div class="item-meta">${r.event || 'TapTap Party'}</div>
+            <div class="item-text">"${r.text}"</div>
+          </div>
+          <div class="item-actions">
+            <button class="btn-approve" onclick="approveReview(${i})">Approve</button>
+            <button class="btn-reject" onclick="rejectReview(${i})">Reject</button>
+          </div>
+        </div>`).join('');
+  }
+
+  function approvePhoto(i) {
+    const photos = get('tt_pending_photos');
+    const approved = get('tt_approved_photos');
+    approved.push(photos.splice(i, 1)[0]);
+    set('tt_pending_photos', photos);
+    set('tt_approved_photos', approved);
+    loadAll();
+    toast('Photo approved ✓', 'success');
+  }
+  function rejectPhoto(i) {
+    const photos = get('tt_pending_photos');
+    photos.splice(i, 1);
+    set('tt_pending_photos', photos);
+    loadAll();
+    toast('Photo rejected', 'error');
+  }
+  function approveReview(i) {
+    const reviews = get('tt_pending_reviews');
+    const approved = get('tt_approved_reviews');
+    approved.push(reviews.splice(i, 1)[0]);
+    set('tt_pending_reviews', reviews);
+    set('tt_approved_reviews', approved);
+    loadAll();
+    toast('Review approved ✓', 'success');
+  }
+  function rejectReview(i) {
+    const reviews = get('tt_pending_reviews');
+    reviews.splice(i, 1);
+    set('tt_pending_reviews', reviews);
+    loadAll();
+    toast('Review rejected', 'error');
+  }
+
+  // ── APPROVED ──
+  function loadApproved() {
+    const photos  = get('tt_approved_photos');
+    const reviews = get('tt_approved_reviews');
+    const pEl = document.getElementById('approvedPhotos');
+    const rEl = document.getElementById('approvedReviews');
+
+    pEl.innerHTML = photos.length === 0 ? '<div class="empty-state">No approved photos yet</div>' :
+      photos.map((p, i) => `
+        <div class="item-card">
+          <img class="item-photo" src="${p.dataUrl || ''}" onerror="this.style.display='none'">
+          <div class="item-info">
+            <div class="item-name">${p.name}</div>
+            <div class="item-meta">${p.event || 'TapTap Party'}</div>
+          </div>
+          <div class="item-actions">
+            <button class="btn-remove" onclick="removeApprovedPhoto(${i})">Remove</button>
+          </div>
+        </div>`).join('');
+
+    rEl.innerHTML = reviews.length === 0 ? '<div class="empty-state">No approved reviews yet</div>' :
+      reviews.map((r, i) => `
+        <div class="item-card">
+          <div class="item-info">
+            <div class="item-name">${r.name} <span class="stars">${'★'.repeat(r.rating || 5)}</span></div>
+            <div class="item-meta">${r.event || 'TapTap Party'}</div>
+            <div class="item-text">"${r.text}"</div>
+          </div>
+          <div class="item-actions">
+            <button class="btn-remove" onclick="removeApprovedReview(${i})">Remove</button>
+          </div>
+        </div>`).join('');
+  }
+
+  function removeApprovedPhoto(i) {
+    const photos = get('tt_approved_photos');
+    photos.splice(i, 1);
+    set('tt_approved_photos', photos);
+    loadAll();
+    toast('Photo removed', 'error');
+  }
+  function removeApprovedReview(i) {
+    const reviews = get('tt_approved_reviews');
+    reviews.splice(i, 1);
+    set('tt_approved_reviews', reviews);
+    loadAll();
+    toast('Review removed', 'error');
+  }
+
+  // ── EVENTS ──
+  function loadEvents() {
+    const events = get('tt_events');
+    const el = document.getElementById('eventsList');
+    if (events.length === 0) { el.innerHTML = '<div class="empty-state">No events added yet</div>'; return; }
+    el.innerHTML = events.map((e, i) => `
+      <div class="event-row">
+        ${e.flyer ? `<img src="${e.flyer}" style="width:48px;height:48px;object-fit:cover;border-radius:2px;flex-shrink:0;">` : '<div style="width:48px;height:48px;background:var(--surface2);border-radius:2px;flex-shrink:0;"></div>'}
+        <div class="event-date">${e.date}</div>
+        <div style="flex:1;">
+          <div class="event-name">${e.name} ${e.isNext ? '<span class="next-badge">NEXT UP</span>' : ''}</div>
+          <div class="event-city">${e.venue ? e.venue + ' · ' : ''}${e.city}</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          ${!e.isNext ? `<button class="btn-setnext" onclick="setNext(${i})">Set as Next Up</button>` : ''}
+          <button class="btn-remove" onclick="removeEvent(${i})">Remove</button>
+        </div>
+      </div>`).join('');
+  }
+
+  function previewFlyer(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = document.getElementById('flyerPreview');
+      img.src = e.target.result;
+      img.style.display = 'block';
+      document.getElementById('flyerUploadBox').textContent = '✓ ' + file.name;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function addEvent() {
+    const name  = document.getElementById('evtName').value.trim();
+    const city  = document.getElementById('evtCity').value.trim();
+    const date  = document.getElementById('evtDate').value;
+    const venue = document.getElementById('evtVenue').value.trim();
+    const link  = document.getElementById('evtLink').value.trim();
+    const flyerFile = document.getElementById('evtFlyer').files[0];
+    if (!name || !city || !date) { toast('Please fill in name, city and date', 'error'); return; }
+
+    const saveEvent = (flyer = null) => {
+      const events = get('tt_events');
+      events.push({ name, city, date, venue, link: link || 'http://Taptap.eventbrite.com', flyer, isNext: false });
+      events.sort((a, b) => new Date(a.date + 'T12:00:00') - new Date(b.date + 'T12:00:00'));
+      set('tt_events', events);
+      ['evtName','evtCity','evtDate','evtVenue','evtLink'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('evtFlyer').value = '';
+      document.getElementById('flyerPreview').style.display = 'none';
+      document.getElementById('flyerUploadBox').textContent = '📸 Click to upload flyer';
+      loadAll();
+      toast('Event added ✓', 'success');
+    };
+
+    if (flyerFile) {
+      const reader = new FileReader();
+      reader.onload = e => saveEvent(e.target.result);
+      reader.readAsDataURL(flyerFile);
+    } else {
+      saveEvent(null);
+    }
+  }
+
+  function setNext(i) {
+    const events = get('tt_events');
+    events.forEach(e => e.isNext = false);
+    events[i].isNext = true;
+    set('tt_events', events);
+    loadAll();
+    toast('Next Up updated ✓', 'success');
+  }
+
+  function removeEvent(i) {
+    const events = get('tt_events');
+    events.splice(i, 1);
+    set('tt_events', events);
+    loadAll();
+    toast('Event removed', 'error');
+  }
+
+  // ── NEWSLETTER ──
+  function loadNewsletter() {
+    const subs = get('tt_newsletter');
+    const el = document.getElementById('subsList');
+    document.getElementById('subCount').textContent = `${subs.length} subscriber${subs.length !== 1 ? 's' : ''}`;
+    if (subs.length === 0) { el.innerHTML = '<div class="empty-state">No subscribers yet</div>'; return; }
+    el.innerHTML = subs.map((s, i) => `
+      <div class="sub-row">
+        <div class="sub-email">${s.email || s}</div>
+        <div style="display:flex;gap:12px;align-items:center;">
+          <div class="sub-date">${s.date || ''}</div>
+          <button class="btn-remove" onclick="removeSub(${i})">Remove</button>
+        </div>
+      </div>`).join('');
+  }
+
+  function removeSub(i) {
+    const subs = get('tt_newsletter');
+    subs.splice(i, 1);
+    set('tt_newsletter', subs);
+    loadNewsletter();
+    updateStats();
+    toast('Subscriber removed', 'error');
+  }
+
+  function exportCSV() {
+    const subs = get('tt_newsletter');
+    if (subs.length === 0) { toast('No subscribers to export', 'error'); return; }
+    const csv = 'Email,Date\n' + subs.map(s => `${s.email || s},${s.date || ''}`).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'taptap-subscribers.csv';
+    a.click();
+    toast('CSV exported ✓', 'success');
+  }
+
+  // ── TOAST ──
+  function toast(msg, type = 'success') {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = `toast ${type} show`;
+    setTimeout(() => el.classList.remove('show'), 3000);
+  }
+</script>
+
+</body>
+</html>

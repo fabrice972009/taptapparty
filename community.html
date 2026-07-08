@@ -55,7 +55,7 @@
     .mobile-menu .mobile-cta { background: var(--red); color: var(--white) !important; padding: 13px 36px; border-radius: 2px; font-size: 22px !important; }
 
     /* PAGE HEADER */
-    .page-header { padding: 140px 48px 60px; max-width: 1000px; margin: 0 auto; }
+    .page-header { padding: 140px 48px 8px; max-width: 1000px; margin: 0 auto; }
     .section-eyebrow { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; font-weight: 500; }
     .page-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(64px, 10vw, 120px); letter-spacing: 4px; line-height: 0.9; }
     .page-title span { color: var(--red); }
@@ -117,7 +117,7 @@
     }
 
     /* WALL OF LOVE */
-    .wall-section { padding: 80px 48px; max-width: 1000px; margin: 0 auto; }
+    .wall-section { padding: 16px 48px 80px; max-width: 1000px; margin: 0 auto; }
     .wall-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; }
     .wall-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px, 5vw, 56px); letter-spacing: 2px; }
 
@@ -176,10 +176,10 @@
       .nav-links { display: none; }
       .nav-cta { display: none; }
       .nav-hamburger { display: flex; z-index: 300; position: relative; margin-left: auto; }
-      .page-header { padding: 100px 20px 40px; }
+      .page-header { padding: 100px 20px 8px; }
       .submit-section { padding: 0 20px 56px; }
       .submit-inner { grid-template-columns: 1fr; gap: 24px; }
-      .wall-section { padding: 56px 20px; }
+      .wall-section { padding: 16px 20px 56px; }
       .wall-header { flex-direction: column; align-items: flex-start; gap: 8px; }
       .photo-wall { grid-template-columns: repeat(2, 1fr); }
 
@@ -198,9 +198,10 @@
     /* ── FOOTER ── */
     .site-footer { border-top: 1px solid rgba(255,255,255,0.05); padding: 56px 48px 36px; }
     .site-footer-inner { max-width: 1000px; margin: 0 auto; }
+    .footer-top-wrap { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
     .footer-logo { height: 36px; width: auto; display: block; mix-blend-mode: screen; margin-bottom: 6px; }
-    .footer-tagline { font-size: 13px; color: #666; margin-bottom: 40px; }
-    .footer-desktop-cols { display: flex; gap: 64px; margin-bottom: 40px; }
+    .footer-tagline { font-size: 13px; color: #666; }
+    .footer-desktop-cols { display: flex; gap: 64px; }
     .footer-dcol h4 { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #F5C518; margin-bottom: 16px; font-weight: 500; }
     .footer-dcol ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
     .footer-dcol a { color: #666; text-decoration: none; font-size: 14px; transition: color 0.2s; }
@@ -210,22 +211,6 @@
     .footer-bottom p { font-size: 13px; color: #666; }
     .footer-ig { color: #666; display: flex; align-items: center; transition: color 0.2s; text-decoration: none; }
     .footer-ig:hover { color: #F0EDE6; }
-
-    @media (max-width: 800px) {
-      .site-footer { padding: 32px 20px 24px; }
-      .footer-tagline { margin-bottom: 20px; }
-      .site-footer-inner { display: flex; flex-direction: column; align-items: center; text-align: center; }
-      .footer-logo { margin: 0 auto 6px; }
-      .footer-desktop-cols { display: none; }
-      .footer-mobile-row { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 20px; }
-      .footer-mobile-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #F5C518; font-weight: 500; }
-      .footer-mobile-links { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px 10px; }
-      .footer-mobile-links a { font-size: 12px; color: rgba(240,237,230,0.6); text-decoration: none; }
-      .footer-mobile-links a:hover { color: #F0EDE6; }
-      .footer-buy { color: #D42027 !important; font-weight: 600; }
-      .fsep { color: rgba(255,255,255,0.2); font-size: 11px; }
-      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
-    }
   </style>
 </head>
 <body>
@@ -297,6 +282,12 @@
     <div class="photo-wall-item" onclick="openLightbox('assets/gallery/photo18.jpg')">
       <img src="assets/gallery/photo18.jpg" alt="Community photo">
     </div>
+  </div>
+  <div style="text-align:center; margin-top:20px;">
+    <a href="https://instagram.com/itstaptapmiami" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:none;border:1px solid rgba(255,255,255,0.2);color:var(--white);padding:10px 28px;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;border-radius:2px;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--white)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)'">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg>
+      See More on Instagram
+    </a>
   </div>
 
   <!-- Review Wall -->
@@ -396,50 +387,37 @@
 
 <!-- SUBMIT SECTION -->
 <section class="submit-section" style="padding-top:64px; border-top: 1px solid rgba(255,255,255,0.05);">
-  <div style="max-width:1000px; margin:0 auto 40px;">
+  <div style="max-width:600px; margin:0 auto; padding: 0 48px 80px;">
     <p class="section-eyebrow">Join The Wall</p>
-    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,5vw,56px);letter-spacing:2px;">SHARE YOUR MOMENT</h2>
-  </div>
-  <div class="submit-inner">
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,5vw,56px);letter-spacing:2px;margin-bottom:8px;">SHARE YOUR MOMENT</h2>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:32px;">Were you at TapTap? Share your photo, your experience, or both.</p>
 
-    <!-- Photo Upload -->
     <div class="submit-card">
-      <h3>Share Your Photo 📸</h3>
-      <p>Were you at TapTap? Upload your best shot — approved photos go straight to the Wall of Love.</p>
+
       <div class="form-group">
-        <label>Your Name</label>
-        <input type="text" id="photoName" placeholder="e.g. Marie">
+        <label>Your Name *</label>
+        <input type="text" id="submitName" placeholder="e.g. Marie">
       </div>
+
       <div class="form-group">
-        <label>Your Photo</label>
-        <div class="upload-box" onclick="document.getElementById('photoFile').click()">
-          <div class="icon">🖼️</div>
+        <label>Which Event?</label>
+        <input type="text" id="submitEvent" placeholder="e.g. TapTap Miami — July 3">
+      </div>
+
+      <div class="form-group">
+        <label>Your Photo <span style="font-size:11px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
+        <div class="upload-box" onclick="document.getElementById('submitFile').click()">
+          <div class="icon">📸</div>
           <p><span>Click to upload</span> your photo</p>
         </div>
-        <input type="file" id="photoFile" accept="image/*" style="display:none" onchange="previewPhoto(this)">
+        <input type="file" id="submitFile" accept="image/*" style="display:none" onchange="previewPhoto(this)">
         <div class="upload-preview" id="photoPreview">
           <img id="previewImg" src="" alt="Preview">
         </div>
       </div>
-      <button class="btn-primary" onclick="submitPhoto()">Submit Photo</button>
-      <p class="submit-note">Photos are reviewed before being published 🇭🇹</p>
-      <div class="success-msg" id="photoSuccess">✅ Photo submitted! We'll review it shortly.</div>
-    </div>
 
-    <!-- Feedback -->
-    <div class="submit-card">
-      <h3>Share Your Experience ✍️</h3>
-      <p>How was TapTap? Tell us about your night — your review helps the diaspora find us.</p>
       <div class="form-group">
-        <label>Your Name</label>
-        <input type="text" id="reviewName" placeholder="e.g. Jean-Pierre">
-      </div>
-      <div class="form-group">
-        <label>Which Event?</label>
-        <input type="text" id="reviewEvent" placeholder="e.g. TapTap Miami — March 29">
-      </div>
-      <div class="form-group">
-        <label>Rating</label>
+        <label>Your Rating <span style="font-size:11px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
         <div class="star-rating" id="starRating">
           <span class="star" onclick="setRating(1)">★</span>
           <span class="star" onclick="setRating(2)">★</span>
@@ -448,16 +426,24 @@
           <span class="star" onclick="setRating(5)">★</span>
         </div>
       </div>
-      <div class="form-group">
-        <label>Your Review</label>
-        <textarea id="reviewText" placeholder="Tell us about your TapTap experience..."></textarea>
-      </div>
-      <button class="btn-primary" onclick="submitReview()">Submit Review</button>
-      <p class="submit-note">Reviews are approved before being published 🇭🇹</p>
-      <div class="success-msg" id="reviewSuccess">✅ Review submitted! We'll review it shortly.</div>
-    </div>
 
+      <div class="form-group">
+        <label>Your Review <span style="font-size:11px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
+        <textarea id="submitText" placeholder="Tell us about your TapTap night..."></textarea>
+      </div>
+
+      <button class="btn-primary" onclick="submitAll()">Submit</button>
+
+      <p class="submit-note" style="margin-top:14px;">All submissions are reviewed before being published 🇭🇹</p>
+
+      <p style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.7;text-align:center;border-top:1px solid rgba(255,255,255,0.05);padding-top:12px;">
+        By submitting, you grant <strong style="color:rgba(240,237,230,0.5);">TapTap Party</strong> and its promoters a non-exclusive, royalty-free license to use your name, photo, and review for marketing and promotional purposes across all platforms, including social media and the TapTap website. Your first name may be credited publicly.
+      </p>
+
+      <div class="success-msg" id="submitSuccess">✅ Submitted! We'll review it shortly and add it to the wall.</div>
+    </div>
   </div>
+</section>
 </section>
 
 <!-- Lightbox -->
@@ -509,23 +495,58 @@
   // Run after approved reviews are loaded
   setTimeout(applyReviewLimit, 100);
 
-  // Load approved fan photos from localStorage and add to wall
-  function loadApprovedCommunityPhotos() {
+  // Base gallery photos (admin-uploaded)
+  const baseGalleryPhotos = [
+    'assets/gallery/photo1.jpg','assets/gallery/photo2.jpg','assets/gallery/photo3.jpg',
+    'assets/gallery/photo4.jpg','assets/gallery/photo5.jpg','assets/gallery/photo6.jpg',
+    'assets/gallery/photo7.jpg','assets/gallery/photo8.jpg','assets/gallery/photo9.jpg',
+    'assets/gallery/photo10.jpg','assets/gallery/photo11.jpg','assets/gallery/photo12.jpg',
+    'assets/gallery/photo13.jpg','assets/gallery/photo14.jpg','assets/gallery/photo15.jpg',
+    'assets/gallery/photo16.jpg','assets/gallery/photo17.jpg','assets/gallery/photo18.jpg',
+    'assets/gallery/photo19.jpg','assets/gallery/photo20.jpg','assets/gallery/photo21.jpg',
+    'assets/gallery/photo22.jpg','assets/gallery/photo23.jpg','assets/gallery/photo24.jpg',
+    'assets/gallery/photo25.jpg','assets/gallery/photo26.jpg','assets/gallery/photo27.jpg',
+    'assets/gallery/photo28.jpg','assets/gallery/photo29.jpg','assets/gallery/photo30.jpg',
+    'assets/gallery/photo31.jpg','assets/gallery/photo32.jpg','assets/gallery/photo33.jpg',
+    'assets/gallery/photo34.jpg','assets/gallery/photo35.jpg','assets/gallery/photo36.jpg',
+    'assets/gallery/photo37.jpg','assets/gallery/photo38.jpg','assets/gallery/photo39.jpg',
+  ];
+
+  const INITIAL_SHOW = 6;
+  let allCommunityPhotos = [];
+
+  function buildPhotoWall() {
     try {
       const approved = JSON.parse(localStorage.getItem('tt_approved_photos') || '[]');
-      const wall = document.getElementById('photoWall');
-      approved.forEach(p => {
-        const item = document.createElement('div');
-        item.className = 'photo-wall-item';
-        item.onclick = () => openLightbox(p.dataUrl);
-        item.innerHTML = `
-          <img src="${p.dataUrl}" alt="Community photo" style="width:100%;height:100%;object-fit:cover;object-position:center top;">
-          <div class="submitter">Submitted by ${p.name}</div>
-        `;
-        wall.appendChild(item);
-      });
-    } catch(e) {}
+      // Merge: base photos as objects + approved community submissions
+      const basePics = baseGalleryPhotos.map(src => ({ src, isAdmin: true, name: null }));
+      const communityPics = approved.map(p => ({ src: p.dataUrl || p.src, isAdmin: false, name: p.name }));
+      // Shuffle all, limit to 50
+      const all = [...basePics, ...communityPics].sort(() => Math.random() - 0.5).slice(0, 50);
+      allCommunityPhotos = all;
+
+      renderPhotos(INITIAL_SHOW);
+
+
+    } catch(e) { console.log(e); }
   }
+
+  function renderPhotos(limit) {
+    const wall = document.getElementById('photoWall');
+    const photos = allCommunityPhotos.slice(0, limit);
+    wall.innerHTML = '';
+    photos.forEach(p => {
+      const item = document.createElement('div');
+      item.className = 'photo-wall-item';
+      item.onclick = () => openLightbox(p.src);
+      item.innerHTML = `<img src="${p.src}" alt="Community photo" onerror="this.parentElement.style.display='none'">
+        ${!p.isAdmin && p.name ? `<div class="submitter">Submitted by ${p.name}</div>` : ''}`;
+      wall.appendChild(item);
+    });
+
+  }
+
+  buildPhotoWall();
 
   // Load approved reviews from localStorage and add to wall
   function loadApprovedReviews() {
@@ -548,7 +569,6 @@
     } catch(e) {}
   }
 
-  loadApprovedCommunityPhotos();
   loadApprovedReviews();
   applyReviewLimit();
   let currentRating = 0;
@@ -572,27 +592,49 @@
   }
 
   // Submit photo (placeholder — wire to Supabase later)
-  function submitPhoto() {
-    const name = document.getElementById('photoName').value.trim();
-    const file = document.getElementById('photoFile').files[0];
-    if (!name || !file) { alert('Please add your name and a photo.'); return; }
-    document.getElementById('photoSuccess').style.display = 'block';
-    document.getElementById('photoName').value = '';
-    document.getElementById('photoFile').value = '';
-    document.getElementById('photoPreview').style.display = 'none';
-  }
+  // Unified submit → pending queue for admin approval
+  function submitAll() {
+    const name  = document.getElementById('submitName').value.trim();
+    const event = document.getElementById('submitEvent').value.trim();
+    const text  = document.getElementById('submitText').value.trim();
+    const file  = document.getElementById('submitFile').files[0];
+    if (!name) { alert('Please add your name.'); return; }
+    if (!text && !file) { alert('Please add a photo, a review, or both.'); return; }
 
-  // Submit review (placeholder — wire to Supabase later)
-  function submitReview() {
-    const name = document.getElementById('reviewName').value.trim();
-    const text = document.getElementById('reviewText').value.trim();
-    if (!name || !text || !currentRating) { alert('Please fill in all fields and add a rating.'); return; }
-    document.getElementById('reviewSuccess').style.display = 'block';
-    document.getElementById('reviewName').value = '';
-    document.getElementById('reviewEvent').value = '';
-    document.getElementById('reviewText').value = '';
-    setRating(0);
-    currentRating = 0;
+    const finish = () => {
+      document.getElementById('submitSuccess').style.display = 'block';
+      document.getElementById('submitName').value = '';
+      document.getElementById('submitEvent').value = '';
+      document.getElementById('submitText').value = '';
+      document.getElementById('submitFile').value = '';
+      document.getElementById('photoPreview').style.display = 'none';
+      document.getElementById('previewImg').src = '';
+      document.querySelector('.upload-box p').innerHTML = '<span>Click to upload</span> your photo';
+      setRating(0); currentRating = 0;
+    };
+
+    const saveReview = () => {
+      if (text) {
+        const rp = JSON.parse(localStorage.getItem('tt_pending_reviews') || '[]');
+        rp.push({ name, event, text, rating: currentRating || 5, date: new Date().toLocaleDateString() });
+        localStorage.setItem('tt_pending_reviews', JSON.stringify(rp));
+      }
+    };
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const pp = JSON.parse(localStorage.getItem('tt_pending_photos') || '[]');
+        pp.push({ name, event, dataUrl: e.target.result, date: new Date().toLocaleDateString() });
+        localStorage.setItem('tt_pending_photos', JSON.stringify(pp));
+        saveReview();
+        finish();
+      };
+      reader.readAsDataURL(file);
+    } else {
+      saveReview();
+      finish();
+    }
   }
 
   // Lightbox
@@ -610,27 +652,32 @@
 
 <footer class="site-footer">
   <div class="site-footer-inner">
-    <img src="logo.png" alt="Tap Tap Party" class="footer-logo">
-    <p class="footer-tagline">Once a month. Every month. 🇭🇹</p>
+    <div class="footer-top-wrap">
+      <div>
+        <img src="logo.png" alt="Tap Tap Party" class="footer-logo">
+        <p class="footer-tagline">Once a month. Every month. 🇭🇹</p>
+      </div>
+      <!-- Desktop columns -->
+      <div class="footer-desktop-cols">
+        <div class="footer-dcol">
+          <h4>Pages</h4>
+          <ul>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="community.html">Community</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-dcol">
+          <h4>Tickets</h4>
+          <ul>
+            <li><a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener">Buy Tickets</a></li>
+            <li><a href="events.html">Upcoming Events</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
 
-    <!-- Desktop columns -->
-    <div class="footer-desktop-cols">
-      <div class="footer-dcol">
-        <h4>Pages</h4>
-        <ul>
-          <li><a href="events.html">Events</a></li>
-          <li><a href="community.html">Community</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="contact.html">Contact</a></li>
-        </ul>
-      </div>
-      <div class="footer-dcol">
-        <h4>Tickets</h4>
-        <ul>
-          <li><a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener">Buy Tickets</a></li>
-          <li><a href="events.html">Upcoming Events</a></li>
-        </ul>
-      </div>
     </div>
 
     <!-- Mobile links -->

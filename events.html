@@ -87,7 +87,7 @@
     }
     .event-img {
       aspect-ratio: 3/4;
-      background: #1a1aff;
+      background: var(--surface2);
       border-radius: 3px; overflow: hidden;
       display: flex; align-items: center; justify-content: center;
       color: var(--muted); font-size: 13px; letter-spacing: 1px;
@@ -155,7 +155,7 @@
 
     /* ── ALL EVENTS ── */
     .all-events {
-      padding: 80px 48px;
+      padding: 32px 48px 80px;
       max-width: 1000px; margin: 0 auto;
     }
     .events-list { display: flex; flex-direction: column; gap: 0; }
@@ -310,9 +310,10 @@
     /* ── FOOTER ── */
     .site-footer { border-top: 1px solid rgba(255,255,255,0.05); padding: 56px 48px 36px; }
     .site-footer-inner { max-width: 1000px; margin: 0 auto; }
+    .footer-top-wrap { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
     .footer-logo { height: 36px; width: auto; display: block; mix-blend-mode: screen; margin-bottom: 6px; }
-    .footer-tagline { font-size: 13px; color: #666; margin-bottom: 40px; }
-    .footer-desktop-cols { display: flex; gap: 64px; margin-bottom: 40px; }
+    .footer-tagline { font-size: 13px; color: #666; }
+    .footer-desktop-cols { display: flex; gap: 64px; }
     .footer-dcol h4 { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #F5C518; margin-bottom: 16px; font-weight: 500; }
     .footer-dcol ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
     .footer-dcol a { color: #666; text-decoration: none; font-size: 14px; transition: color 0.2s; }
@@ -322,22 +323,6 @@
     .footer-bottom p { font-size: 13px; color: #666; }
     .footer-ig { color: #666; display: flex; align-items: center; transition: color 0.2s; text-decoration: none; }
     .footer-ig:hover { color: #F0EDE6; }
-
-    @media (max-width: 800px) {
-      .site-footer { padding: 32px 20px 24px; }
-      .footer-tagline { margin-bottom: 20px; }
-      .site-footer-inner { display: flex; flex-direction: column; align-items: center; text-align: center; }
-      .footer-logo { margin: 0 auto 6px; }
-      .footer-desktop-cols { display: none; }
-      .footer-mobile-row { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 20px; }
-      .footer-mobile-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #F5C518; font-weight: 500; }
-      .footer-mobile-links { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px 10px; }
-      .footer-mobile-links a { font-size: 12px; color: rgba(240,237,230,0.6); text-decoration: none; }
-      .footer-mobile-links a:hover { color: #F0EDE6; }
-      .footer-buy { color: #D42027 !important; font-weight: 600; }
-      .fsep { color: rgba(255,255,255,0.2); font-size: 11px; }
-      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
-    }
   </style>
 </head>
 <body>
@@ -390,21 +375,65 @@
 <!-- Next Up -->
 <section class="next-up" style="padding-top:64px;">
   <div class="next-up-inner">
-    <div class="event-img"><img src="event-july3b.png" alt="TapTap Miami July 3"></div>
+    <div class="event-img" id="evtFeatImg" style="position:relative;">
+      <img src="og-image.png" alt="TapTap event flyer" id="evtFeatImgEl">
+      <div class="coming-soon-tag" style="position:absolute;bottom:0;left:0;right:0;background:rgba(8,8,8,0.75);color:rgba(240,237,230,0.7);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-align:center;padding:10px;">More Details Coming Soon</div>
+    </div>
     <div>
       <span class="event-tag">Next Up</span>
-      <div class="event-date">Friday, July 3, 2026</div>
-      <div class="event-name">Tap Tap Miami<br>4th of July Edition</div>
-      <div class="event-details">
+      <div class="event-date" id="evtFeatDate">Friday, July 3, 2026</div>
+      <div class="event-name" id="evtFeatName">Tap Tap Miami<br>4th of July Edition</div>
+      <div class="event-details" id="evtFeatDetails">
         <div class="event-detail-row"><span class="dot"></span>2335 N Miami Ave, Miami, FL</div>
         <div class="event-detail-row"><span class="dot"></span>DJ Bullet &amp; Friends</div>
         <div class="event-detail-row"><span class="dot"></span>Doors open at 9 PM</div>
       </div>
-      <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" class="btn-primary" style="display:block; text-align:center; margin-top:24px;">Buy Tickets</a>
+      <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" class="btn-primary" id="evtFeatTicket" style="display:block; text-align:center; margin-top:24px;">Buy Tickets</a>
       <p class="stripe-note" style="margin-top:10px;">🎟 taptap.eventbrite.com</p>
     </div>
   </div>
 </section>
+
+<script>
+  // Auto next event from admin localStorage
+  (function() {
+    try {
+      const events = JSON.parse(localStorage.getItem('tt_events') || '[]');
+      if (!events.length) return;
+      const today = new Date(); today.setHours(0,0,0,0);
+      const future = events.filter(e => new Date(e.date + 'T12:00:00') >= today).sort((a,b) => new Date(a.date + 'T12:00:00') - new Date(b.date + 'T12:00:00'));
+      if (!future.length) return;
+      const next = future[0];
+      const d = new Date(next.date + 'T12:00:00');
+      const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      const fullMonths = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+      const fi = document.getElementById('evtFeatImgEl');
+      const fw = document.getElementById('evtFeatImg');
+      if (next.flyer) {
+        fi.src = next.flyer;
+      } else {
+        fi.src = 'og-image.png';
+        if (!fw.querySelector('.coming-soon-tag')) {
+          const tag = document.createElement('div');
+          tag.className = 'coming-soon-tag';
+          tag.style.cssText = 'position:absolute;bottom:0;left:0;right:0;background:rgba(8,8,8,0.75);color:rgba(240,237,230,0.7);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-align:center;padding:10px;';
+          tag.textContent = 'More Details Coming Soon';
+          fw.style.position = 'relative';
+          fw.appendChild(tag);
+        }
+      }
+      document.getElementById('evtFeatDate').textContent = `${days[d.getDay()]}, ${fullMonths[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+      document.getElementById('evtFeatName').textContent = next.name;
+      document.getElementById('evtFeatDetails').innerHTML = `
+        ${next.venue ? `<div class="event-detail-row"><span class="dot"></span>${next.venue}${next.city ? ', ' + next.city : ''}</div>` : ''}
+        <div class="event-detail-row"><span class="dot"></span>DJ Bullet & Friends</div>
+        <div class="event-detail-row"><span class="dot"></span>Doors open at 9 PM</div>
+      `;
+      if (next.link) document.getElementById('evtFeatTicket').href = next.link;
+    } catch(e) {}
+  })();
+</script>
 
 
 <!-- All Events -->
@@ -423,15 +452,6 @@
   <!-- UPCOMING -->
   <div class="events-section-label">Upcoming</div>
   <div class="events-list" id="upcomingList">
-
-    <div class="event-row" data-city="miami">
-      <div class="event-row-date"><div class="month">JUL</div>3</div>
-      <div class="event-row-info">
-        <div class="name">Tap Tap Miami <span class="badge">4th of July</span></div>
-        <div class="location">Miami, FL</div>
-      </div>
-      <div class="event-row-action"><a href="#next-up">Get Tickets</a></div>
-    </div>
 
     <div class="event-row" data-city="london">
       <div class="event-row-date"><div class="month">AUG</div>30</div>
@@ -486,6 +506,15 @@
     <button class="toggle-past" onclick="togglePast(this)">Show ↓</button>
   </div>
   <div class="events-list past-list" id="pastList" style="display:none;">
+    <div class="event-row past" data-city="miami">
+      <div class="event-row-date"><div class="month">JUL</div>3</div>
+      <div class="event-row-info">
+        <div class="name">Tap Tap Miami <span class="badge">4th of July</span></div>
+        <div class="location">Miami, FL</div>
+      </div>
+      <div class="event-row-action"><a href="#" style="pointer-events:none;opacity:0.4;">Past</a></div>
+    </div>
+
 
     <div class="event-row past" data-city="jersey-city">
       <div class="event-row-date"><div class="month">JAN</div>16</div>
@@ -664,27 +693,32 @@
 
 <footer class="site-footer">
   <div class="site-footer-inner">
-    <img src="logo.png" alt="Tap Tap Party" class="footer-logo">
-    <p class="footer-tagline">Once a month. Every month. 🇭🇹</p>
+    <div class="footer-top-wrap">
+      <div>
+        <img src="logo.png" alt="Tap Tap Party" class="footer-logo">
+        <p class="footer-tagline">Once a month. Every month. 🇭🇹</p>
+      </div>
+      <!-- Desktop columns -->
+      <div class="footer-desktop-cols">
+        <div class="footer-dcol">
+          <h4>Pages</h4>
+          <ul>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="community.html">Community</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-dcol">
+          <h4>Tickets</h4>
+          <ul>
+            <li><a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener">Buy Tickets</a></li>
+            <li><a href="events.html">Upcoming Events</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
 
-    <!-- Desktop columns -->
-    <div class="footer-desktop-cols">
-      <div class="footer-dcol">
-        <h4>Pages</h4>
-        <ul>
-          <li><a href="events.html">Events</a></li>
-          <li><a href="community.html">Community</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="contact.html">Contact</a></li>
-        </ul>
-      </div>
-      <div class="footer-dcol">
-        <h4>Tickets</h4>
-        <ul>
-          <li><a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener">Buy Tickets</a></li>
-          <li><a href="events.html">Upcoming Events</a></li>
-        </ul>
-      </div>
     </div>
 
     <!-- Mobile links -->

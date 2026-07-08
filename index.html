@@ -223,7 +223,7 @@
       letter-spacing: 1px;
       max-width: 320px;
     }
-    .next-event-img img { width: 100%; height: 100%; object-fit: cover; }
+    .next-event-img img { width: 100%; height: 100%; object-fit: contain; background: var(--surface2); }
     .next-event-info { }
     .event-date-line {
       font-size: 13px;
@@ -468,7 +468,7 @@
 
       .gallery-section { padding: 48px 20px; }
       .gallery-head { flex-direction: column; align-items: flex-start; gap: 16px; }
-      #galleryThree { grid-template-columns: 1fr 1fr 1fr !important; gap: 4px !important; }
+      #galleryThree { grid-template-columns: 1fr 1fr !important; gap: 4px !important; }
 
       .newsletter-section { padding: 56px 20px; }
       .reviews-peek { padding: 56px 20px !important; }
@@ -684,15 +684,17 @@
     <div class="next-event-inner">
 
       <!-- Featured Flyer -->
-      <div class="next-event-img"><img src="event-july3.png" alt="Tap Tap Miami July 3"></div>
+      <div class="next-event-img" id="nextFlyer" style="position:relative;">
+        <img src="og-image.png" alt="Tap Tap event flyer" id="nextFlyerImg">
+        <div class="coming-soon-tag" style="position:absolute;bottom:0;left:0;right:0;background:rgba(8,8,8,0.75);color:rgba(240,237,230,0.7);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-align:center;padding:10px;">More Details Coming Soon</div>
+      </div>
 
       <!-- Featured Info Middle -->
       <div class="featured-info">
-        <div class="event-date-line">Friday, July 3, 2026</div>
-        <div class="event-name">Tap Tap Miami<br><span style="color:var(--red)">4th of July Edition</span></div>
-        <div class="event-details">
-          <div class="event-detail-row"><span class="dot"></span>2335 N Miami Ave, Miami, FL</div>
-          <div class="event-detail-row"><span class="dot"></span>9PM – 3AM</div>
+        <div class="event-date-line" id="nextDateLine">Sunday, August 30, 2026</div>
+        <div class="event-name" id="nextName">Tap Tap London</div>
+        <div class="event-details" id="nextDetails">
+          <div class="event-detail-row"><span class="dot"></span>London, UK</div>
           <div class="event-detail-row"><span class="dot"></span>DJ Bullet &amp; Friends</div>
         </div>
       </div>
@@ -700,41 +702,21 @@
       <!-- Upcoming Sidebar Right -->
       <div class="upcoming-sidebar">
         <p style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:20px;">Also Coming Up</p>
-
-        <div class="sidebar-event">
-          <div class="sidebar-date">
-            <div class="ud-month">AUG</div>
-            <div class="ud-day">30</div>
+        <div id="sidebarEvents">
+          <div class="sidebar-event">
+            <div class="sidebar-date"><div class="ud-month">SEP</div><div class="ud-day">5</div></div>
+            <div><div class="sidebar-name">Tap Tap New York</div><div class="sidebar-loc">New York, NY</div></div>
           </div>
-          <div>
-            <div class="sidebar-name">Tap Tap London</div>
-            <div class="sidebar-loc">London, UK</div>
+          <div class="sidebar-event">
+            <div class="sidebar-date"><div class="ud-month">OCT</div><div class="ud-day">11</div></div>
+            <div><div class="sidebar-name">Tap Tap Miami</div><div class="sidebar-loc">Miami, FL</div></div>
           </div>
-        </div>
-
-        <div class="sidebar-event">
-          <div class="sidebar-date">
-            <div class="ud-month">SEP</div>
-            <div class="ud-day">5</div>
-          </div>
-          <div>
-            <div class="sidebar-name">Tap Tap New York</div>
-            <div class="sidebar-loc">New York, NY</div>
+          <div class="sidebar-event">
+            <div class="sidebar-date"><div class="ud-month">NOV</div><div class="ud-day">29</div></div>
+            <div><div class="sidebar-name">Tap Tap Miami</div><div class="sidebar-loc">Miami, FL</div></div>
           </div>
         </div>
-
-        <div class="sidebar-event">
-          <div class="sidebar-date">
-            <div class="ud-month">OCT</div>
-            <div class="ud-day">11</div>
-          </div>
-          <div>
-            <div class="sidebar-name">Tap Tap Miami</div>
-            <div class="sidebar-loc">Miami, FL</div>
-          </div>
-        </div>
-
-        <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" class="btn-primary" style="display:block;text-align:center;margin-top:32px;">Get Tickets</a>
+        <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" class="btn-primary" id="nextTicketBtn" style="display:block;text-align:center;margin-top:32px;">Get Tickets</a>
       </div>
 
     </div>
@@ -838,7 +820,26 @@
 <section class="about-section">
   <div class="about-inner">
     <div class="about-img-wrap">
-      <div class="about-img"><img src="emblem.png" alt="Tap Tap Party emblem"></div>
+
+      <!-- Slideshow: Emblem ↔ Video -->
+      <div style="position:relative;">
+        <!-- Emblem slide -->
+        <div id="wwSlide0" class="ww-slide">
+          <div class="about-img"><img src="emblem.png" alt="Tap Tap Party emblem"></div>
+        </div>
+        <!-- Video slide -->
+        <div id="wwSlide1" class="ww-slide" style="display:none;">
+          <video id="wwaVideo" muted playsinline loop style="width:100%;border-radius:3px;display:block;">
+            <source src="whoweare.mp4" type="video/mp4">
+          </video>
+        </div>
+        <!-- Toggle dots -->
+        <div style="display:flex;justify-content:center;gap:8px;margin-top:12px;">
+          <span id="wwDot0" onclick="showWWSlide(0)" style="width:8px;height:8px;border-radius:50%;background:var(--white);cursor:pointer;transition:background 0.2s;"></span>
+          <span id="wwDot1" onclick="showWWSlide(1)" style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.3);cursor:pointer;transition:background 0.2s;"></span>
+        </div>
+      </div>
+
       <div class="about-stats-row">
         <div class="stat-inline"><span class="stat-num">50+</span><span class="stat-lbl">Events</span></div>
         <span class="stat-pipe">|</span>
@@ -860,7 +861,20 @@
   </div>
 </section>
 
+<script>
+  function showWWSlide(n) {
+    const slides = [document.getElementById('wwSlide0'), document.getElementById('wwSlide1')];
+    const dots   = [document.getElementById('wwDot0'),   document.getElementById('wwDot1')];
+    const video  = document.getElementById('wwaVideo');
+    slides.forEach((s, i) => s.style.display = i === n ? 'block' : 'none');
+    dots.forEach((d, i) => d.style.background = i === n ? 'var(--white)' : 'rgba(255,255,255,0.3)');
+    if (n === 1) { video.play(); }
+    else { video.pause(); video.currentTime = 0; }
+  }
+</script>
+
 <style>
+  .ww-slide { transition: opacity 0.3s; }
   .about-img-wrap { display: flex; flex-direction: column; gap: 16px; }
   .about-stats-row {
     display: flex; align-items: center; justify-content: center;
@@ -902,6 +916,94 @@
 </section>
 
 <script>
+  // ── AUTO NEXT EVENT from admin localStorage ──
+  // Seed default upcoming events if not already seeded
+  (function seedEvents() {
+    if (localStorage.getItem('tt_seeded')) return;
+    const defaults = [
+      { name: 'Tap Tap London', city: 'London, UK', date: '2026-08-30', venue: 'TBA', link: 'http://Taptap.eventbrite.com', flyer: null },
+      { name: 'Tap Tap New York', city: 'New York, NY', date: '2026-09-05', venue: 'TBA', link: 'http://Taptap.eventbrite.com', flyer: null },
+      { name: 'Tap Tap Miami', city: 'Miami, FL', date: '2026-10-11', venue: 'TBA', link: 'http://Taptap.eventbrite.com', flyer: null },
+      { name: 'Tap Tap Miami', city: 'Miami, FL', date: '2026-11-29', venue: 'TBA', link: 'http://Taptap.eventbrite.com', flyer: null },
+      { name: 'Tap Tap Miami', city: 'Miami, FL', date: '2026-12-20', venue: 'TBA', link: 'http://Taptap.eventbrite.com', flyer: null },
+    ];
+    if (!JSON.parse(localStorage.getItem('tt_events') || '[]').length) {
+      localStorage.setItem('tt_events', JSON.stringify(defaults));
+    }
+  })();
+
+  (function() {
+    try {
+      const events = JSON.parse(localStorage.getItem('tt_events') || '[]');
+      if (!events.length) return;
+      const today = new Date(); today.setHours(0,0,0,0);
+      const future = events.filter(e => new Date(e.date + 'T12:00:00') >= today).sort((a,b) => new Date(a.date + 'T12:00:00') - new Date(b.date + 'T12:00:00'));
+      if (!future.length) return;
+
+      const next = future[0];
+      const d = new Date(next.date + 'T12:00:00');
+      const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const fullMonths = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+      // Update flyer
+      const flyerImg = document.getElementById('nextFlyerImg');
+      const flyerWrap = document.getElementById('nextFlyer');
+      if (next.flyer) {
+        flyerImg.src = next.flyer;
+        flyerImg.style.opacity = '1';
+        flyerImg.alt = next.name;
+        const tag = flyerWrap.querySelector('.coming-soon-tag');
+        if (tag) tag.remove();
+      } else {
+        flyerImg.src = 'og-image.png';
+        flyerImg.style.opacity = '1';
+        flyerImg.alt = next.name;
+        if (!flyerWrap.querySelector('.coming-soon-tag')) {
+          const tag = document.createElement('div');
+          tag.className = 'coming-soon-tag';
+          tag.style.cssText = 'position:absolute;bottom:0;left:0;right:0;background:rgba(8,8,8,0.75);color:rgba(240,237,230,0.7);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-align:center;padding:10px;';
+          tag.textContent = 'More Details Coming Soon';
+          flyerWrap.style.position = 'relative';
+          flyerWrap.appendChild(tag);
+        }
+      }
+
+      // Update date line
+      document.getElementById('nextDateLine').textContent = `${days[d.getDay()]}, ${fullMonths[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+
+      // Update name
+      document.getElementById('nextName').textContent = next.name;
+
+      // Update details
+      document.getElementById('nextDetails').innerHTML = `
+        ${next.venue ? `<div class="event-detail-row"><span class="dot"></span>${next.venue}${next.city ? ', ' + next.city : ''}</div>` : ''}
+        <div class="event-detail-row"><span class="dot"></span>DJ Bullet & Friends</div>
+      `;
+
+      // Update ticket link
+      if (next.link) document.getElementById('nextTicketBtn').href = next.link;
+
+      // Update sidebar with next 3 after the featured
+      const sidebar = future.slice(1, 4);
+      if (sidebar.length) {
+        document.getElementById('sidebarEvents').innerHTML = sidebar.map(e => {
+          const sd = new Date(e.date + 'T12:00:00');
+          return `<div class="sidebar-event">
+            <div class="sidebar-date">
+              <div class="ud-month">${months[sd.getMonth()].toUpperCase()}</div>
+              <div class="ud-day">${sd.getDate()}</div>
+            </div>
+            <div>
+              <div class="sidebar-name">${e.name}</div>
+              <div class="sidebar-loc">${e.city}</div>
+            </div>
+          </div>`;
+        }).join('');
+      }
+    } catch(e) {}
+  })();
+
   function getApprovedPhotos() {
     try { return JSON.parse(localStorage.getItem('tt_approved_photos') || '[]'); } catch { return []; }
   }
@@ -946,11 +1048,23 @@
       const el = document.getElementById('gthumb' + i);
       if (!el) return;
       el.innerHTML = '';
+      el.style.position = 'relative';
+      el.style.overflow = 'hidden';
+
+      // Blurred background
+      const bg = document.createElement('img');
+      bg.src = src;
+      bg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(12px) brightness(0.5);transform:scale(1.1);';
+      bg.onerror = () => {};
+
+      // Full image centered
       const img = document.createElement('img');
       img.src = src;
       img.alt = 'Tap Tap Party';
-      img.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:center top;display:block;';
+      img.style.cssText = 'position:relative;z-index:1;width:100%;height:100%;object-fit:contain;display:block;';
       img.onerror = () => el.style.display = 'none';
+
+      el.appendChild(bg);
       el.appendChild(img);
     });
     // Update dots

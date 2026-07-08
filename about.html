@@ -183,6 +183,7 @@
       .hero-img { display: none; }
       .section { padding: 56px 20px; }
       .two-col { grid-template-columns: 1fr; gap: 32px; }
+      .performers-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
       .stats-row { grid-template-columns: 1fr 1fr; }
       .stat-box:nth-child(2) { border-right: none; }
       .stat-box:nth-child(3) { border-top: 1px solid rgba(255,255,255,0.07); }
@@ -206,9 +207,10 @@
     /* ── FOOTER ── */
     .site-footer { border-top: 1px solid rgba(255,255,255,0.05); padding: 56px 48px 36px; }
     .site-footer-inner { max-width: 1000px; margin: 0 auto; }
+    .footer-top-wrap { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
     .footer-logo { height: 36px; width: auto; display: block; mix-blend-mode: screen; margin-bottom: 6px; }
-    .footer-tagline { font-size: 13px; color: #666; margin-bottom: 40px; }
-    .footer-desktop-cols { display: flex; gap: 64px; margin-bottom: 40px; }
+    .footer-tagline { font-size: 13px; color: #666; }
+    .footer-desktop-cols { display: flex; gap: 64px; }
     .footer-dcol h4 { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #F5C518; margin-bottom: 16px; font-weight: 500; }
     .footer-dcol ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
     .footer-dcol a { color: #666; text-decoration: none; font-size: 14px; transition: color 0.2s; }
@@ -218,22 +220,6 @@
     .footer-bottom p { font-size: 13px; color: #666; }
     .footer-ig { color: #666; display: flex; align-items: center; transition: color 0.2s; text-decoration: none; }
     .footer-ig:hover { color: #F0EDE6; }
-
-    @media (max-width: 800px) {
-      .site-footer { padding: 32px 20px 24px; }
-      .footer-tagline { margin-bottom: 20px; }
-      .site-footer-inner { display: flex; flex-direction: column; align-items: center; text-align: center; }
-      .footer-logo { margin: 0 auto 6px; }
-      .footer-desktop-cols { display: none; }
-      .footer-mobile-row { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 20px; }
-      .footer-mobile-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #F5C518; font-weight: 500; }
-      .footer-mobile-links { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px 10px; }
-      .footer-mobile-links a { font-size: 12px; color: rgba(240,237,230,0.6); text-decoration: none; }
-      .footer-mobile-links a:hover { color: #F0EDE6; }
-      .footer-buy { color: #D42027 !important; font-weight: 600; }
-      .fsep { color: rgba(255,255,255,0.2); font-size: 11px; }
-      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
-    }
   </style>
 </head>
 <body>
@@ -355,79 +341,68 @@
     <p class="section-eyebrow">Notable Past Performers</p>
     <h2 class="section-title">DJ BULLET<br><span>&amp; FRIENDS.</span></h2>
 
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:48px; margin-bottom:56px;">
+    <div class="performers-grid" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:48px; margin-bottom:56px;">
 
-      <!-- DJs & Hosts -->
+      <!-- Resident DJs -->
       <div>
-        <p style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;font-weight:500;">DJs & Hosts</p>
+        <p style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;font-weight:500;">Resident DJs</p>
         <div style="display:flex;flex-direction:column;gap:0;">
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-            <span style="font-size:15px;font-weight:500;">DJ Bullet</span>
-            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Founder · DJ</span>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+            <span style="font-size:14px;font-weight:500;">DJ Bullet</span>
+            <span style="font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Founder</span>
           </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-            <span style="font-size:15px;font-weight:500;">P-Dous</span>
-            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Host</span>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+            <span style="font-size:14px;font-weight:500;">Yo Babou</span>
           </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-            <span style="font-size:15px;font-weight:500;">DJ K9</span>
-            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">DJ</span>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+            <span style="font-size:14px;font-weight:500;">Mr Mario</span>
           </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-            <span style="font-size:15px;font-weight:500;">Yo! Babou</span>
-            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">DJ</span>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+            <span style="font-size:14px;font-weight:500;">DJ K9</span>
           </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-            <span style="font-size:15px;font-weight:500;">Ted Bounce</span>
-            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">DJ</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-            <span style="font-size:15px;font-weight:500;">Magic Kenny</span>
-            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">DJ</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-            <span style="font-size:15px;font-weight:500;">DJ Stakz</span>
-            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">DJ</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;">
-            <span style="font-size:15px;font-weight:500;">Jason Panton</span>
-            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">DJ</span>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;">
+            <span style="font-size:14px;font-weight:500;">Jason Panton</span>
           </div>
         </div>
       </div>
 
-      <!-- Notable Artists -->
+      <!-- Guest DJs -->
       <div>
-        <p style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;font-weight:500;">Notable Artists</p>
+        <p style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;font-weight:500;">Guest DJs</p>
         <div style="display:flex;flex-direction:column;gap:0;">
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-            <span style="font-size:15px;font-weight:500;">Fatima</span>
-            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Artist</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-            <span style="font-size:15px;font-weight:500;">Arly Larivière</span>
-            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Artist</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-            <span style="font-size:15px;font-weight:500;">Richard Cave</span>
-            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Artist</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-            <span style="font-size:15px;font-weight:500;">Alan Cave</span>
-            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Artist</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-            <span style="font-size:15px;font-weight:500;">Tonymix</span>
-            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Artist</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-            <span style="font-size:15px;font-weight:500;">Baky</span>
-            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Artist</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;">
-            <span style="font-size:15px;font-weight:500;">Skyla Tylaa</span>
-            <span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Artist</span>
-          </div>
+          <div style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:14px;font-weight:500;">Tonymix</span></div>
+          <div style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:14px;font-weight:500;">DJ PhaPhane</span></div>
+          <div style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:14px;font-weight:500;">Skyla Tylaa</span></div>
+          <div style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:14px;font-weight:500;">DJ Maphorisa</span></div>
+          <div style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:14px;font-weight:500;">DJ Lag</span></div>
+          <div style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:14px;font-weight:500;">Ted Bounce</span></div>
+          <div style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:14px;font-weight:500;">DJ LC</span></div>
+          <div style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:14px;font-weight:500;">Magic Kenny</span></div>
+          <div style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:14px;font-weight:500;">DJ Stakz</span></div>
+          <div style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:14px;font-weight:500;">Mr Jim</span></div>
+          <div style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:14px;font-weight:500;">DJ Squal</span></div>
+          <div style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:14px;font-weight:500;">Milly Marv</span></div>
+          <div style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:14px;font-weight:500;">DJ Magma</span></div>
+          <div style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:14px;font-weight:500;">DJ Marz</span></div>
+          <div style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:14px;font-weight:500;">DJ Killerz</span></div>
+          <div style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:14px;font-weight:500;">DJ Mad Max</span></div>
+          <div style="padding:12px 0;"><span style="font-size:13px;font-style:italic;color:var(--muted);">& More</span></div>
+        </div>
+      </div>
+
+      <!-- Performers -->
+      <div>
+        <p style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;font-weight:500;">Performers</p>
+        <div style="display:flex;flex-direction:column;gap:0;">
+          <div style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:14px;font-weight:500;">Richard Cave</span></div>
+          <div style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:14px;font-weight:500;">Arly Larivière</span></div>
+          <div style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:14px;font-weight:500;">Alan Cave</span></div>
+          <div style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:14px;font-weight:500;">P-Dous</span></div>
+          <div style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:14px;font-weight:500;">Fatima</span></div>
+          <div style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:14px;font-weight:500;">Trouble Boy</span></div>
+          <div style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:14px;font-weight:500;">MGCK</span></div>
+          <div style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-size:14px;font-weight:500;">Andybeatz</span></div>
+          <div style="padding:12px 0;"><span style="font-size:14px;font-weight:500;">Steves J Bryan</span></div>
         </div>
       </div>
 
@@ -449,16 +424,17 @@
     <p class="section-eyebrow">The Tour</p>
     <h2 class="section-title">WHERE WE'VE<br><span>BEEN.</span></h2>
     <div class="section-body">
-      <p>Every first night in a new city has sold out. From Miami to Paris, from Toronto to Atlanta — wherever Haitians are, TapTap shows up. The support of the diaspora across the world is what drives this forward.</p>
+      <p>Every first night in a new city has sold out. From Miami to Paris, from Orlando to London — wherever Haitians are, TapTap shows up.</p>
     </div>
-    <div class="cities-flow" style="flex-wrap:nowrap; overflow-x:auto; padding-bottom:4px;">
+    <div class="cities-flow" style="flex-wrap:wrap; padding-bottom:4px;">
       <span class="city-pill">🇺🇸 Miami</span>
-      <span class="city-pill">🇺🇸 Atlanta</span>
+      <span class="city-pill">🇺🇸 Orlando</span>
       <span class="city-pill">🇺🇸 New York</span>
+      <span class="city-pill">🇺🇸 Atlanta</span>
       <span class="city-pill">🇺🇸 Boston</span>
       <span class="city-pill">🇺🇸 Philadelphia</span>
-      <span class="city-pill">🇨🇦 Toronto</span>
-      <span class="city-pill">🇨🇦 Montreal</span>
+      <span class="city-pill">🇺🇸 Washington DC</span>
+      <span class="city-pill">🇩🇴 Punta Cana</span>
       <span class="city-pill">🇫🇷 Paris</span>
       <span class="city-pill">🇬🇧 London</span>
     </div>
@@ -496,27 +472,32 @@
 
 <footer class="site-footer">
   <div class="site-footer-inner">
-    <img src="logo.png" alt="Tap Tap Party" class="footer-logo">
-    <p class="footer-tagline">Once a month. Every month. 🇭🇹</p>
+    <div class="footer-top-wrap">
+      <div>
+        <img src="logo.png" alt="Tap Tap Party" class="footer-logo">
+        <p class="footer-tagline">Once a month. Every month. 🇭🇹</p>
+      </div>
+      <!-- Desktop columns -->
+      <div class="footer-desktop-cols">
+        <div class="footer-dcol">
+          <h4>Pages</h4>
+          <ul>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="community.html">Community</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-dcol">
+          <h4>Tickets</h4>
+          <ul>
+            <li><a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener">Buy Tickets</a></li>
+            <li><a href="events.html">Upcoming Events</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
 
-    <!-- Desktop columns -->
-    <div class="footer-desktop-cols">
-      <div class="footer-dcol">
-        <h4>Pages</h4>
-        <ul>
-          <li><a href="events.html">Events</a></li>
-          <li><a href="community.html">Community</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="contact.html">Contact</a></li>
-        </ul>
-      </div>
-      <div class="footer-dcol">
-        <h4>Tickets</h4>
-        <ul>
-          <li><a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener">Buy Tickets</a></li>
-          <li><a href="events.html">Upcoming Events</a></li>
-        </ul>
-      </div>
     </div>
 
     <!-- Mobile links -->
