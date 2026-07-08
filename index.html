@@ -7,7 +7,7 @@
   <meta name="description" content="TapTap — The Ultimate Caribbean Nightlife Experience. DJ Bullet & Friends present a monthly Haitian culture experience. Music, food, art & people. Miami, New York, London and beyond.">
   <meta property="og:title" content="TapTap — The Ultimate Caribbean Nightlife Experience">
   <meta property="og:description" content="Once a month. Haitian music, food, art & people. DJ Bullet & Friends.">
-  <meta property="og:image" content="logo.png">
+  <meta property="og:image" content="https://taptapparty.vercel.app/og-image.png">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -823,15 +823,15 @@
 
       <!-- Slideshow: Emblem ↔ Video -->
       <div style="position:relative;">
-        <!-- Emblem slide -->
+        <!-- Video slide (first) -->
         <div id="wwSlide0" class="ww-slide">
-          <div class="about-img"><img src="emblem.png" alt="Tap Tap Party emblem"></div>
-        </div>
-        <!-- Video slide -->
-        <div id="wwSlide1" class="ww-slide" style="display:none;">
-          <video id="wwaVideo" muted playsinline loop style="width:100%;border-radius:3px;display:block;">
+          <video id="wwaVideo" muted playsinline autoplay loop style="width:100%;border-radius:3px;display:block;">
             <source src="whoweare.mp4" type="video/mp4">
           </video>
+        </div>
+        <!-- Emblem slide -->
+        <div id="wwSlide1" class="ww-slide" style="display:none;">
+          <div class="about-img"><img src="emblem.png" alt="Tap Tap Party emblem"></div>
         </div>
         <!-- Toggle dots -->
         <div style="display:flex;justify-content:center;gap:8px;margin-top:12px;">
@@ -868,9 +868,14 @@
     const video  = document.getElementById('wwaVideo');
     slides.forEach((s, i) => s.style.display = i === n ? 'block' : 'none');
     dots.forEach((d, i) => d.style.background = i === n ? 'var(--white)' : 'rgba(255,255,255,0.3)');
-    if (n === 1) { video.play(); }
-    else { video.pause(); video.currentTime = 0; }
+    if (n === 0) { video.play(); }
+    else { video.pause(); }
   }
+  // Autoplay video on page load
+  window.addEventListener('load', () => {
+    const v = document.getElementById('wwaVideo');
+    if (v) v.play().catch(() => {});
+  });
 </script>
 
 <style>

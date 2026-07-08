@@ -170,30 +170,6 @@
     .socials a { width: 36px; height: 36px; border: 1px solid rgba(255,255,255,0.1); border-radius: 2px; display: flex; align-items: center; justify-content: center; color: var(--muted); text-decoration: none; font-size: 12px; font-weight: 600; transition: border-color 0.2s, color 0.2s; }
     .socials a:hover { border-color: var(--white); color: var(--white); }
 
-    @media (max-width: 800px) {
-      nav { padding: 0 20px; height: 56px; display: flex; justify-content: space-between; }
-      .nav-logo img { height: 32px; }
-      .nav-links { display: none; }
-      .nav-cta { display: none; }
-      .nav-hamburger { display: flex; z-index: 300; position: relative; margin-left: auto; }
-      .page-header { padding: 100px 20px 8px; }
-      .submit-section { padding: 0 20px 56px; }
-      .submit-inner { grid-template-columns: 1fr; gap: 24px; }
-      .wall-section { padding: 16px 20px 56px; }
-      .wall-header { flex-direction: column; align-items: flex-start; gap: 8px; }
-      .photo-wall { grid-template-columns: repeat(2, 1fr); }
-
-      /* Mobile footer */
-      .footer-top > div:first-child { display: flex !important; flex-direction: column !important; align-items: center !important; }
-      .footer-bottom { flex-direction: column !important; align-items: center !important; text-align: center !important; }
-      .footer-mobile-tickets { display: flex !important; }
-      .mobile-menu a { font-size: 24px !important; letter-spacing: 2px !important; }
-      .mobile-menu .mobile-cta { font-size: 16px !important; padding: 12px 32px !important; }
-
-      /* Mobile footer */
-      .footer-top > div:first-child { display: flex !important; flex-direction: column !important; align-items: center !important; }
-      .footer-bottom { flex-direction: column !important; align-items: center !important; text-align: center !important; gap: 12px !important; }
-    }
 
     /* ── FOOTER ── */
     .site-footer { border-top: 1px solid rgba(255,255,255,0.05); padding: 56px 48px 36px; }
@@ -211,7 +187,33 @@
     .footer-bottom p { font-size: 13px; color: #666; }
     .footer-ig { color: #666; display: flex; align-items: center; transition: color 0.2s; text-decoration: none; }
     .footer-ig:hover { color: #F0EDE6; }
-  </style>
+
+    @media (max-width: 800px) {
+      nav { padding: 0 20px; height: 56px; display: flex; justify-content: space-between; }
+      .nav-logo img { height: 32px; }
+      .nav-links { display: none; }
+      .nav-cta { display: none; }
+      .nav-hamburger { display: flex; z-index: 300; position: relative; margin-left: auto; }
+      .page-header { padding: 100px 20px 8px; }
+      .submit-section { padding: 0 20px 56px; }
+      .submit-inner { grid-template-columns: 1fr; gap: 24px; }
+      .wall-section { padding: 16px 20px 56px; }
+      .wall-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .photo-wall { grid-template-columns: repeat(2, 1fr); }
+
+      /* Mobile footer */
+      .mobile-menu a { font-size: 24px !important; letter-spacing: 2px !important; }
+      .mobile-menu .mobile-cta { font-size: 16px !important; padding: 12px 32px !important; }
+
+      /* Mobile footer */
+    
+      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; align-items: center; }
+    }  </style>
+  <meta property="og:image" content="https://taptapparty.vercel.app/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://taptapparty.vercel.app/og-image.png">
 </head>
 <body>
 
