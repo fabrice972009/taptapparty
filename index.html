@@ -602,7 +602,7 @@
       this.speedX = (Math.random() - 0.5) * 0.5;
       this.life = init ? Math.random() * 300 : 0;
       this.maxLife = 250 + Math.random() * 350;
-      this.maxOpacity = 0.06 + Math.random() * 0.08;
+      this.maxOpacity = 0.03 + Math.random() * 0.04;
       this.opacity = init ? this.maxOpacity * Math.random() : 0;
       this.color = Math.random() > 0.5 ? BLUE : RED;
       this.rotation = Math.random() * Math.PI * 2;
@@ -641,7 +641,7 @@
     this.reset(init);
   }
 
-  for (let i = 0; i < 55; i++) particles.push(new Particle(true));
+  for (let i = 0; i < 30; i++) particles.push(new Particle(true));
 
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -1258,16 +1258,29 @@
     btn.textContent = '...';
     btn.disabled = true;
 
+    // Save to Supabase
     const { error } = await supa.from('newsletter').insert([{ email }]);
 
-    if (error) {
-      if (error.code === '23505') {
-        msg.textContent = "You're already subscribed! 🇭🇹";
-        msg.style.color = '#F5C518';
-      } else {
-        msg.textContent = 'Something went wrong. Try again.';
-        msg.style.color = '#ff6b6b';
-      }
+    if (error && error.code !== '23505') {
+      msg.textContent = 'Something went wrong. Try again.';
+      msg.style.color = '#ff6b6b';
+      btn.textContent = 'Sign Up';
+      btn.disabled = false;
+      return;
+    }
+
+    // Sync to Brevo via secure serverless function
+    try {
+      await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+    } catch(e) { console.log('Brevo sync error', e); }
+
+    if (error && error.code === '23505') {
+      msg.textContent = "You\'re already subscribed! 🇭🇹";
+      msg.style.color = '#F5C518';
     } else {
       msg.textContent = '✅ You\'re in! See you at the next TapTap 🇭🇹';
       msg.style.color = '#2DB358';

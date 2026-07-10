@@ -224,7 +224,7 @@
       this.speedX = (Math.random() - 0.5) * 0.5;
       this.life = init ? Math.random() * 300 : 0;
       this.maxLife = 250 + Math.random() * 350;
-      this.maxOpacity = 0.06 + Math.random() * 0.08;
+      this.maxOpacity = 0.03 + Math.random() * 0.04;
       this.opacity = init ? this.maxOpacity * Math.random() : 0;
       this.color = Math.random() > 0.5 ? BLUE : RED;
       this.rotation = Math.random() * Math.PI * 2;
@@ -263,7 +263,7 @@
     this.reset(init);
   }
 
-  for (let i = 0; i < 55; i++) particles.push(new Particle(true));
+  for (let i = 0; i < 30; i++) particles.push(new Particle(true));
 
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
