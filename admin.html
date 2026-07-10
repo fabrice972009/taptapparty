@@ -128,8 +128,87 @@
     .toast.success { border-color:rgba(45,179,88,0.4); color:var(--green); }
     .toast.error { border-color:rgba(212,32,39,0.4); color:#ff6b6b; }
   </style>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPA_URL = 'https://rmzfowqzlqyzbjchpntv.supabase.co';
+    const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtemZvd3F6bHF5emJqY2hwbnR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM0NzQxODcsImV4cCI6MjA5OTA1MDE4N30.GB42OaMpcIt7uxopfPYEH4Vdatm7hYS37AptnivgUkU';
+    const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
+  </script>
 </head>
 <body>
+<!-- Smoke Background -->
+<canvas id="smokeCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('smokeCanvas');
+  const ctx = canvas.getContext('2d');
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const BLUE = '#003A8C', RED = '#D42027';
+  const particles = [];
+
+  function Particle(init) {
+    this.reset = function(init) {
+      this.x = Math.random() * canvas.width;
+      this.y = init ? Math.random() * canvas.height : canvas.height + 30;
+      this.size = 80 + Math.random() * 160;
+      this.speedY = -(0.4 + Math.random() * 0.7);
+      this.speedX = (Math.random() - 0.5) * 0.5;
+      this.life = init ? Math.random() * 300 : 0;
+      this.maxLife = 250 + Math.random() * 350;
+      this.maxOpacity = 0.06 + Math.random() * 0.08;
+      this.opacity = init ? this.maxOpacity * Math.random() : 0;
+      this.color = Math.random() > 0.5 ? BLUE : RED;
+      this.rotation = Math.random() * Math.PI * 2;
+      this.rotSpeed = (Math.random() - 0.5) * 0.006;
+      this.wobble = Math.random() * Math.PI * 2;
+    };
+    this.update = function() {
+      this.life++;
+      this.wobble += 0.015;
+      this.x += this.speedX + Math.sin(this.wobble) * 0.5;
+      this.y += this.speedY;
+      this.rotation += this.rotSpeed;
+      this.size += 0.3;
+      const p = this.life / this.maxLife;
+      if (p < 0.15) this.opacity = (p / 0.15) * this.maxOpacity;
+      else if (p > 0.65) this.opacity = ((1 - p) / 0.35) * this.maxOpacity;
+      else this.opacity = this.maxOpacity;
+      if (this.life >= this.maxLife || this.y < -this.size) this.reset(false);
+    };
+    this.draw = function() {
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.rotation);
+      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, this.size);
+      const hex = Math.round(this.opacity * 255).toString(16).padStart(2,'0');
+      const hex2 = Math.round(this.opacity * 0.4 * 255).toString(16).padStart(2,'0');
+      g.addColorStop(0,   this.color + hex);
+      g.addColorStop(0.5, this.color + hex2);
+      g.addColorStop(1,   this.color + '00');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(0, 0, this.size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    };
+    this.reset(init);
+  }
+
+  for (let i = 0; i < 55; i++) particles.push(new Particle(true));
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+</script>
 
 <!-- LOGIN -->
 <div id="loginScreen">
@@ -275,30 +354,50 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  // ── AUTH ──
-  const CREDS = { email: 'admin@itstaptap.com', pass: 'Bullet2026!!' };
-
-  function doLogin() {
+  // ── AUTH — Supabase ──
+  async function doLogin() {
     const email = document.getElementById('loginEmail').value.trim();
     const pass  = document.getElementById('loginPassword').value;
     const err   = document.getElementById('loginError');
-    if (email === CREDS.email && pass === CREDS.pass) {
-      err.style.display = 'none';
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('appScreen').style.display = 'block';
-      seedIfNeeded();
-      loadAll();
-    } else {
+    const btn   = document.querySelector('.btn-login');
+
+    btn.textContent = 'Signing in...';
+    btn.disabled = true;
+
+    const { data, error } = await supa.auth.signInWithPassword({ email, password: pass });
+
+    btn.textContent = 'Sign In';
+    btn.disabled = false;
+
+    if (error) {
+      err.textContent = 'Invalid email or password.';
       err.style.display = 'block';
+      return;
     }
+
+    err.style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('appScreen').style.display = 'block';
+    loadAll();
   }
 
-  function logout() {
+  async function logout() {
+    await supa.auth.signOut();
     document.getElementById('appScreen').style.display = 'none';
     document.getElementById('loginScreen').style.display = 'flex';
     document.getElementById('loginEmail').value = '';
     document.getElementById('loginPassword').value = '';
   }
+
+  // Auto-restore session if already logged in
+  (async function checkSession() {
+    const { data: { session } } = await supa.auth.getSession();
+    if (session) {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('appScreen').style.display = 'block';
+      loadAll();
+    }
+  })();
 
   // ── NAVIGATION ──
   function showPage(name) {
@@ -309,307 +408,201 @@
   }
 
   // ── DATA ──
-  function get(key) { try { return JSON.parse(localStorage.getItem(key) || '[]'); } catch { return []; } }
-  function set(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
-
-  // Seed existing hardcoded content on first load
-  function seedIfNeeded() {
-    if (localStorage.getItem('tt_seeded')) return;
-
-    // Seed existing approved reviews
-    const reviews = [
-      { name: 'Jerry R.', event: 'TapTap Miami, March 2026', text: "DJ Bullet is built different. The way he transitions between kompa, afrobeats and hip-hop is seamless. You don't just hear the music at TapTap — you feel it in your chest the whole night.", rating: 5, date: 'Mar 29, 2026' },
-      { name: 'Nia', event: 'TapTap Miami, May 2026', text: "P-Dous on the mic is something else. He keeps the whole crowd locked in and makes everyone feel like they belong. He's the soul of TapTap for real.", rating: 5, date: 'May 17, 2026' },
-      { name: 'Jade', event: 'TapTap Atlanta, June 2026', text: "I'm not even Haitian and TapTap is my favorite party of the year. The culture, the fashion, the music — you feel the love the second you walk in.", rating: 5, date: 'Jun 24, 2026' },
-      { name: 'XTO', event: 'TapTap Miami, May 2026', text: "Ted Bounce had the whole room shaking. Nonstop energy from the first drop to the last track. I was sweating the entire set and loved every second.", rating: 5, date: 'May 17, 2026' },
-      { name: 'Yuri', event: 'TapTap Boston, June 2026', text: "DJ K9 came in and completely flipped the energy. Nobody wanted to leave. Pure talent on the decks — TapTap always brings the best out.", rating: 4.5, date: 'Jun 12, 2026' },
-      { name: 'JO', event: 'TapTap Miami 3 Years, March 2026', text: "Flew in from New York just for this. Worth every penny. The Haitian flag was waving all night. The 3 year anniversary was something truly special.", rating: 5, date: 'Mar 29, 2026' },
-      { name: 'Nal de Bash', event: 'TapTap Philadelphia, June 2026', text: "Brought my whole crew from Philly and they haven't stopped talking about it. The flag drop moment had everyone going crazy. This is what Haitian culture looks like in 2026.", rating: 5, date: 'Jun 19, 2026' },
-      { name: 'Tp', event: 'TapTap Miami, May 2026', text: "Discovered TapTap through a friend, now I haven't missed one since. The vibe is always right, the crowd is the most welcoming energy you'll find anywhere.", rating: 4.5, date: 'May 17, 2026' },
-      { name: 'Marie-Josée', event: 'TapTap Atlanta, June 2026', text: "First time at TapTap and I already bought tickets for the next one. The energy in the room was unlike anything I've experienced.", rating: 5, date: 'Jun 24, 2026' },
-    ];
-    set('tt_approved_reviews', reviews);
-
-    // Seed approved photos (URL references from gallery)
-    const photos = Array.from({length: 6}, (_, i) => ({
-      name: ['Sophia', 'Jerry', 'Daniel', 'Kenza', 'Yanick', 'Christelle'][i],
-      dataUrl: `assets/gallery/photo${[3,7,10,14,16,18][i]}.jpg`,
-      date: 'Admin'
-    }));
-    set('tt_approved_photos', photos);
-
-    // Seed all events
-    const events = [
-      { name: 'Tap Tap London', city: 'London, UK', date: '2026-08-30', venue: 'TBA', link: 'http://Taptap.eventbrite.com', flyer: null, isNext: true },
-      { name: 'Tap Tap New York', city: 'New York, NY', date: '2026-09-05', venue: 'TBA', link: 'http://Taptap.eventbrite.com', flyer: null, isNext: false },
-      { name: 'Tap Tap Miami', city: 'Miami, FL', date: '2026-10-11', venue: 'TBA', link: 'http://Taptap.eventbrite.com', flyer: null, isNext: false },
-      { name: 'Tap Tap Miami', city: 'Miami, FL', date: '2026-11-29', venue: 'TBA', link: 'http://Taptap.eventbrite.com', flyer: null, isNext: false },
-      { name: 'Tap Tap Miami', city: 'Miami, FL', date: '2026-12-20', venue: 'TBA', link: 'http://Taptap.eventbrite.com', flyer: null, isNext: false },
-    ];
-    set('tt_events', events);
-    localStorage.setItem('tt_seeded', '1');
+  async function loadAll() {
+    await Promise.all([loadPending(), loadApproved(), loadEvents(), loadNewsletter()]);
+    await updateStats();
   }
 
-  function loadAll() {
-    loadPending();
-    loadApproved();
-    loadEvents();
-    loadNewsletter();
-    updateStats();
-  }
-
-  function updateStats() {
-    const pending = get('tt_pending_photos').length + get('tt_pending_reviews').length;
-    const approved = get('tt_approved_photos').length + get('tt_approved_reviews').length;
-    document.getElementById('statPending').textContent = pending;
+  async function updateStats() {
+    const [pp, pr, ev, nl, ap, ar] = await Promise.all([
+      supa.from('community_photos').select('id',{count:'exact',head:true}).eq('status','pending'),
+      supa.from('community_reviews').select('id',{count:'exact',head:true}).eq('status','pending'),
+      supa.from('events').select('id',{count:'exact',head:true}),
+      supa.from('newsletter').select('id',{count:'exact',head:true}),
+      supa.from('community_photos').select('id',{count:'exact',head:true}).eq('status','approved'),
+      supa.from('community_reviews').select('id',{count:'exact',head:true}).eq('status','approved'),
+    ]);
+    const pending  = (pp.count||0) + (pr.count||0);
+    const approved = (ap.count||0) + (ar.count||0);
+    document.getElementById('statPending').textContent  = pending;
     document.getElementById('statApproved').textContent = approved;
-    document.getElementById('statEvents').textContent = get('tt_events').length;
-    document.getElementById('statSubs').textContent = get('tt_newsletter').length;
+    document.getElementById('statEvents').textContent   = ev.count||0;
+    document.getElementById('statSubs').textContent     = nl.count||0;
     document.getElementById('pendingBadge').textContent = pending;
     document.getElementById('pendingBadge').style.display = pending > 0 ? 'inline' : 'none';
   }
 
   // ── PENDING ──
-  function loadPending() {
-    const photos  = get('tt_pending_photos');
-    const reviews = get('tt_pending_reviews');
+  async function loadPending() {
+    const { data: photos  } = await supa.from('community_photos').select('*').eq('status','pending').order('created_at',{ascending:false});
+    const { data: reviews } = await supa.from('community_reviews').select('*').eq('status','pending').order('created_at',{ascending:false});
     const pEl = document.getElementById('pendingPhotos');
     const rEl = document.getElementById('pendingReviews');
 
-    pEl.innerHTML = photos.length === 0 ? '<div class="empty-state">No pending photos</div>' :
-      photos.map((p, i) => `
-        <div class="item-card" id="pp${i}">
-          <img class="item-photo" src="${p.dataUrl || ''}" onerror="this.style.display='none'">
-          <div class="item-info">
-            <div class="item-name">${p.name}</div>
-            <div class="item-meta">${p.event || 'TapTap Party'}</div>
-          </div>
-          <div class="item-actions">
-            <button class="btn-approve" onclick="approvePhoto(${i})">Approve</button>
-            <button class="btn-reject" onclick="rejectPhoto(${i})">Reject</button>
-          </div>
-        </div>`).join('');
-
-    rEl.innerHTML = reviews.length === 0 ? '<div class="empty-state">No pending reviews</div>' :
-      reviews.map((r, i) => `
-        <div class="item-card" id="pr${i}">
-          <div class="item-info">
-            <div class="item-name">${r.name} <span class="stars">${'★'.repeat(r.rating || 5)}</span></div>
-            <div class="item-meta">${r.event || 'TapTap Party'}</div>
-            <div class="item-text">"${r.text}"</div>
-          </div>
-          <div class="item-actions">
-            <button class="btn-approve" onclick="approveReview(${i})">Approve</button>
-            <button class="btn-reject" onclick="rejectReview(${i})">Reject</button>
-          </div>
-        </div>`).join('');
-  }
-
-  function approvePhoto(i) {
-    const photos = get('tt_pending_photos');
-    const approved = get('tt_approved_photos');
-    approved.push(photos.splice(i, 1)[0]);
-    set('tt_pending_photos', photos);
-    set('tt_approved_photos', approved);
-    loadAll();
-    toast('Photo approved ✓', 'success');
-  }
-  function rejectPhoto(i) {
-    const photos = get('tt_pending_photos');
-    photos.splice(i, 1);
-    set('tt_pending_photos', photos);
-    loadAll();
-    toast('Photo rejected', 'error');
-  }
-  function approveReview(i) {
-    const reviews = get('tt_pending_reviews');
-    const approved = get('tt_approved_reviews');
-    approved.push(reviews.splice(i, 1)[0]);
-    set('tt_pending_reviews', reviews);
-    set('tt_approved_reviews', approved);
-    loadAll();
-    toast('Review approved ✓', 'success');
-  }
-  function rejectReview(i) {
-    const reviews = get('tt_pending_reviews');
-    reviews.splice(i, 1);
-    set('tt_pending_reviews', reviews);
-    loadAll();
-    toast('Review rejected', 'error');
-  }
-
-  // ── APPROVED ──
-  function loadApproved() {
-    const photos  = get('tt_approved_photos');
-    const reviews = get('tt_approved_reviews');
-    const pEl = document.getElementById('approvedPhotos');
-    const rEl = document.getElementById('approvedReviews');
-
-    pEl.innerHTML = photos.length === 0 ? '<div class="empty-state">No approved photos yet</div>' :
-      photos.map((p, i) => `
-        <div class="item-card">
-          <img class="item-photo" src="${p.dataUrl || ''}" onerror="this.style.display='none'">
-          <div class="item-info">
-            <div class="item-name">${p.name}</div>
-            <div class="item-meta">${p.event || 'TapTap Party'}</div>
-          </div>
-          <div class="item-actions">
-            <button class="btn-remove" onclick="removeApprovedPhoto(${i})">Remove</button>
-          </div>
-        </div>`).join('');
-
-    rEl.innerHTML = reviews.length === 0 ? '<div class="empty-state">No approved reviews yet</div>' :
-      reviews.map((r, i) => `
-        <div class="item-card">
-          <div class="item-info">
-            <div class="item-name">${r.name} <span class="stars">${'★'.repeat(r.rating || 5)}</span></div>
-            <div class="item-meta">${r.event || 'TapTap Party'}</div>
-            <div class="item-text">"${r.text}"</div>
-          </div>
-          <div class="item-actions">
-            <button class="btn-remove" onclick="removeApprovedReview(${i})">Remove</button>
-          </div>
-        </div>`).join('');
-  }
-
-  function removeApprovedPhoto(i) {
-    const photos = get('tt_approved_photos');
-    photos.splice(i, 1);
-    set('tt_approved_photos', photos);
-    loadAll();
-    toast('Photo removed', 'error');
-  }
-  function removeApprovedReview(i) {
-    const reviews = get('tt_approved_reviews');
-    reviews.splice(i, 1);
-    set('tt_approved_reviews', reviews);
-    loadAll();
-    toast('Review removed', 'error');
-  }
-
-  // ── EVENTS ──
-  function loadEvents() {
-    const events = get('tt_events');
-    const el = document.getElementById('eventsList');
-    if (events.length === 0) { el.innerHTML = '<div class="empty-state">No events added yet</div>'; return; }
-    el.innerHTML = events.map((e, i) => `
-      <div class="event-row">
-        ${e.flyer ? `<img src="${e.flyer}" style="width:48px;height:48px;object-fit:cover;border-radius:2px;flex-shrink:0;">` : '<div style="width:48px;height:48px;background:var(--surface2);border-radius:2px;flex-shrink:0;"></div>'}
-        <div class="event-date">${e.date}</div>
-        <div style="flex:1;">
-          <div class="event-name">${e.name} ${e.isNext ? '<span class="next-badge">NEXT UP</span>' : ''}</div>
-          <div class="event-city">${e.venue ? e.venue + ' · ' : ''}${e.city}</div>
+    pEl.innerHTML = !photos?.length ? '<div class="empty-state">No pending photos</div>' :
+      photos.map(p => `<div class="item-card">
+        ${p.image_url ? `<img class="item-photo" src="${p.image_url}" onerror="this.style.display='none'">` : ''}
+        <div class="item-info">
+          <div class="item-name">${p.name}</div>
+          <div class="item-meta">${p.event_name||'TapTap Party'} · ${new Date(p.created_at).toLocaleDateString()}</div>
         </div>
-        <div style="display:flex;gap:8px;align-items:center;">
-          ${!e.isNext ? `<button class="btn-setnext" onclick="setNext(${i})">Set as Next Up</button>` : ''}
-          <button class="btn-remove" onclick="removeEvent(${i})">Remove</button>
+        <div class="item-actions">
+          <button class="btn-approve" onclick="approvePhoto('${p.id}')">Approve</button>
+          <button class="btn-reject"  onclick="rejectPhoto('${p.id}')">Reject</button>
+        </div>
+      </div>`).join('');
+
+    rEl.innerHTML = !reviews?.length ? '<div class="empty-state">No pending reviews</div>' :
+      reviews.map(r => `<div class="item-card">
+        <div class="item-info">
+          <div class="item-name">${r.name} <span class="stars">${'★'.repeat(r.rating||5)}</span></div>
+          <div class="item-meta">${r.event_name||'TapTap Party'} · ${new Date(r.created_at).toLocaleDateString()}</div>
+          <div class="item-text">"${r.review||''}"</div>
+        </div>
+        <div class="item-actions">
+          <button class="btn-approve" onclick="approveReview('${r.id}')">Approve</button>
+          <button class="btn-reject"  onclick="rejectReview('${r.id}')">Reject</button>
         </div>
       </div>`).join('');
   }
 
+  async function approvePhoto(id)  { await supa.from('community_photos').update({status:'approved'}).eq('id',id); loadAll(); toast('Photo approved ✓','success'); }
+  async function rejectPhoto(id)   { await supa.from('community_photos').delete().eq('id',id); loadAll(); toast('Photo rejected','error'); }
+  async function approveReview(id) { await supa.from('community_reviews').update({status:'approved'}).eq('id',id); loadAll(); toast('Review approved ✓','success'); }
+  async function rejectReview(id)  { await supa.from('community_reviews').delete().eq('id',id); loadAll(); toast('Review rejected','error'); }
+
+  // ── APPROVED ──
+  async function loadApproved() {
+    const { data: photos  } = await supa.from('community_photos').select('*').eq('status','approved').order('created_at',{ascending:false});
+    const { data: reviews } = await supa.from('community_reviews').select('*').eq('status','approved').order('created_at',{ascending:false});
+    const pEl = document.getElementById('approvedPhotos');
+    const rEl = document.getElementById('approvedReviews');
+
+    pEl.innerHTML = !photos?.length ? '<div class="empty-state">No approved photos yet</div>' :
+      photos.map(p => `<div class="item-card">
+        ${p.image_url ? `<img class="item-photo" src="${p.image_url}" onerror="this.style.display='none'">` : ''}
+        <div class="item-info">
+          <div class="item-name">${p.name}</div>
+          <div class="item-meta">${p.event_name||'TapTap Party'}</div>
+        </div>
+        <div class="item-actions"><button class="btn-remove" onclick="removeApprovedPhoto('${p.id}')">Remove</button></div>
+      </div>`).join('');
+
+    rEl.innerHTML = !reviews?.length ? '<div class="empty-state">No approved reviews yet</div>' :
+      reviews.map(r => `<div class="item-card">
+        <div class="item-info">
+          <div class="item-name">${r.name} <span class="stars">${'★'.repeat(r.rating||5)}</span></div>
+          <div class="item-meta">${r.event_name||'TapTap Party'}</div>
+          <div class="item-text">"${r.review||''}"</div>
+        </div>
+        <div class="item-actions"><button class="btn-remove" onclick="removeApprovedReview('${r.id}')">Remove</button></div>
+      </div>`).join('');
+  }
+
+  async function removeApprovedPhoto(id)  { await supa.from('community_photos').delete().eq('id',id); loadAll(); toast('Photo removed','error'); }
+  async function removeApprovedReview(id) { await supa.from('community_reviews').delete().eq('id',id); loadAll(); toast('Review removed','error'); }
+
+  // ── EVENTS ──
+  async function loadEvents() {
+    const { data: events } = await supa.from('events').select('*').order('event_date',{ascending:true});
+    const el = document.getElementById('eventsList');
+    if (!events?.length) { el.innerHTML = '<div class="empty-state">No events added yet</div>'; return; }
+    el.innerHTML = events.map(e => `<div class="event-row">
+      ${e.flyer_url ? `<img src="${e.flyer_url}" style="width:48px;height:48px;object-fit:cover;border-radius:2px;flex-shrink:0;">` : '<div style="width:48px;height:48px;background:var(--surface2);border-radius:2px;flex-shrink:0;"></div>'}
+      <div class="event-date">${e.event_date}</div>
+      <div style="flex:1;">
+        <div class="event-name">${e.name} ${e.is_next?'<span class="next-badge">NEXT UP</span>':''}</div>
+        <div class="event-city">${e.venue?e.venue+' · ':''}${e.city}</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        ${!e.is_next?`<button class="btn-setnext" onclick="setNext('${e.id}')">Set as Next Up</button>`:''}
+        <button class="btn-remove" onclick="removeEvent('${e.id}')">Remove</button>
+      </div>
+    </div>`).join('');
+  }
+
   function previewFlyer(input) {
-    const file = input.files[0];
-    if (!file) return;
+    const file = input.files[0]; if (!file) return;
     const reader = new FileReader();
     reader.onload = e => {
       const img = document.getElementById('flyerPreview');
-      img.src = e.target.result;
-      img.style.display = 'block';
+      img.src = e.target.result; img.style.display = 'block';
       document.getElementById('flyerUploadBox').textContent = '✓ ' + file.name;
     };
     reader.readAsDataURL(file);
   }
 
-  function addEvent() {
+  async function addEvent() {
     const name  = document.getElementById('evtName').value.trim();
     const city  = document.getElementById('evtCity').value.trim();
     const date  = document.getElementById('evtDate').value;
     const venue = document.getElementById('evtVenue').value.trim();
     const link  = document.getElementById('evtLink').value.trim();
     const flyerFile = document.getElementById('evtFlyer').files[0];
-    if (!name || !city || !date) { toast('Please fill in name, city and date', 'error'); return; }
+    if (!name || !city || !date) { toast('Please fill in name, city and date','error'); return; }
 
-    const saveEvent = (flyer = null) => {
-      const events = get('tt_events');
-      events.push({ name, city, date, venue, link: link || 'http://Taptap.eventbrite.com', flyer, isNext: false });
-      events.sort((a, b) => new Date(a.date + 'T12:00:00') - new Date(b.date + 'T12:00:00'));
-      set('tt_events', events);
-      ['evtName','evtCity','evtDate','evtVenue','evtLink'].forEach(id => document.getElementById(id).value = '');
-      document.getElementById('evtFlyer').value = '';
-      document.getElementById('flyerPreview').style.display = 'none';
-      document.getElementById('flyerUploadBox').textContent = '📸 Click to upload flyer';
-      loadAll();
-      toast('Event added ✓', 'success');
-    };
-
+    let flyer_url = null;
     if (flyerFile) {
-      const reader = new FileReader();
-      reader.onload = e => saveEvent(e.target.result);
-      reader.readAsDataURL(flyerFile);
-    } else {
-      saveEvent(null);
+      const ext = flyerFile.name.split('.').pop();
+      const fn  = `flyer_${Date.now()}.${ext}`;
+      const { error: upErr } = await supa.storage.from('community-photos').upload(fn, flyerFile);
+      if (!upErr) { const { data } = supa.storage.from('community-photos').getPublicUrl(fn); flyer_url = data.publicUrl; }
     }
+
+    await supa.from('events').insert([{ name, city, event_date: date, venue, ticket_link: link||'http://Taptap.eventbrite.com', flyer_url, is_next: false }]);
+    ['evtName','evtCity','evtDate','evtVenue','evtLink'].forEach(id => document.getElementById(id).value='');
+    document.getElementById('evtFlyer').value='';
+    document.getElementById('flyerPreview').style.display='none';
+    document.getElementById('flyerUploadBox').textContent='📸 Click to upload flyer';
+    loadAll(); toast('Event added ✓','success');
   }
 
-  function setNext(i) {
-    const events = get('tt_events');
-    events.forEach(e => e.isNext = false);
-    events[i].isNext = true;
-    set('tt_events', events);
-    loadAll();
-    toast('Next Up updated ✓', 'success');
+  async function setNext(id) {
+    await supa.from('events').update({is_next:false}).gt('id','00000000-0000-0000-0000-000000000000');
+    await supa.from('events').update({is_next:true}).eq('id',id);
+    loadAll(); toast('Next Up updated ✓','success');
   }
 
-  function removeEvent(i) {
-    const events = get('tt_events');
-    events.splice(i, 1);
-    set('tt_events', events);
-    loadAll();
-    toast('Event removed', 'error');
+  async function removeEvent(id) {
+    await supa.from('events').delete().eq('id',id);
+    loadAll(); toast('Event removed','error');
   }
 
   // ── NEWSLETTER ──
-  function loadNewsletter() {
-    const subs = get('tt_newsletter');
+  async function loadNewsletter() {
+    const { data: subs } = await supa.from('newsletter').select('*').order('created_at',{ascending:false});
     const el = document.getElementById('subsList');
-    document.getElementById('subCount').textContent = `${subs.length} subscriber${subs.length !== 1 ? 's' : ''}`;
-    if (subs.length === 0) { el.innerHTML = '<div class="empty-state">No subscribers yet</div>'; return; }
-    el.innerHTML = subs.map((s, i) => `
-      <div class="sub-row">
-        <div class="sub-email">${s.email || s}</div>
-        <div style="display:flex;gap:12px;align-items:center;">
-          <div class="sub-date">${s.date || ''}</div>
-          <button class="btn-remove" onclick="removeSub(${i})">Remove</button>
-        </div>
-      </div>`).join('');
+    document.getElementById('subCount').textContent = `${subs?.length||0} subscriber${subs?.length!==1?'s':''}`;
+    if (!subs?.length) { el.innerHTML = '<div class="empty-state">No subscribers yet</div>'; return; }
+    el.innerHTML = subs.map(s => `<div class="sub-row">
+      <div class="sub-email">${s.email}</div>
+      <div style="display:flex;gap:12px;align-items:center;">
+        <div class="sub-date">${new Date(s.created_at).toLocaleDateString()}</div>
+        <button class="btn-remove" onclick="removeSub('${s.id}')">Remove</button>
+      </div>
+    </div>`).join('');
   }
 
-  function removeSub(i) {
-    const subs = get('tt_newsletter');
-    subs.splice(i, 1);
-    set('tt_newsletter', subs);
-    loadNewsletter();
-    updateStats();
-    toast('Subscriber removed', 'error');
+  async function removeSub(id) {
+    await supa.from('newsletter').delete().eq('id',id);
+    loadNewsletter(); updateStats(); toast('Subscriber removed','error');
   }
 
   function exportCSV() {
-    const subs = get('tt_newsletter');
-    if (subs.length === 0) { toast('No subscribers to export', 'error'); return; }
-    const csv = 'Email,Date\n' + subs.map(s => `${s.email || s},${s.date || ''}`).join('\n');
-    const blob = new Blob([csv], { type: 'text/csv' });
+    const rows = document.querySelectorAll('.sub-row');
+    if (!rows.length) { toast('No subscribers to export','error'); return; }
+    let csv = 'Email,Date\n';
+    rows.forEach(r => { csv += `${r.querySelector('.sub-email').textContent},${r.querySelector('.sub-date').textContent}\n`; });
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'taptap-subscribers.csv';
-    a.click();
-    toast('CSV exported ✓', 'success');
+    a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+    a.download = 'taptap-subscribers.csv'; a.click();
+    toast('CSV exported ✓','success');
   }
 
   // ── TOAST ──
-  function toast(msg, type = 'success') {
+  function toast(msg, type='success') {
     const el = document.getElementById('toast');
-    el.textContent = msg;
-    el.className = `toast ${type} show`;
+    el.textContent = msg; el.className = `toast ${type} show`;
     setTimeout(() => el.classList.remove('show'), 3000);
   }
 </script>

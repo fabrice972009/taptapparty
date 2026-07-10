@@ -570,11 +570,90 @@
       .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
     }
   </style>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPA_URL = 'https://rmzfowqzlqyzbjchpntv.supabase.co';
+    const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtemZvd3F6bHF5emJqY2hwbnR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM0NzQxODcsImV4cCI6MjA5OTA1MDE4N30.GB42OaMpcIt7uxopfPYEH4Vdatm7hYS37AptnivgUkU';
+    const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
+  </script>
 </head>
 <body>
+<!-- Smoke Background -->
+<canvas id="smokeCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('smokeCanvas');
+  const ctx = canvas.getContext('2d');
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const BLUE = '#003A8C', RED = '#D42027';
+  const particles = [];
+
+  function Particle(init) {
+    this.reset = function(init) {
+      this.x = Math.random() * canvas.width;
+      this.y = init ? Math.random() * canvas.height : canvas.height + 30;
+      this.size = 80 + Math.random() * 160;
+      this.speedY = -(0.4 + Math.random() * 0.7);
+      this.speedX = (Math.random() - 0.5) * 0.5;
+      this.life = init ? Math.random() * 300 : 0;
+      this.maxLife = 250 + Math.random() * 350;
+      this.maxOpacity = 0.06 + Math.random() * 0.08;
+      this.opacity = init ? this.maxOpacity * Math.random() : 0;
+      this.color = Math.random() > 0.5 ? BLUE : RED;
+      this.rotation = Math.random() * Math.PI * 2;
+      this.rotSpeed = (Math.random() - 0.5) * 0.006;
+      this.wobble = Math.random() * Math.PI * 2;
+    };
+    this.update = function() {
+      this.life++;
+      this.wobble += 0.015;
+      this.x += this.speedX + Math.sin(this.wobble) * 0.5;
+      this.y += this.speedY;
+      this.rotation += this.rotSpeed;
+      this.size += 0.3;
+      const p = this.life / this.maxLife;
+      if (p < 0.15) this.opacity = (p / 0.15) * this.maxOpacity;
+      else if (p > 0.65) this.opacity = ((1 - p) / 0.35) * this.maxOpacity;
+      else this.opacity = this.maxOpacity;
+      if (this.life >= this.maxLife || this.y < -this.size) this.reset(false);
+    };
+    this.draw = function() {
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.rotation);
+      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, this.size);
+      const hex = Math.round(this.opacity * 255).toString(16).padStart(2,'0');
+      const hex2 = Math.round(this.opacity * 0.4 * 255).toString(16).padStart(2,'0');
+      g.addColorStop(0,   this.color + hex);
+      g.addColorStop(0.5, this.color + hex2);
+      g.addColorStop(1,   this.color + '00');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(0, 0, this.size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    };
+    this.reset(init);
+  }
+
+  for (let i = 0; i < 55; i++) particles.push(new Particle(true));
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+</script>
 
 <!-- Mobile Menu -->
-<div class="mobile-menu" id="mobileMenu">
+<div class="mobile-menu" style="z-index:190;" id="mobileMenu">
   <a href="index.html" onclick="closeMenu()">Home</a>
   <a href="events.html" onclick="closeMenu()">Events</a>
 <a href="community.html" onclick="closeMenu()">Community</a>
@@ -604,12 +683,9 @@
     <span></span><span></span><span></span>
   </button>
 </nav>
+<canvas class="tt-spray" id="navStripe" style="position:fixed;top:70px;left:0;right:0;width:100%;height:10px;z-index:199;" width="1400" height="10"></canvas>
 
 <!-- Stripe below nav, above video -->
-<div class="tt-stripe" style="position:fixed; top: 70px; left:0; right:0; z-index:199;" aria-hidden="true">
-  <span style="background:#003A8C"></span>
-  <span style="background:#D42027"></span>
-</div>
 
 <!-- Hero -->
 <section class="hero">
@@ -922,23 +998,8 @@
 </section>
 
 <script>
-  // ── AUTO NEXT EVENT from admin localStorage ──
-  // Seed default upcoming events if not already seeded
-  (function seedEvents() {
-    if (localStorage.getItem('tt_seeded')) return;
-    const defaults = [
-      { name: 'Tap Tap London', city: 'London, UK', date: '2026-08-30', venue: 'TBA', link: 'http://Taptap.eventbrite.com', flyer: null },
-      { name: 'Tap Tap New York', city: 'New York, NY', date: '2026-09-05', venue: 'TBA', link: 'http://Taptap.eventbrite.com', flyer: null },
-      { name: 'Tap Tap Miami', city: 'Miami, FL', date: '2026-10-11', venue: 'TBA', link: 'http://Taptap.eventbrite.com', flyer: null },
-      { name: 'Tap Tap Miami', city: 'Miami, FL', date: '2026-11-29', venue: 'TBA', link: 'http://Taptap.eventbrite.com', flyer: null },
-      { name: 'Tap Tap Miami', city: 'Miami, FL', date: '2026-12-20', venue: 'TBA', link: 'http://Taptap.eventbrite.com', flyer: null },
-    ];
-    if (!JSON.parse(localStorage.getItem('tt_events') || '[]').length) {
-      localStorage.setItem('tt_events', JSON.stringify(defaults));
-    }
-  })();
-
-  (function() {
+  // ── AUTO NEXT EVENT from Supabase ──
+  (async function() {
     try {
       const events = JSON.parse(localStorage.getItem('tt_events') || '[]');
       if (!events.length) return;
@@ -955,8 +1016,8 @@
       // Update flyer
       const flyerImg = document.getElementById('nextFlyerImg');
       const flyerWrap = document.getElementById('nextFlyer');
-      if (next.flyer) {
-        flyerImg.src = next.flyer;
+      if (next.flyer_url) {
+        flyerImg.src = next.flyer_url;
         flyerImg.style.opacity = '1';
         flyerImg.alt = next.name;
         const tag = flyerWrap.querySelector('.coming-soon-tag');
@@ -988,13 +1049,13 @@
       `;
 
       // Update ticket link
-      if (next.link) document.getElementById('nextTicketBtn').href = next.link;
+      if (next.ticket_link) document.getElementById('nextTicketBtn').href = next.ticket_link;
 
       // Update sidebar with next 3 after the featured
-      const sidebar = future.slice(1, 4);
+      const sidebar = events.slice(1, 4);
       if (sidebar.length) {
         document.getElementById('sidebarEvents').innerHTML = sidebar.map(e => {
-          const sd = new Date(e.date + 'T12:00:00');
+          const sd = new Date(e.event_date + 'T12:00:00');
           return `<div class="sidebar-event">
             <div class="sidebar-date">
               <div class="ud-month">${months[sd.getMonth()].toUpperCase()}</div>
@@ -1067,6 +1128,7 @@
       const img = document.createElement('img');
       img.src = src;
       img.alt = 'Tap Tap Party';
+      img.loading = 'lazy';
       img.style.cssText = 'position:relative;z-index:1;width:100%;height:100%;object-fit:contain;display:block;';
       img.onerror = () => el.style.display = 'none';
 
@@ -1176,18 +1238,47 @@
     <h2>NEVER MISS<br>A PARTY</h2>
     <p>Sign up to get early access to tickets, event announcements, and exclusive Tap Tap updates.</p>
     <div class="newsletter-form">
-      <input type="email" placeholder="Your email address">
-      <button type="submit">Sign Up</button>
+      <input type="email" id="newsletterEmail" placeholder="Your email address">
+      <button type="submit" onclick="subscribeNewsletter()">Sign Up</button>
     </div>
-    <p class="newsletter-note">No spam. Unsubscribe anytime.</p>
+    <p class="newsletter-note" id="newsletterMsg">No spam. Unsubscribe anytime.</p>
   </div>
 </section>
 
+<script>
+  async function subscribeNewsletter() {
+    const email = document.getElementById('newsletterEmail').value.trim();
+    const msg   = document.getElementById('newsletterMsg');
+    if (!email || !email.includes('@')) {
+      msg.textContent = 'Please enter a valid email.';
+      msg.style.color = '#ff6b6b';
+      return;
+    }
+    const btn = document.querySelector('.newsletter-form button');
+    btn.textContent = '...';
+    btn.disabled = true;
+
+    const { error } = await supa.from('newsletter').insert([{ email }]);
+
+    if (error) {
+      if (error.code === '23505') {
+        msg.textContent = "You're already subscribed! 🇭🇹";
+        msg.style.color = '#F5C518';
+      } else {
+        msg.textContent = 'Something went wrong. Try again.';
+        msg.style.color = '#ff6b6b';
+      }
+    } else {
+      msg.textContent = '✅ You\'re in! See you at the next TapTap 🇭🇹';
+      msg.style.color = '#2DB358';
+      document.getElementById('newsletterEmail').value = '';
+    }
+    btn.textContent = 'Sign Up';
+    btn.disabled = false;
+  }
+</script>
+
 <!-- Stripe -->
-<div class="tt-stripe" aria-hidden="true">
-  <span style="background:#003A8C"></span>
-  <span style="background:#D42027"></span>
-</div>
 
 
 
@@ -1206,6 +1297,7 @@
   }
 </script>
 
+<canvas class="tt-spray" style="display:block;width:100%;height:10px;" width="1400" height="10"></canvas>
 <footer class="site-footer">
   <div class="site-footer-inner">
     <div class="footer-top-wrap">
@@ -1265,5 +1357,49 @@
   </div>
 </footer>
 
+
+
+<script>
+(function(){
+  function drawSpray(c) {
+    const ctx = c.getContext('2d');
+    const W = c.width, H = c.height;
+    ctx.clearRect(0,0,W,H);
+
+    // Blue left with feathered right edge
+    for(let y=0;y<H;y++){
+      const noise = Math.sin(y*2.1)*1.5;
+      const grad = ctx.createLinearGradient(0,0,W/2+60+noise,0);
+      grad.addColorStop(0,'rgba(0,58,140,1)');
+      grad.addColorStop(0.75,'rgba(0,58,140,0.95)');
+      grad.addColorStop(1,'rgba(0,58,140,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0,y,W/2+60+noise,1);
+    }
+
+    // Red right with feathered left edge
+    for(let y=0;y<H;y++){
+      const noise = Math.sin(y*1.7)*1.5;
+      const grad = ctx.createLinearGradient(W,0,W/2-60+noise,0);
+      grad.addColorStop(0,'rgba(212,32,39,1)');
+      grad.addColorStop(0.75,'rgba(212,32,39,0.95)');
+      grad.addColorStop(1,'rgba(212,32,39,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(W/2-60+noise,y,W/2+60,1);
+    }
+
+    // Spray texture
+    for(let i=0;i<2500;i++){
+      const x = Math.random()*W;
+      const col = x < W/2 ? '0,58,140' : '212,32,39';
+      ctx.beginPath();
+      ctx.arc(x,Math.random()*H,Math.random()*1.5,0,Math.PI*2);
+      ctx.fillStyle = `rgba(${col},${Math.random()*0.45})`;
+      ctx.fill();
+    }
+  }
+  document.querySelectorAll('.tt-spray').forEach(drawSpray);
+})();
+</script>
 </body>
 </html>

@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Community — Tap Tap Party</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -26,8 +27,7 @@
     /* NAV */
     nav {
       position: fixed; top: 6px; left: 0; right: 0; z-index: 200;
-      background: rgba(8,8,8,0.88); backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px); padding: 0 48px; height: 64px;
+      background: rgba(8,8,8,0.82); padding: 0 48px; height: 64px;
       display: grid; grid-template-columns: auto 1fr auto; align-items: center;
       border-bottom: 1px solid rgba(255,255,255,0.05);
     }
@@ -173,8 +173,8 @@
 
     /* ── FOOTER ── */
     .site-footer { border-top: 1px solid rgba(255,255,255,0.05); padding: 56px 48px 36px; }
-    .site-footer-inner { max-width: 1000px; margin: 0 auto; }
-    .footer-top-wrap { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
+    .site-footer-inner { max-width: 1000px; width: 100%; margin: 0 auto; }
+    .footer-top-wrap { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; width: 100%; }
     .footer-logo { height: 36px; width: auto; display: block; mix-blend-mode: screen; margin-bottom: 6px; }
     .footer-tagline { font-size: 13px; color: #666; }
     .footer-desktop-cols { display: flex; gap: 64px; }
@@ -207,6 +207,18 @@
 
       /* Mobile footer */
     
+
+      .site-footer { padding: 32px 20px 24px; }
+      .site-footer-inner { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
+      .footer-top-wrap { flex-direction: column; align-items: center; width: 100%; }
+      .footer-logo { margin: 0 auto 6px; }
+      .footer-desktop-cols { display: none !important; }
+      .footer-mobile-row { display: flex !important; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 20px; }
+      .footer-mobile-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #F5C518; font-weight: 500; }
+      .footer-mobile-links { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px 10px; }
+      .footer-mobile-links a { font-size: 12px; color: rgba(240,237,230,0.6); text-decoration: none; }
+      .footer-buy { color: #D42027 !important; font-weight: 600; }
+      .fsep { color: rgba(255,255,255,0.2); font-size: 11px; }
       .footer-bottom { flex-direction: column; gap: 12px; text-align: center; align-items: center; }
     }  </style>
   <meta property="og:image" content="https://taptapparty.vercel.app/og-image.png">
@@ -214,8 +226,87 @@
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://taptapparty.vercel.app/og-image.png">
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPA_URL = 'https://rmzfowqzlqyzbjchpntv.supabase.co';
+    const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtemZvd3F6bHF5emJqY2hwbnR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM0NzQxODcsImV4cCI6MjA5OTA1MDE4N30.GB42OaMpcIt7uxopfPYEH4Vdatm7hYS37AptnivgUkU';
+    const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
+  </script>
 </head>
 <body>
+<!-- Smoke Background -->
+<canvas id="smokeCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('smokeCanvas');
+  const ctx = canvas.getContext('2d');
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const BLUE = '#003A8C', RED = '#D42027';
+  const particles = [];
+
+  function Particle(init) {
+    this.reset = function(init) {
+      this.x = Math.random() * canvas.width;
+      this.y = init ? Math.random() * canvas.height : canvas.height + 30;
+      this.size = 80 + Math.random() * 160;
+      this.speedY = -(0.4 + Math.random() * 0.7);
+      this.speedX = (Math.random() - 0.5) * 0.5;
+      this.life = init ? Math.random() * 300 : 0;
+      this.maxLife = 250 + Math.random() * 350;
+      this.maxOpacity = 0.06 + Math.random() * 0.08;
+      this.opacity = init ? this.maxOpacity * Math.random() : 0;
+      this.color = Math.random() > 0.5 ? BLUE : RED;
+      this.rotation = Math.random() * Math.PI * 2;
+      this.rotSpeed = (Math.random() - 0.5) * 0.006;
+      this.wobble = Math.random() * Math.PI * 2;
+    };
+    this.update = function() {
+      this.life++;
+      this.wobble += 0.015;
+      this.x += this.speedX + Math.sin(this.wobble) * 0.5;
+      this.y += this.speedY;
+      this.rotation += this.rotSpeed;
+      this.size += 0.3;
+      const p = this.life / this.maxLife;
+      if (p < 0.15) this.opacity = (p / 0.15) * this.maxOpacity;
+      else if (p > 0.65) this.opacity = ((1 - p) / 0.35) * this.maxOpacity;
+      else this.opacity = this.maxOpacity;
+      if (this.life >= this.maxLife || this.y < -this.size) this.reset(false);
+    };
+    this.draw = function() {
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.rotation);
+      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, this.size);
+      const hex = Math.round(this.opacity * 255).toString(16).padStart(2,'0');
+      const hex2 = Math.round(this.opacity * 0.4 * 255).toString(16).padStart(2,'0');
+      g.addColorStop(0,   this.color + hex);
+      g.addColorStop(0.5, this.color + hex2);
+      g.addColorStop(1,   this.color + '00');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(0, 0, this.size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    };
+    this.reset(init);
+  }
+
+  for (let i = 0; i < 55; i++) particles.push(new Particle(true));
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+</script>
 
 <div class="mobile-menu" id="mobileMenu">
   <a href="index.html" onclick="closeMenu()">Home</a>
@@ -241,12 +332,9 @@
     <span></span><span></span><span></span>
   </button>
 </nav>
+<canvas class="tt-spray" id="navStripe" style="position:fixed;top:70px;left:0;right:0;width:100%;height:10px;z-index:199;" width="1400" height="10"></canvas>
 
 <!-- Fixed stripe below nav -->
-<div class="tt-stripe" style="position:fixed; top:70px; left:0; right:0; z-index:199;" aria-hidden="true">
-  <span style="background:#003A8C"></span>
-  <span style="background:#D42027"></span>
-</div>
 
 <div class="page-header">
   <p class="section-eyebrow">The People</p>
@@ -457,10 +545,6 @@
 </div>
 
 
-<div class="tt-stripe" aria-hidden="true">
-  <span style="background:#003A8C"></span>
-  <span style="background:#D42027"></span>
-</div>
 
 
 <script>
@@ -517,12 +601,13 @@
   const INITIAL_SHOW = 6;
   let allCommunityPhotos = [];
 
-  function buildPhotoWall() {
+  async function buildPhotoWall() {
     try {
-      const approved = JSON.parse(localStorage.getItem('tt_approved_photos') || '[]');
+      const { data: approvedData } = await supa.from('community_photos').select('*').eq('status','approved').order('created_at',{ascending:false});
+      const approved = (approvedData||[]).map(p => ({ src: p.image_url, isAdmin: false, name: p.name }));
       // Merge: base photos as objects + approved community submissions
       const basePics = baseGalleryPhotos.map(src => ({ src, isAdmin: true, name: null }));
-      const communityPics = approved.map(p => ({ src: p.dataUrl || p.src, isAdmin: false, name: p.name }));
+      const communityPics = approved;
       // Shuffle all, limit to 50
       const all = [...basePics, ...communityPics].sort(() => Math.random() - 0.5).slice(0, 50);
       allCommunityPhotos = all;
@@ -551,27 +636,29 @@
   buildPhotoWall();
 
   // Load approved reviews from localStorage and add to wall
-  function loadApprovedReviews() {
+  async function loadApprovedReviews() {
     try {
-      const approved = JSON.parse(localStorage.getItem('tt_approved_reviews') || '[]');
+      const { data: approved } = await supa.from('community_reviews').select('*').eq('status', 'approved');
       const wall = document.getElementById('reviewWall');
-      approved.forEach(r => {
+      (approved || []).forEach(r => {
         const initials = r.name.substring(0,2).toUpperCase();
+        const stars = Math.floor(r.rating || 5);
         const card = document.createElement('div');
         card.className = 'review-card';
         card.innerHTML = `
           <div class="reviewer-avatar" style="background:var(--red);">${initials}</div>
           <div>
-            <div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
-            <div class="review-text">"${r.text}"</div>
-            <div class="review-meta">${r.name} · ${r.event || 'TapTap Party'}</div>
+            <div class="review-stars">${'★'.repeat(stars)}${r.rating % 1 ? '½' : ''}</div>
+            <div class="review-text">"${r.review}"</div>
+            <div class="review-meta">${r.name} · ${r.event_name || 'TapTap Party'}</div>
           </div>`;
         wall.appendChild(card);
       });
+      applyReviewLimit();
     } catch(e) {}
   }
 
-  loadApprovedReviews();
+  loadApprovedReviews().then(() => applyReviewLimit());
   applyReviewLimit();
   let currentRating = 0;
   function setRating(n) {
@@ -594,8 +681,8 @@
   }
 
   // Submit photo (placeholder — wire to Supabase later)
-  // Unified submit → pending queue for admin approval
-  function submitAll() {
+  // Unified submit → Supabase
+  async function submitAll() {
     const name  = document.getElementById('submitName').value.trim();
     const event = document.getElementById('submitEvent').value.trim();
     const text  = document.getElementById('submitText').value.trim();
@@ -603,7 +690,26 @@
     if (!name) { alert('Please add your name.'); return; }
     if (!text && !file) { alert('Please add a photo, a review, or both.'); return; }
 
-    const finish = () => {
+    const btn = document.querySelector('.submit-card .btn-primary');
+    btn.textContent = 'Submitting...';
+    btn.disabled = true;
+
+    try {
+      // Upload photo to Supabase Storage
+      if (file) {
+        const ext = file.name.split('.').pop();
+        const filename = `${Date.now()}_${name.replace(/\s/g,'_')}.${ext}`;
+        const { data: upload, error: upErr } = await supa.storage.from('community-photos').upload(filename, file);
+        if (upErr) throw upErr;
+        const { data: urlData } = supa.storage.from('community-photos').getPublicUrl(filename);
+        await supa.from('community_photos').insert({ name, event_name: event, image_url: urlData.publicUrl, status: 'pending' });
+      }
+
+      // Save review
+      if (text) {
+        await supa.from('community_reviews').insert({ name, event_name: event, review: text, rating: currentRating || 5, status: 'pending' });
+      }
+
       document.getElementById('submitSuccess').style.display = 'block';
       document.getElementById('submitName').value = '';
       document.getElementById('submitEvent').value = '';
@@ -613,29 +719,12 @@
       document.getElementById('previewImg').src = '';
       document.querySelector('.upload-box p').innerHTML = '<span>Click to upload</span> your photo';
       setRating(0); currentRating = 0;
-    };
-
-    const saveReview = () => {
-      if (text) {
-        const rp = JSON.parse(localStorage.getItem('tt_pending_reviews') || '[]');
-        rp.push({ name, event, text, rating: currentRating || 5, date: new Date().toLocaleDateString() });
-        localStorage.setItem('tt_pending_reviews', JSON.stringify(rp));
-      }
-    };
-
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = e => {
-        const pp = JSON.parse(localStorage.getItem('tt_pending_photos') || '[]');
-        pp.push({ name, event, dataUrl: e.target.result, date: new Date().toLocaleDateString() });
-        localStorage.setItem('tt_pending_photos', JSON.stringify(pp));
-        saveReview();
-        finish();
-      };
-      reader.readAsDataURL(file);
-    } else {
-      saveReview();
-      finish();
+    } catch(e) {
+      alert('Something went wrong. Please try again.');
+      console.error(e);
+    } finally {
+      btn.textContent = 'Submit';
+      btn.disabled = false;
     }
   }
 
@@ -652,6 +741,7 @@
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
 </script>
 
+<canvas class="tt-spray" style="display:block;width:100%;height:10px;" width="1400" height="10"></canvas>
 <footer class="site-footer">
   <div class="site-footer-inner">
     <div class="footer-top-wrap">
@@ -711,5 +801,49 @@
   </div>
 </footer>
 
+
+
+<script>
+(function(){
+  function drawSpray(c) {
+    const ctx = c.getContext('2d');
+    const W = c.width, H = c.height;
+    ctx.clearRect(0,0,W,H);
+
+    // Blue left with feathered right edge
+    for(let y=0;y<H;y++){
+      const noise = Math.sin(y*2.1)*1.5;
+      const grad = ctx.createLinearGradient(0,0,W/2+60+noise,0);
+      grad.addColorStop(0,'rgba(0,58,140,1)');
+      grad.addColorStop(0.75,'rgba(0,58,140,0.95)');
+      grad.addColorStop(1,'rgba(0,58,140,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0,y,W/2+60+noise,1);
+    }
+
+    // Red right with feathered left edge
+    for(let y=0;y<H;y++){
+      const noise = Math.sin(y*1.7)*1.5;
+      const grad = ctx.createLinearGradient(W,0,W/2-60+noise,0);
+      grad.addColorStop(0,'rgba(212,32,39,1)');
+      grad.addColorStop(0.75,'rgba(212,32,39,0.95)');
+      grad.addColorStop(1,'rgba(212,32,39,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(W/2-60+noise,y,W/2+60,1);
+    }
+
+    // Spray texture
+    for(let i=0;i<2500;i++){
+      const x = Math.random()*W;
+      const col = x < W/2 ? '0,58,140' : '212,32,39';
+      ctx.beginPath();
+      ctx.arc(x,Math.random()*H,Math.random()*1.5,0,Math.PI*2);
+      ctx.fillStyle = `rgba(${col},${Math.random()*0.45})`;
+      ctx.fill();
+    }
+  }
+  document.querySelectorAll('.tt-spray').forEach(drawSpray);
+})();
+</script>
 </body>
 </html>
