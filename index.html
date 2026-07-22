@@ -8,7 +8,7 @@
   <meta property="og:title" content="TapTap — The Ultimate Caribbean Nightlife Experience">
   <meta property="og:description" content="Once a month. Haitian music, food, art & people. DJ Bullet & Friends.">
   <meta property="og:image" content="https://taptapparty.vercel.app/og-image.png">
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Anton&family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #080808;
@@ -25,7 +25,7 @@
     body {
       background: var(--bg);
       color: var(--white);
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Inter', 'DM Sans', sans-serif;
       font-size: 16px;
       line-height: 1.6;
     }
@@ -39,9 +39,7 @@
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 200;
-      background: rgba(8,8,8,0.88);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: linear-gradient(180deg, rgba(8,8,8,0.92) 0%, rgba(8,8,8,0.78) 100%);
       padding: 0 48px;
       height: 64px;
       display: grid;
@@ -50,7 +48,7 @@
       border-bottom: 1px solid rgba(255,255,255,0.05);
     }
     .nav-logo {
-      font-family: 'Bebas Neue', sans-serif;
+      font-family: 'Anton', 'Bebas Neue', sans-serif;
       font-size: 26px;
       letter-spacing: 3px;
       color: var(--white);
@@ -65,16 +63,25 @@
       font-weight: 500;
       letter-spacing: 1px;
       text-transform: uppercase;
-      transition: color 0.2s;
+      transition: color 0.2s, border-color 0.2s;
+      padding-bottom: 4px;
+      border-bottom: 1px solid transparent;
     }
-    .nav-links a:hover { color: var(--white); }
+    .nav-links a:hover, .nav-links a.active { color: var(--white); border-bottom-color: var(--gold); }
     .nav-cta {
-      background: var(--red) !important;
-      color: var(--white) !important;
+      background: transparent;
+      color: var(--red);
+      border: 1px solid var(--red);
       padding: 10px 22px;
       border-radius: 2px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
     }
-    .nav-cta:hover { opacity: 0.85; }
+    .nav-cta:hover { background: var(--red); color: var(--white); }
     .nav-hamburger {
       display: none;
       flex-direction: column;
@@ -131,7 +138,7 @@
       font-weight: 500;
     }
     .hero-title {
-      font-family: 'Bebas Neue', sans-serif;
+      font-family: 'Anton', 'Bebas Neue', sans-serif;
       font-size: clamp(80px, 16vw, 200px);
       letter-spacing: 6px;
       line-height: 0.88;
@@ -191,7 +198,7 @@
       font-weight: 500;
     }
     .section-title {
-      font-family: 'Bebas Neue', sans-serif;
+      font-family: 'Anton', 'Bebas Neue', sans-serif;
       font-size: clamp(40px, 5vw, 64px);
       letter-spacing: 2px;
       line-height: 1;
@@ -233,7 +240,7 @@
       margin-bottom: 12px;
     }
     .event-name {
-      font-family: 'Bebas Neue', sans-serif;
+      font-family: 'Anton', 'Bebas Neue', sans-serif;
       font-size: clamp(36px, 4vw, 52px);
       letter-spacing: 2px;
       line-height: 1.05;
@@ -283,7 +290,7 @@
     }
     .about-img img { width: 100%; height: 100%; object-fit: contain; }
     .about-text h2 {
-      font-family: 'Bebas Neue', sans-serif;
+      font-family: 'Anton', 'Bebas Neue', sans-serif;
       font-size: clamp(44px, 5vw, 68px);
       letter-spacing: 2px;
       line-height: 0.95;
@@ -304,7 +311,7 @@
       border-top: 1px solid rgba(255,255,255,0.07);
     }
     .stat-num {
-      font-family: 'Bebas Neue', sans-serif;
+      font-family: 'Anton', 'Bebas Neue', sans-serif;
       font-size: 48px;
       color: var(--gold);
       line-height: 1;
@@ -377,7 +384,7 @@
       margin: 0 auto;
     }
     .newsletter-inner h2 {
-      font-family: 'Bebas Neue', sans-serif;
+      font-family: 'Anton', 'Bebas Neue', sans-serif;
       font-size: clamp(40px, 5vw, 60px);
       letter-spacing: 3px;
       margin-bottom: 14px;
@@ -402,7 +409,7 @@
       color: var(--white);
       padding: 14px 20px;
       font-size: 14px;
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Inter', 'DM Sans', sans-serif;
       border-radius: 2px 0 0 2px;
       outline: none;
       transition: border-color 0.2s;
@@ -420,7 +427,7 @@
       text-transform: uppercase;
       cursor: pointer;
       border-radius: 0 2px 2px 0;
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Inter', 'DM Sans', sans-serif;
       transition: opacity 0.2s;
     }
     .newsletter-form button:hover { opacity: 0.85; }
@@ -466,6 +473,11 @@
       .about-stats { grid-template-columns: 1fr 1fr; gap: 16px; }
       .stat-num { font-size: 40px; }
 
+      .about-stats-row { grid-template-columns: 1fr 1fr; }
+      .stat-block:nth-child(2) { border-right: none; }
+      .stat-block:nth-child(3) { border-top: 1px solid rgba(255,255,255,0.07); }
+      .stat-block:nth-child(4) { border-top: 1px solid rgba(255,255,255,0.07); }
+      .stat-big { font-size: 28px; }
       .gallery-section { padding: 48px 20px; }
       .gallery-head { flex-direction: column; align-items: flex-start; gap: 16px; }
       #galleryThree { grid-template-columns: 1fr 1fr !important; gap: 4px !important; }
@@ -502,7 +514,7 @@
     }
     .mobile-menu.open { display: flex; }
     .mobile-menu a {
-      font-family: 'Bebas Neue', sans-serif;
+      font-family: 'Anton', 'Bebas Neue', sans-serif;
       font-size: 24px;
       letter-spacing: 4px;
       color: var(--white);
@@ -569,6 +581,10 @@
       .fsep { color: rgba(255,255,255,0.2); font-size: 11px; }
       .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
     }
+
+  .g-thumb { overflow: hidden; }
+  .g-thumb img { transition: transform 0.4s ease; display: block; }
+  .g-thumb:hover img { transform: scale(1.05); }
   </style>
 
   <!-- Supabase -->
@@ -602,7 +618,7 @@
       this.speedX = (Math.random() - 0.5) * 0.5;
       this.life = init ? Math.random() * 300 : 0;
       this.maxLife = 250 + Math.random() * 350;
-      this.maxOpacity = 0.05 + Math.random() * 0.06;
+      this.maxOpacity = 0.03 + Math.random() * 0.04;
       this.opacity = init ? this.maxOpacity * Math.random() : 0;
       this.color = Math.random() > 0.5 ? BLUE : RED;
       this.rotation = Math.random() * Math.PI * 2;
@@ -641,7 +657,7 @@
     this.reset(init);
   }
 
-  for (let i = 0; i < 25; i++) particles.push(new Particle(true));
+  for (let i = 0; i < 30; i++) particles.push(new Particle(true));
 
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -709,7 +725,7 @@
 
 <!-- VIBE VIDEO -->
 <div style="text-align:center; padding: 48px 24px 24px;">
-  <p style="font-family:'DM Sans',sans-serif; font-size:clamp(14px,1.8vw,18px); letter-spacing:3px; color:rgba(240,237,230,0.6); font-weight:500;">Music. People. Culture. 🇭🇹</p>
+  <p style="font-family:'Inter','DM Sans',sans-serif; font-size:clamp(14px,1.8vw,18px); letter-spacing:3px; color:rgba(240,237,230,0.6); font-weight:500;">Music. People. Culture. 🇭🇹</p>
 </div>
 <section class="vibe-section">
   <video class="vibe-video" id="vibeVideo" autoplay muted loop playsinline webkit-playsinline x-webkit-airplay="deny">
@@ -821,7 +837,7 @@
   .sidebar-event:first-of-type { border-top: 1px solid rgba(255,255,255,0.06); }
   .sidebar-date { text-align: center; min-width: 40px; }
   .ud-month { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); }
-  .ud-day { font-family: 'Bebas Neue', sans-serif; font-size: 32px; line-height: 1; }
+  .ud-day { font-family: 'Anton', 'Bebas Neue', sans-serif; font-size: 32px; line-height: 1; }
   .sidebar-name { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
   .sidebar-loc { font-size: 12px; color: var(--muted); }
 
@@ -876,7 +892,7 @@
     gap: 16px;
   }
   .city-item {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Inter', 'DM Sans', sans-serif;
     font-size: 13px;
     font-weight: 500;
     letter-spacing: 0.5px;
@@ -918,11 +934,8 @@
 
       <div class="about-stats-row">
         <div class="stat-inline"><span class="stat-num">50+</span><span class="stat-lbl">Events</span></div>
-        <span class="stat-pipe">|</span>
         <div class="stat-inline"><span class="stat-num">10+</span><span class="stat-lbl">Cities</span></div>
-        <span class="stat-pipe">|</span>
         <div class="stat-inline"><span class="stat-num">3+</span><span class="stat-lbl">Years Running</span></div>
-        <span class="stat-pipe">|</span>
         <div class="stat-inline"><span class="stat-num">1</span><span class="stat-lbl">🇭🇹 Culture</span></div>
       </div>
     </div>
@@ -958,15 +971,41 @@
   .ww-slide { transition: opacity 0.3s; }
   .about-img-wrap { display: flex; flex-direction: column; gap: 16px; }
   .about-stats-row {
-    display: flex; align-items: center; justify-content: center;
-    gap: 12px; flex-wrap: wrap;
-    padding: 14px 0;
-    border-top: 1px solid rgba(255,255,255,0.07);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 20px;
   }
-  .stat-inline { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-  .stat-inline .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--gold); line-height: 1; }
-  .stat-inline .stat-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; }
-  .stat-pipe { color: rgba(255,255,255,0.15); font-size: 18px; }
+  .stat-block {
+    padding: 18px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    border-right: 1px solid rgba(255,255,255,0.07);
+    background: rgba(255,255,255,0.02);
+    transition: background 0.2s;
+  }
+  .stat-block:last-child { border-right: none; }
+  .stat-block:hover { background: rgba(255,255,255,0.05); }
+  .stat-big {
+    font-family: 'Anton', 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: var(--gold);
+    line-height: 1;
+    letter-spacing: 1px;
+  }
+  .stat-plus { font-size: 22px; color: var(--red); vertical-align: super; }
+  .stat-tag {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+  }
 </style>
 
 <!-- Stripe -->

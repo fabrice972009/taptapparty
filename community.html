@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Community — Tap Tap Party</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #080808;
@@ -19,7 +19,7 @@
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
-    body { background: var(--bg); color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 16px; line-height: 1.6; }
+    body { background: var(--bg); color: var(--white); font-family: 'Inter', 'DM Sans', sans-serif; font-size: 16px; line-height: 1.6; }
 
     .tt-stripe { display: flex; height: 6px; width: 100%; }
     .tt-stripe span { flex: 1; }
@@ -50,14 +50,14 @@
       flex-direction: column; align-items: center; justify-content: center; gap: 32px; padding: 80px 24px 40px;
     }
     .mobile-menu.open { display: flex; }
-    .mobile-menu a { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 3px; color: var(--white); text-decoration: none; }
+    .mobile-menu a { font-family: 'Anton', 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 3px; color: var(--white); text-decoration: none; }
     .mobile-menu a:hover { color: var(--red); }
     .mobile-menu .mobile-cta { background: var(--red); color: var(--white) !important; padding: 13px 36px; border-radius: 2px; font-size: 22px !important; }
 
     /* PAGE HEADER */
     .page-header { padding: 140px 48px 8px; max-width: 1000px; margin: 0 auto; }
     .section-eyebrow { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; font-weight: 500; }
-    .page-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(64px, 10vw, 120px); letter-spacing: 4px; line-height: 0.9; }
+    .page-title { font-family: 'Anton', 'Bebas Neue', sans-serif; font-size: clamp(64px, 10vw, 120px); letter-spacing: 4px; line-height: 0.9; }
     .page-title span { color: var(--red); }
 
     /* SUBMIT SECTION */
@@ -68,7 +68,7 @@
       background: var(--surface); border: 1px solid rgba(255,255,255,0.06);
       border-radius: 3px; padding: 36px;
     }
-    .submit-card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 2px; margin-bottom: 6px; }
+    .submit-card h3 { font-family: 'Anton', 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 2px; margin-bottom: 6px; }
     .submit-card p { font-size: 13px; color: var(--muted); margin-bottom: 28px; line-height: 1.6; }
 
     .form-group { margin-bottom: 16px; }
@@ -77,7 +77,7 @@
       width: 100%; background: var(--surface2);
       border: 1px solid rgba(255,255,255,0.08);
       color: var(--white); padding: 12px 16px;
-      font-size: 14px; font-family: 'DM Sans', sans-serif;
+      font-size: 14px; font-family: 'Inter', 'DM Sans', sans-serif;
       border-radius: 2px; outline: none; transition: border-color 0.2s;
     }
     .form-group input::placeholder, .form-group textarea::placeholder { color: var(--muted); }
@@ -103,7 +103,7 @@
       width: 100%; background: var(--red); color: var(--white);
       padding: 14px; font-size: 12px; font-weight: 600; letter-spacing: 1.5px;
       text-transform: uppercase; border: none; border-radius: 2px; cursor: pointer;
-      font-family: 'DM Sans', sans-serif; transition: opacity 0.2s; margin-top: 8px;
+      font-family: 'Inter', 'DM Sans', sans-serif; transition: opacity 0.2s; margin-top: 8px;
     }
     .btn-primary:hover { opacity: 0.85; }
     .submit-note { font-size: 11px; color: var(--muted); text-align: center; margin-top: 10px; }
@@ -119,7 +119,7 @@
     /* WALL OF LOVE */
     .wall-section { padding: 16px 48px 80px; max-width: 1000px; margin: 0 auto; }
     .wall-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; }
-    .wall-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px, 5vw, 56px); letter-spacing: 2px; }
+    .wall-title { font-family: 'Anton', 'Bebas Neue', sans-serif; font-size: clamp(36px, 5vw, 56px); letter-spacing: 2px; }
 
     /* PHOTO WALL */
     .photo-wall { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 64px; }
@@ -150,7 +150,7 @@
     .reviewer-avatar {
       width: 44px; height: 44px; border-radius: 50%;
       background: var(--red); display: flex; align-items: center; justify-content: center;
-      font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 1px; flex-shrink: 0;
+      font-family: 'Anton', 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 1px; flex-shrink: 0;
     }
     .review-stars { color: var(--gold); font-size: 14px; margin-bottom: 6px; }
     .review-text { font-size: 14px; color: rgba(240,237,230,0.75); line-height: 1.7; margin-bottom: 8px; }
@@ -469,7 +469,7 @@
 
     </div>
     <div id="seeMoreWrap" style="text-align:center; margin-top:24px; display:none;">
-      <button onclick="showAllReviews()" style="background:none; border:1px solid rgba(255,255,255,0.2); color:var(--white); padding:10px 28px; font-size:12px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; border-radius:2px; font-family:'DM Sans',sans-serif; transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--white)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)'">See More Reviews ↓</button>
+      <button onclick="showAllReviews()" style="background:none; border:1px solid rgba(255,255,255,0.2); color:var(--white); padding:10px 28px; font-size:12px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; border-radius:2px; font-family:'Inter','DM Sans',sans-serif; transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--white)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)'">See More Reviews ↓</button>
     </div>
   </div>
 
@@ -479,7 +479,7 @@
 <section class="submit-section" style="padding-top:64px; border-top: 1px solid rgba(255,255,255,0.05);">
   <div style="max-width:600px; margin:0 auto; padding: 0 48px 80px;">
     <p class="section-eyebrow">Join The Wall</p>
-    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,5vw,56px);letter-spacing:2px;margin-bottom:8px;">SHARE YOUR MOMENT</h2>
+    <h2 style="font-family:'Anton','Bebas Neue',sans-serif;font-size:clamp(36px,5vw,56px);letter-spacing:2px;margin-bottom:8px;">SHARE YOUR MOMENT</h2>
     <p style="font-size:14px;color:var(--muted);margin-bottom:32px;">Were you at TapTap? Share your photo, your experience, or both.</p>
 
     <div class="submit-card">
