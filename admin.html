@@ -114,6 +114,10 @@
     .event-city { font-size:12px; color:var(--muted); }
     .btn-setnext { background:none; border:1px solid rgba(245,197,24,0.3); color:var(--gold); padding:5px 10px; font-size:11px; cursor:pointer; border-radius:2px; font-family:'Inter','DM Sans',sans-serif; }
     .btn-setnext:hover { background:rgba(245,197,24,0.1); }
+    .btn-edit { background:none; border:1px solid rgba(255,255,255,0.18); color:var(--white); padding:5px 10px; font-size:11px; cursor:pointer; border-radius:2px; font-family:'Inter','DM Sans',sans-serif; }
+    .btn-edit:hover { background:rgba(255,255,255,0.07); }
+    .btn-cancel { display:none; background:none; border:1px solid rgba(255,255,255,0.12); color:var(--muted); padding:10px 18px; font-size:12px; font-weight:600; cursor:pointer; border-radius:2px; margin-left:8px; }
+    .events-status { font-size:12px; color:var(--muted); margin-left:10px; }
 
     /* NEWSLETTER */
     .sub-row { background:var(--surface); border:1px solid rgba(255,255,255,0.06); border-radius:3px; padding:12px 20px; margin-bottom:6px; display:flex; align-items:center; justify-content:space-between; }
@@ -213,7 +217,7 @@
 <!-- LOGIN -->
 <div id="loginScreen">
   <div class="login-box">
-    <div class="login-logo">TAP TAP</div>
+    <div class="login-logo">TAPTAP</div>
     <div class="login-sub">Admin Dashboard</div>
     <div class="login-error" id="loginError">Invalid email or password.</div>
     <div class="field-label">Email</div>
@@ -228,7 +232,7 @@
 <div id="appScreen">
   <div class="sidebar">
     <div class="sidebar-brand">
-      <div class="sidebar-brand-name">TAP TAP</div>
+      <div class="sidebar-brand-name">TAPTAP</div>
       <div class="sidebar-brand-sub">Admin Panel</div>
     </div>
     <nav class="sidebar-nav">
@@ -296,30 +300,54 @@
       <div class="page-sub">Add, edit, or remove events. Set the Next Up event on the landing page.</div>
 
       <div class="event-form">
-        <h3 style="font-size:14px;font-weight:600;margin-bottom:16px;">Add New Event</h3>
+        <h3 id="eventFormTitle" style="font-size:14px;font-weight:600;margin-bottom:16px;">Add New Event</h3>
         <div class="form-row2">
           <div class="form-group">
             <label>Event Name</label>
-            <input type="text" id="evtName" placeholder="e.g. TapTap Miami">
+            <input type="text" id="evtName" placeholder="e.g. TapTap London">
           </div>
-          <div class="form-group">
-            <label>City</label>
-            <input type="text" id="evtCity" placeholder="e.g. Miami, FL">
-          </div>
-        </div>
-        <div class="form-row2">
           <div class="form-group">
             <label>Date</label>
             <input type="date" id="evtDate">
           </div>
+        </div>
+        <div class="form-row2">
           <div class="form-group">
             <label>Venue</label>
-            <input type="text" id="evtVenue" placeholder="e.g. Trill Social Miami">
+            <input type="text" id="evtVenue" placeholder="e.g. The Camden">
+          </div>
+          <div class="form-group">
+            <label>Street Address</label>
+            <input type="text" id="evtAddress" placeholder="e.g. 65 Crowndale Rd">
+          </div>
+        </div>
+        <div class="form-row2">
+          <div class="form-group">
+            <label>City</label>
+            <input type="text" id="evtCity" placeholder="e.g. London">
+          </div>
+          <div class="form-group">
+            <label>Country</label>
+            <input type="text" id="evtCountry" placeholder="e.g. United Kingdom">
+          </div>
+        </div>
+        <div class="form-row2">
+          <div class="form-group">
+            <label>Doors Open / Event Time</label>
+            <input type="text" id="evtDoors" placeholder="e.g. 9 PM – 3 AM">
+          </div>
+          <div class="form-group">
+            <label>Organizer / Performers</label>
+            <input type="text" id="evtOrganizer" placeholder="e.g. DJ Bullet & Friends">
           </div>
         </div>
         <div class="form-group">
+          <label>Description / Music</label>
+          <textarea id="evtDescription" rows="3" placeholder="e.g. Konpa · Afrobeat · Dancehall · Amapiano · Soca"></textarea>
+        </div>
+        <div class="form-group">
           <label>Ticket Link</label>
-          <input type="text" id="evtLink" placeholder="http://Taptap.eventbrite.com">
+          <input type="url" id="evtLink" placeholder="https://taptap.eventbrite.com">
         </div>
         <div class="form-group">
           <label>Party Flyer / Cover Photo</label>
@@ -329,10 +357,10 @@
           <input type="file" id="evtFlyer" accept="image/*" style="display:none" onchange="previewFlyer(this)">
           <img id="flyerPreview" src="" alt="Flyer preview" style="display:none;width:100%;max-height:200px;object-fit:contain;margin-top:10px;border-radius:2px;border:1px solid rgba(255,255,255,0.08);">
         </div>
-        <button class="btn-add" onclick="addEvent()">Add Event</button>
+        <button class="btn-add" id="saveEventBtn" onclick="saveEvent()">Add Event</button><button class="btn-cancel" id="cancelEditBtn" onclick="cancelEdit()">Cancel Edit</button>
       </div>
 
-      <div class="section-head"><h3>All Events</h3></div>
+      <div class="section-head"><div style="display:flex;align-items:center;"><h3>All Events</h3><span class="events-status" id="eventsStatus"></span></div><button class="btn-export" onclick="loadEvents()">Refresh</button></div>
       <div id="eventsList"><div class="empty-state">No events added yet</div></div>
     </div>
 
@@ -503,22 +531,63 @@
   async function removeApprovedReview(id) { await supa.from('community_reviews').delete().eq('id',id); loadAll(); toast('Review removed','error'); }
 
   // ── EVENTS ──
+  let editingEventId = null;
+  let currentFlyerUrl = null;
+  let cachedEvents = [];
+
   async function loadEvents() {
-    const { data: events } = await supa.from('events').select('*').order('event_date',{ascending:true});
     const el = document.getElementById('eventsList');
-    if (!events?.length) { el.innerHTML = '<div class="empty-state">No events added yet</div>'; return; }
-    el.innerHTML = events.map(e => `<div class="event-row">
-      ${e.flyer_url ? `<img src="${e.flyer_url}" style="width:48px;height:48px;object-fit:cover;border-radius:2px;flex-shrink:0;">` : '<div style="width:48px;height:48px;background:var(--surface2);border-radius:2px;flex-shrink:0;"></div>'}
-      <div class="event-date">${e.event_date}</div>
-      <div style="flex:1;">
-        <div class="event-name">${e.name} ${e.is_next?'<span class="next-badge">NEXT UP</span>':''}</div>
-        <div class="event-city">${e.venue?e.venue+' · ':''}${e.city}</div>
+    const status = document.getElementById('eventsStatus');
+    el.innerHTML = '<div class="empty-state">Loading events from Supabase…</div>';
+    status.textContent = 'Syncing…';
+
+    const { data: events, error } = await supa
+      .from('events')
+      .select('*')
+      .order('event_date', { ascending: true });
+
+    if (error) {
+      console.error('Supabase events load error:', error);
+      status.textContent = 'Could not sync';
+      el.innerHTML = `<div class="empty-state" style="color:#ff6b6b;">Could not load events from Supabase.<br><small>${escapeHtml(error.message || 'Check the events table SELECT policy.')}</small></div>`;
+      toast('Could not load events from Supabase','error');
+      return;
+    }
+
+    cachedEvents = events || [];
+    status.textContent = `${cachedEvents.length} event${cachedEvents.length === 1 ? '' : 's'} synced`;
+    document.getElementById('statEvents').textContent = cachedEvents.length;
+
+    if (!cachedEvents.length) {
+      el.innerHTML = '<div class="empty-state">No events found in Supabase</div>';
+      return;
+    }
+
+    el.innerHTML = cachedEvents.map(e => `<div class="event-row">
+      ${e.flyer_url ? `<img src="${escapeAttr(e.flyer_url)}" style="width:48px;height:48px;object-fit:cover;border-radius:2px;flex-shrink:0;" onerror="this.style.visibility='hidden'">` : '<div style="width:48px;height:48px;background:var(--surface2);border-radius:2px;flex-shrink:0;"></div>'}
+      <div class="event-date">${formatEventDate(e.event_date)}</div>
+      <div style="flex:1;min-width:0;">
+        <div class="event-name">${escapeHtml(e.name || 'Untitled event')} ${e.is_next ? '<span class="next-badge">NEXT UP</span>' : ''}</div>
+        <div class="event-city">${escapeHtml([e.venue, e.street_address, e.city, e.country].filter(Boolean).join(' · '))}</div>
       </div>
-      <div style="display:flex;gap:8px;align-items:center;">
-        ${!e.is_next?`<button class="btn-setnext" onclick="setNext('${e.id}')">Set as Next Up</button>`:''}
-        <button class="btn-remove" onclick="removeEvent('${e.id}')">Remove</button>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end;">
+        ${!e.is_next ? `<button class="btn-setnext" onclick="setNext('${e.id}')">Set as Next Up</button>` : ''}
+        <button class="btn-edit" onclick="editEvent('${e.id}')">Edit</button>
+        <button class="btn-remove" onclick="removeEvent('${e.id}')">Delete</button>
       </div>
     </div>`).join('');
+  }
+
+  function escapeHtml(value='') {
+    return String(value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+  }
+
+  function escapeAttr(value='') { return escapeHtml(value); }
+
+  function formatEventDate(value) {
+    if (!value) return 'No date';
+    const d = new Date(`${value}T00:00:00`);
+    return Number.isNaN(d.getTime()) ? escapeHtml(value) : d.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});
   }
 
   function previewFlyer(input) {
@@ -532,40 +601,144 @@
     reader.readAsDataURL(file);
   }
 
-  async function addEvent() {
-    const name  = document.getElementById('evtName').value.trim();
-    const city  = document.getElementById('evtCity').value.trim();
-    const date  = document.getElementById('evtDate').value;
-    const venue = document.getElementById('evtVenue').value.trim();
-    const link  = document.getElementById('evtLink').value.trim();
-    const flyerFile = document.getElementById('evtFlyer').files[0];
-    if (!name || !city || !date) { toast('Please fill in name, city and date','error'); return; }
+  function getEventFormData() {
+    return {
+      name: document.getElementById('evtName').value.trim(),
+      event_date: document.getElementById('evtDate').value,
+      venue: document.getElementById('evtVenue').value.trim() || null,
+      street_address: document.getElementById('evtAddress').value.trim() || null,
+      city: document.getElementById('evtCity').value.trim(),
+      country: document.getElementById('evtCountry').value.trim() || null,
+      doors_open: document.getElementById('evtDoors').value.trim() || null,
+      organizer: document.getElementById('evtOrganizer').value.trim() || null,
+      description: document.getElementById('evtDescription').value.trim() || null,
+      ticket_link: document.getElementById('evtLink').value.trim() || 'http://Taptap.eventbrite.com'
+    };
+  }
 
-    let flyer_url = null;
-    if (flyerFile) {
-      const ext = flyerFile.name.split('.').pop();
-      const fn  = `flyer_${Date.now()}.${ext}`;
-      const { error: upErr } = await supa.storage.from('community-photos').upload(fn, flyerFile);
-      if (!upErr) { const { data } = supa.storage.from('community-photos').getPublicUrl(fn); flyer_url = data.publicUrl; }
+  async function saveEvent() {
+    const eventData = getEventFormData();
+    const flyerFile = document.getElementById('evtFlyer').files[0];
+    if (!eventData.name || !eventData.event_date || !eventData.city) {
+      toast('Please fill in event name, date and city','error');
+      return;
     }
 
-    await supa.from('events').insert([{ name, city, event_date: date, venue, ticket_link: link||'http://Taptap.eventbrite.com', flyer_url, is_next: false }]);
-    ['evtName','evtCity','evtDate','evtVenue','evtLink'].forEach(id => document.getElementById(id).value='');
+    const saveBtn = document.getElementById('saveEventBtn');
+    saveBtn.disabled = true;
+    saveBtn.textContent = editingEventId ? 'Saving…' : 'Adding…';
+
+    let flyer_url = currentFlyerUrl;
+    if (flyerFile) {
+      const ext = flyerFile.name.split('.').pop();
+      const fn = `flyer_${Date.now()}.${ext}`;
+      const { error: upErr } = await supa.storage.from('community-photos').upload(fn, flyerFile);
+      if (upErr) {
+        console.error(upErr);
+        toast(`Flyer upload failed: ${upErr.message}`,'error');
+        saveBtn.disabled = false;
+        saveBtn.textContent = editingEventId ? 'Save Changes' : 'Add Event';
+        return;
+      }
+      const { data } = supa.storage.from('community-photos').getPublicUrl(fn);
+      flyer_url = data.publicUrl;
+    }
+
+    const payload = { ...eventData, flyer_url };
+    let result;
+    if (editingEventId) {
+      result = await supa.from('events').update(payload).eq('id', editingEventId).select().single();
+    } else {
+      result = await supa.from('events').insert([{ ...payload, is_next:false }]).select().single();
+    }
+
+    saveBtn.disabled = false;
+    if (result.error) {
+      console.error(result.error);
+      saveBtn.textContent = editingEventId ? 'Save Changes' : 'Add Event';
+      toast(`Could not save event: ${result.error.message}`,'error');
+      return;
+    }
+
+    const wasEditing = Boolean(editingEventId);
+    resetEventForm();
+    await loadEvents();
+    await updateStats();
+    toast(wasEditing ? 'Event updated ✓' : 'Event added ✓','success');
+  }
+
+  function editEvent(id) {
+    const e = cachedEvents.find(item => String(item.id) === String(id));
+    if (!e) { toast('Event could not be found. Refresh and try again.','error'); return; }
+    editingEventId = e.id;
+    currentFlyerUrl = e.flyer_url || null;
+    document.getElementById('evtName').value = e.name || '';
+    document.getElementById('evtDate').value = e.event_date || '';
+    document.getElementById('evtVenue').value = e.venue || '';
+    document.getElementById('evtAddress').value = e.street_address || '';
+    document.getElementById('evtCity').value = e.city || '';
+    document.getElementById('evtCountry').value = e.country || '';
+    document.getElementById('evtDoors').value = e.doors_open || '';
+    document.getElementById('evtOrganizer').value = e.organizer || '';
+    document.getElementById('evtDescription').value = e.description || '';
+    document.getElementById('evtLink').value = e.ticket_link || '';
+    document.getElementById('eventFormTitle').textContent = `Edit ${e.name || 'Event'}`;
+    document.getElementById('saveEventBtn').textContent = 'Save Changes';
+    document.getElementById('cancelEditBtn').style.display = 'inline-block';
+    const preview = document.getElementById('flyerPreview');
+    if (e.flyer_url) {
+      preview.src = e.flyer_url;
+      preview.style.display = 'block';
+      document.getElementById('flyerUploadBox').textContent = '📸 Click to replace flyer';
+    } else {
+      preview.style.display = 'none';
+      document.getElementById('flyerUploadBox').textContent = '📸 Click to upload flyer';
+    }
+    document.querySelector('.event-form').scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  function cancelEdit() { resetEventForm(); }
+
+  function resetEventForm() {
+    editingEventId = null;
+    currentFlyerUrl = null;
+    ['evtName','evtDate','evtVenue','evtAddress','evtCity','evtCountry','evtDoors','evtOrganizer','evtDescription','evtLink']
+      .forEach(id => document.getElementById(id).value='');
     document.getElementById('evtFlyer').value='';
+    document.getElementById('flyerPreview').src='';
     document.getElementById('flyerPreview').style.display='none';
     document.getElementById('flyerUploadBox').textContent='📸 Click to upload flyer';
-    loadAll(); toast('Event added ✓','success');
+    document.getElementById('eventFormTitle').textContent='Add New Event';
+    document.getElementById('saveEventBtn').textContent='Add Event';
+    document.getElementById('saveEventBtn').disabled=false;
+    document.getElementById('cancelEditBtn').style.display='none';
   }
 
   async function setNext(id) {
-    await supa.from('events').update({is_next:false}).gt('id','00000000-0000-0000-0000-000000000000');
-    await supa.from('events').update({is_next:true}).eq('id',id);
-    loadAll(); toast('Next Up updated ✓','success');
+    const { error: clearError } = await supa.from('events').update({is_next:false}).neq('id', id);
+    const { error: setError } = await supa.from('events').update({is_next:true}).eq('id',id);
+    if (clearError || setError) {
+      console.error(clearError || setError);
+      toast(`Could not update Next Up: ${(clearError || setError).message}`,'error');
+      return;
+    }
+    await loadEvents();
+    toast('Next Up updated ✓','success');
   }
 
   async function removeEvent(id) {
-    await supa.from('events').delete().eq('id',id);
-    loadAll(); toast('Event removed','error');
+    const e = cachedEvents.find(item => String(item.id) === String(id));
+    if (!confirm(`Delete ${e?.name || 'this event'}? This cannot be undone.`)) return;
+    const { error } = await supa.from('events').delete().eq('id',id);
+    if (error) {
+      console.error(error);
+      toast(`Could not delete event: ${error.message}`,'error');
+      return;
+    }
+    if (editingEventId === id) resetEventForm();
+    await loadEvents();
+    await updateStats();
+    toast('Event deleted','success');
   }
 
   // ── NEWSLETTER ──

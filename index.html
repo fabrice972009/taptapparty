@@ -230,7 +230,7 @@
       letter-spacing: 1px;
       max-width: 320px;
     }
-    .next-event-img img { width: 100%; height: 100%; object-fit: contain; background: var(--surface2); }
+    .next-event-img img { width: 100%; height: 100%; object-fit: contain; }
     .next-event-info { }
     .event-date-line {
       font-size: 13px;
@@ -685,7 +685,7 @@
 <!-- Nav -->
 <nav>
   <a href="index.html" class="nav-logo">
-    <img src="logo.png" alt="Tap Tap Party" style="height: 40px; width: auto; display: block; mix-blend-mode: screen;">
+    <img src="logo.png" alt="TapTap Party" style="height: 40px; width: auto; display: block; mix-blend-mode: screen;">
   </a>
   <ul class="nav-links">
     <li><a href="index.html">Home</a></li>
@@ -777,17 +777,19 @@
 
       <!-- Featured Flyer -->
       <div class="next-event-img" id="nextFlyer" style="position:relative;">
-        <img src="og-image.png" alt="Tap Tap event flyer" id="nextFlyerImg">
-        <div class="coming-soon-tag" style="position:absolute;bottom:0;left:0;right:0;background:rgba(8,8,8,0.75);color:rgba(240,237,230,0.7);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-align:center;padding:10px;">More Details Coming Soon</div>
+        <img src="flyer-london.jpg" alt="TapTap London Aug 30" id="nextFlyerImg" style="width:100%;height:100%;object-fit:contain;display:block;">
       </div>
 
       <!-- Featured Info Middle -->
       <div class="featured-info">
         <div class="event-date-line" id="nextDateLine">Sunday, August 30, 2026</div>
-        <div class="event-name" id="nextName">Tap Tap London</div>
+        <div class="event-name" id="nextName">TapTap London</div>
+        <div id="nextSubtitle" style="color:var(--gold);font-size:13px;letter-spacing:1.4px;margin:8px 0 18px;line-height:1.4;">Notting Hill Carnival Weekend</div>
         <div class="event-details" id="nextDetails">
-          <div class="event-detail-row"><span class="dot"></span>London, UK</div>
+          <div class="event-detail-row"><span class="dot"></span>The Camden — 65 Crowndale Rd, London NW1 1TN — London — UK</div>
+          <div class="event-detail-row"><span class="dot"></span>9 PM – 3 AM</div>
           <div class="event-detail-row"><span class="dot"></span>DJ Bullet &amp; Friends</div>
+          <div class="event-detail-row"><span class="dot"></span>Konpa · Afrobeat · Dancehall · Amapiano · Soca</div>
         </div>
       </div>
 
@@ -797,15 +799,15 @@
         <div id="sidebarEvents">
           <div class="sidebar-event">
             <div class="sidebar-date"><div class="ud-month">SEP</div><div class="ud-day">5</div></div>
-            <div><div class="sidebar-name">Tap Tap New York</div><div class="sidebar-loc">New York, NY</div></div>
+            <div><div class="sidebar-name">TapTap New York</div><div class="sidebar-loc">New York, NY</div></div>
           </div>
           <div class="sidebar-event">
             <div class="sidebar-date"><div class="ud-month">OCT</div><div class="ud-day">11</div></div>
-            <div><div class="sidebar-name">Tap Tap Miami</div><div class="sidebar-loc">Miami, FL</div></div>
+            <div><div class="sidebar-name">TapTap Miami</div><div class="sidebar-loc">Miami, FL</div></div>
           </div>
           <div class="sidebar-event">
             <div class="sidebar-date"><div class="ud-month">NOV</div><div class="ud-day">29</div></div>
-            <div><div class="sidebar-name">Tap Tap Miami</div><div class="sidebar-loc">Miami, FL</div></div>
+            <div><div class="sidebar-name">TapTap Miami</div><div class="sidebar-loc">Miami, FL</div></div>
           </div>
         </div>
         <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" class="btn-primary" id="nextTicketBtn" style="display:block;text-align:center;margin-top:32px;">Get Tickets</a>
@@ -923,7 +925,7 @@
         </div>
         <!-- Emblem slide -->
         <div id="wwSlide1" class="ww-slide" style="display:none;">
-          <div class="about-img"><img src="emblem.png" alt="Tap Tap Party emblem"></div>
+          <div class="about-img"><img src="emblem.png" alt="TapTap Party emblem"></div>
         </div>
         <!-- Toggle dots -->
         <div style="display:flex;justify-content:center;gap:8px;margin-top:12px;">
@@ -955,7 +957,7 @@
       <p class="section-eyebrow">Who We Are</p>
       <h2>CELEBRATING<br>HAITIAN<br><span class="red">CULTURE.</span></h2>
       <p>
-        Tap Tap Party is Miami's premier monthly Haitian cultural experience. We bring together the diaspora and everyone who loves Haitian music, food, art, and people — once a month, every month. DJ Bullet &amp; Friends set the soundtrack while Miami dances.
+        TapTap Party is Miami's premier monthly Haitian cultural experience. We bring together the diaspora and everyone who loves Haitian music, food, art, and people — once a month, every month. DJ Bullet &amp; Friends set the soundtrack while Miami dances.
       </p>
       <a href="about.html" class="btn-sm-outline" style="display:inline-block; margin-top:8px;">Learn More</a>
     </div>
@@ -1049,77 +1051,106 @@
 </section>
 
 <script>
+  function escapeHomepageHtml(value) {
+    return String(value ?? '')
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
+  }
+
   // ── AUTO NEXT EVENT from Supabase ──
   (async function() {
     try {
-      const events = JSON.parse(localStorage.getItem('tt_events') || '[]');
-      if (!events.length) return;
-      const today = new Date(); today.setHours(0,0,0,0);
-      const future = events.filter(e => new Date(e.date + 'T12:00:00') >= today).sort((a,b) => new Date(a.date + 'T12:00:00') - new Date(b.date + 'T12:00:00'));
-      if (!future.length) return;
+      const todayISO = new Date().toISOString().split('T')[0];
 
-      const next = future[0];
-      const d = new Date(next.date + 'T12:00:00');
+      // Load all upcoming events from Supabase, ordered by date.
+      const { data: upcomingEvents, error: upcomingError } = await supa
+        .from('events')
+        .select('*')
+        .gte('event_date', todayISO)
+        .order('event_date', { ascending: true });
+
+      if (upcomingError) throw upcomingError;
+      if (!upcomingEvents || !upcomingEvents.length) return;
+
+      // Prefer the event marked "Next Up" in admin; otherwise use the nearest event.
+      const next = upcomingEvents.find(event => event.is_next === true) || upcomingEvents[0];
+      const d = new Date(next.event_date + 'T12:00:00');
       const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
       const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
       const fullMonths = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-      // Update flyer
+      // Update featured event.
+      document.getElementById('nextDateLine').textContent = `${days[d.getDay()]}, ${fullMonths[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+      document.getElementById('nextName').textContent = next.name || 'TapTap Party';
+
       const flyerImg = document.getElementById('nextFlyerImg');
       const flyerWrap = document.getElementById('nextFlyer');
-      if (next.flyer_url) {
+      if (next.flyer_url && flyerImg) {
         flyerImg.src = next.flyer_url;
-        flyerImg.style.opacity = '1';
-        flyerImg.alt = next.name;
-        const tag = flyerWrap.querySelector('.coming-soon-tag');
+        flyerImg.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:center top;display:block;';
+        flyerImg.alt = next.name || 'TapTap Party event flyer';
+        const tag = flyerWrap ? flyerWrap.querySelector('.coming-soon-tag') : null;
         if (tag) tag.remove();
-      } else {
-        flyerImg.src = 'og-image.png';
-        flyerImg.style.opacity = '1';
-        flyerImg.alt = next.name;
-        if (!flyerWrap.querySelector('.coming-soon-tag')) {
-          const tag = document.createElement('div');
-          tag.className = 'coming-soon-tag';
-          tag.style.cssText = 'position:absolute;bottom:0;left:0;right:0;background:rgba(8,8,8,0.75);color:rgba(240,237,230,0.7);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-align:center;padding:10px;';
-          tag.textContent = 'More Details Coming Soon';
-          flyerWrap.style.position = 'relative';
-          flyerWrap.appendChild(tag);
-        }
       }
 
-      // Update date line
-      document.getElementById('nextDateLine').textContent = `${days[d.getDay()]}, ${fullMonths[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+      const subtitle = document.getElementById('nextSubtitle');
+      const isLondon = /london/i.test([next.name, next.city, next.country].filter(Boolean).join(' '));
+      if (subtitle) {
+        subtitle.textContent = isLondon ? 'Notting Hill Carnival Weekend' : '';
+        subtitle.style.display = subtitle.textContent ? 'block' : 'none';
+      }
 
-      // Update name
-      document.getElementById('nextName').textContent = next.name;
+      const details = [];
+      const fullLocation = [next.venue, next.street_address, next.city, next.country]
+        .filter(Boolean)
+        .join(' — ');
+      if (fullLocation) details.push(fullLocation);
+      if (next.doors_open) details.push(next.doors_open);
+      if (next.organizer) details.push(next.organizer);
+      if (next.description) details.push(next.description);
 
-      // Update details
-      document.getElementById('nextDetails').innerHTML = `
-        ${next.venue ? `<div class="event-detail-row"><span class="dot"></span>${next.venue}${next.city ? ', ' + next.city : ''}</div>` : ''}
-        <div class="event-detail-row"><span class="dot"></span>DJ Bullet & Friends</div>
-      `;
+      // Helpful fallbacks for the London event if an older database row is missing fields.
+      if (isLondon) {
+        if (!fullLocation) details.push('The Camden — 65 Crowndale Rd, London NW1 1TN — London — UK');
+        if (!next.doors_open) details.push('9 PM – 3 AM');
+        if (!next.organizer) details.push('DJ Bullet & Friends');
+        if (!next.description) details.push('Konpa · Afrobeat · Dancehall · Amapiano · Soca');
+      }
 
-      // Update ticket link
-      if (next.ticket_link) document.getElementById('nextTicketBtn').href = next.ticket_link;
+      document.getElementById('nextDetails').innerHTML = details
+        .map(item => `<div class="event-detail-row"><span class="dot"></span>${escapeHomepageHtml(item)}</div>`)
+        .join('');
 
-      // Update sidebar with next 3 after the featured
-      const sidebar = events.slice(1, 4);
+      if (next.ticket_link) {
+        document.getElementById('nextTicketBtn').href = next.ticket_link;
+      }
+
+      // Show the next three upcoming events after the featured event.
+      const sidebar = upcomingEvents
+        .filter(event => event.id !== next.id)
+        .slice(0, 3);
+
       if (sidebar.length) {
-        document.getElementById('sidebarEvents').innerHTML = sidebar.map(e => {
-          const sd = new Date(e.event_date + 'T12:00:00');
+        document.getElementById('sidebarEvents').innerHTML = sidebar.map(event => {
+          const sd = new Date(event.event_date + 'T12:00:00');
           return `<div class="sidebar-event">
             <div class="sidebar-date">
               <div class="ud-month">${months[sd.getMonth()].toUpperCase()}</div>
               <div class="ud-day">${sd.getDate()}</div>
             </div>
             <div>
-              <div class="sidebar-name">${e.name}</div>
-              <div class="sidebar-loc">${e.city}</div>
+              <div class="sidebar-name">${event.name || 'TapTap Party'}</div>
+              <div class="sidebar-loc">${event.city || ''}</div>
             </div>
           </div>`;
         }).join('');
       }
-    } catch(e) {}
+    } catch (error) {
+      console.error('Unable to load homepage events from Supabase:', error);
+    }
   })();
 
   function getApprovedPhotos() {
@@ -1166,24 +1197,14 @@
       const el = document.getElementById('gthumb' + i);
       if (!el) return;
       el.innerHTML = '';
-      el.style.position = 'relative';
-      el.style.overflow = 'hidden';
+      el.style.background = '#0d0d0d';
 
-      // Blurred background
-      const bg = document.createElement('img');
-      bg.src = src;
-      bg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(12px) brightness(0.5);transform:scale(1.1);';
-      bg.onerror = () => {};
-
-      // Full image centered
       const img = document.createElement('img');
       img.src = src;
-      img.alt = 'Tap Tap Party';
+      img.alt = 'TapTap Party';
       img.loading = 'lazy';
-      img.style.cssText = 'position:relative;z-index:1;width:100%;height:100%;object-fit:contain;display:block;';
+      img.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:center top;display:block;';
       img.onerror = () => el.style.display = 'none';
-
-      el.appendChild(bg);
       el.appendChild(img);
     });
     // Update dots
@@ -1287,7 +1308,7 @@
   <div class="newsletter-inner">
     <p class="section-eyebrow">Stay In The Loop</p>
     <h2>NEVER MISS<br>A PARTY</h2>
-    <p>Sign up to get early access to tickets, event announcements, and exclusive Tap Tap updates.</p>
+    <p>Sign up to get early access to tickets, event announcements, and exclusive TapTap updates.</p>
     <div class="newsletter-form">
       <input type="email" id="newsletterEmail" placeholder="Your email address">
       <button type="submit" onclick="subscribeNewsletter()">Sign Up</button>
@@ -1366,7 +1387,7 @@
   <div class="site-footer-inner">
     <div class="footer-top-wrap">
       <div>
-        <img src="logo.png" alt="Tap Tap Party" class="footer-logo">
+        <img src="logo.png" alt="TapTap Party" class="footer-logo">
         <p class="footer-tagline">Once a month. Every month. 🇭🇹</p>
       </div>
       <!-- Desktop columns -->
@@ -1409,7 +1430,7 @@
     </div>
 
     <div class="footer-bottom">
-      <p>© 2026 Tap Tap Party. All rights reserved.</p>
+      <p>© 2026 TapTap Party. All rights reserved.</p>
       <a href="https://instagram.com/itstaptapmiami" target="_blank" rel="noopener" class="footer-ig">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
           <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Events — Tap Tap Party</title>
+  <title>Events — TapTap Party</title>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
   <script src="https://js.stripe.com/v3/"></script>
   <style>
@@ -32,7 +32,8 @@
       z-index: 200;
       background: rgba(8,8,8,0.88);
       
-      -webkit-
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       padding: 0 48px;
       height: 64px;
       display: grid;
@@ -60,7 +61,7 @@
 
     /* ── PAGE HEADER ── */
     .page-header {
-      padding: 140px 48px 80px;
+      padding: 112px 48px 44px;
       max-width: 1000px;
       margin: 0 auto;
     }
@@ -77,15 +78,17 @@
 
     /* ── NEXT UP ── */
     .next-up {
-      padding: 0 48px 80px;
+      padding: 0 48px 48px;
       border-bottom: 1px solid rgba(255,255,255,0.05);
     }
     .next-up-inner {
       max-width: 1000px; margin: 0 auto;
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 64px; align-items: center;
+      display: grid; grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
+      gap: 36px; align-items: center;
     }
     .event-img {
+      width: min(100%, 300px);
+      justify-self: center;
       aspect-ratio: 3/4;
       background: var(--surface2);
       border-radius: 3px; overflow: hidden;
@@ -108,20 +111,20 @@
       font-size: clamp(36px, 4vw, 54px);
       letter-spacing: 2px; line-height: 1.05; margin-bottom: 20px;
     }
-    .event-details { display: flex; flex-direction: column; gap: 8px; margin-bottom: 28px; }
+    .event-details { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
     .event-detail-row { display: flex; align-items: center; gap: 10px; font-size: 14px; color: rgba(240,237,230,0.65); }
     .event-detail-row span.dot { width: 4px; height: 4px; background: var(--red); border-radius: 50%; flex-shrink: 0; }
     .ticket-box {
       background: var(--surface);
       border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 3px; padding: 24px;
+      border-radius: 3px; padding: 16px;
       margin-bottom: 0;
     }
     .ticket-box h4 { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
-    .ticket-tiers { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+    .ticket-tiers { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
     .ticket-tier {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 12px 16px;
+      padding: 10px 14px;
       background: var(--surface2);
       border-radius: 2px;
       cursor: pointer;
@@ -143,7 +146,7 @@
     .btn-primary {
       display: block; width: 100%;
       background: var(--red); color: var(--white);
-      padding: 16px; text-align: center;
+      padding: 13px; text-align: center;
       font-size: 13px; font-weight: 600; letter-spacing: 1.5px;
       text-transform: uppercase; text-decoration: none;
       border-radius: 2px; border: none; cursor: pointer;
@@ -155,7 +158,7 @@
 
     /* ── ALL EVENTS ── */
     .all-events {
-      padding: 32px 48px 80px;
+      padding: 24px 48px 72px;
       max-width: 1000px; margin: 0 auto;
     }
     .events-list { display: flex; flex-direction: column; gap: 0; }
@@ -236,17 +239,17 @@
       .nav-cta { display: none; }
       .nav-hamburger { display: flex; z-index: 300; position: relative; }
 
-      .page-header { padding: 100px 20px 40px; }
+      .page-header { padding: 88px 20px 28px; }
       .page-title { font-size: 72px; }
 
-      .next-up { padding: 0 20px 48px; }
-      .next-up-inner { grid-template-columns: 1fr; gap: 28px; }
-      .event-img { aspect-ratio: 3/4; }
+      .next-up { padding: 0 20px 36px; }
+      .next-up-inner { grid-template-columns: 1fr; gap: 22px; }
+      .event-img { width: min(78vw, 270px); aspect-ratio: 3/4; }
       .event-name { font-size: 32px; }
-      .ticket-box { padding: 20px; }
+      .ticket-box { padding: 15px; }
       .tier-price { font-size: 20px; }
 
-      .all-events { padding: 48px 20px; }
+      .all-events { padding: 36px 20px 56px; }
       .event-row {
         grid-template-columns: 72px 1fr;
         gap: 14px;
@@ -440,7 +443,7 @@
 
 <nav>
   <a href="index.html" class="nav-logo">
-    <img src="logo.png" alt="Tap Tap Party">
+    <img src="logo.png" alt="TapTap Party">
   </a>
   <ul class="nav-links">
     <li><a href="index.html">Home</a></li>
@@ -469,16 +472,14 @@
 <section class="next-up" style="padding-top:64px;">
   <div class="next-up-inner">
     <div class="event-img" id="evtFeatImg" style="position:relative;">
-      <img src="flyer-london.jpg" alt="Tap Tap London Aug 30" id="evtFeatImgEl">
+      <img src="flyer-london.jpg" alt="TapTap London Aug 30" id="evtFeatImgEl">
     </div>
     <div>
       <span class="event-tag">Next Up</span>
-      <div class="event-date" id="evtFeatDate">Friday, July 3, 2026</div>
-      <div class="event-name" id="evtFeatName">Tap Tap Miami<br>4th of July Edition</div>
+      <div class="event-date" id="evtFeatDate">Sunday, August 30, 2026</div>
+      <div class="event-name" id="evtFeatName">TapTap London<br><span style="color:var(--gold);font-size:0.24em;letter-spacing:1.2px;display:inline-block;margin-top:8px;line-height:1.25;">Notting Hill Carnival Weekend</span></div>
       <div class="event-details" id="evtFeatDetails">
-        <div class="event-detail-row"><span class="dot"></span>2335 N Miami Ave, Miami, FL</div>
-        <div class="event-detail-row"><span class="dot"></span>DJ Bullet &amp; Friends</div>
-        <div class="event-detail-row"><span class="dot"></span>Doors open at 9 PM</div>
+        <div class="event-detail-row"><span class="dot"></span>Event details loading…</div>
       </div>
       <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" class="btn-primary" id="evtFeatTicket" style="display:block; text-align:center; margin-top:24px;">Buy Tickets</a>
       <p class="stripe-note" style="margin-top:10px;">🎟 taptap.eventbrite.com</p>
@@ -487,40 +488,143 @@
 </section>
 
 <script>
-  // Auto next event from Supabase
-  (async function() {
-    try {
-      const { data: events } = await supa.from('events').select('*').gte('event_date', new Date().toISOString().split('T')[0]).order('event_date',{ascending:true});
-      if (!events?.length) return;
-      const next = events[0];
-      const d = new Date(next.event_date + 'T12:00:00');
-      const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-      const fullMonths = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  function escapeHtml(value) {
+    return String(value ?? '')
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
+  }
 
-      const fi = document.getElementById('evtFeatImgEl');
-      const fw = document.getElementById('evtFeatImg');
-      if (next.flyer) {
-        fi.src = next.flyer_url;
-      } else {
-        fi.src = 'og-image.png';
-        if (!fw.querySelector('.coming-soon-tag')) {
-          const tag = document.createElement('div');
-          tag.className = 'coming-soon-tag';
-          tag.style.cssText = 'position:absolute;bottom:0;left:0;right:0;background:rgba(8,8,8,0.75);color:rgba(240,237,230,0.7);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-align:center;padding:10px;';
-          tag.textContent = 'More Details Coming Soon';
-          fw.style.position = 'relative';
-          fw.appendChild(tag);
-        }
+  function eventLocation(event) {
+    return [event.venue, event.street_address, event.city, event.country]
+      .filter(Boolean)
+      .join(' — ');
+  }
+
+  function citySlug(city) {
+    return String(city || 'other').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  }
+
+  function formatEventDate(dateString) {
+    const d = new Date(dateString + 'T12:00:00');
+    return d.toLocaleDateString('en-US', {
+      weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
+    });
+  }
+
+  function renderFeaturedEvent(event) {
+    const image = document.getElementById('evtFeatImgEl');
+    if (event.flyer_url) {
+      image.src = event.flyer_url;
+      image.alt = event.name || 'TapTap event flyer';
+      image.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:center top;display:block;';
+    }
+
+    document.getElementById('evtFeatDate').textContent = formatEventDate(event.event_date);
+    const featuredName = document.getElementById('evtFeatName');
+    const eventName = event.name || 'TapTap Party';
+    const londonSubtitle = /london/i.test(eventName)
+      ? '<br><span style="color:var(--gold);font-size:0.24em;letter-spacing:1.2px;display:inline-block;margin-top:8px;line-height:1.25;">Notting Hill Carnival Weekend</span>'
+      : '';
+    featuredName.innerHTML = escapeHtml(eventName) + londonSubtitle;
+
+    const details = [];
+    const location = eventLocation(event);
+    if (location) details.push(location);
+    if (event.doors_open) details.push(event.doors_open);
+    if (event.organizer) details.push(event.organizer);
+    if (event.description) details.push(event.description);
+
+    document.getElementById('evtFeatDetails').innerHTML = details.length
+      ? details.map(item => `<div class="event-detail-row"><span class="dot"></span>${escapeHtml(item)}</div>`).join('')
+      : '<div class="event-detail-row"><span class="dot"></span>More details coming soon</div>';
+
+    const ticket = document.getElementById('evtFeatTicket');
+    if (event.ticket_link) ticket.href = event.ticket_link;
+  }
+
+  function renderUpcomingEvents(events) {
+    const list = document.getElementById('upcomingList');
+    const filters = document.getElementById('cityFilters');
+
+    if (!events.length) {
+      list.innerHTML = '<div class="empty-state">No upcoming events have been announced yet.</div>';
+      filters.innerHTML = `<button class="city-btn active" onclick="filterCity('all', this)">All Cities</button>`;
+      return;
+    }
+
+    const cities = [...new Set(events.map(event => event.city).filter(Boolean))];
+    filters.innerHTML = [
+      `<button class="city-btn active" onclick="filterCity('all', this)">All Cities</button>`,
+      ...cities.map(city => `<button class="city-btn" onclick="filterCity('${citySlug(city)}', this)">${escapeHtml(city)}</button>`)
+    ].join('');
+
+    list.innerHTML = events.map(event => {
+      const d = new Date(event.event_date + 'T12:00:00');
+      const month = d.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+      const day = d.getDate();
+      const location = [event.city, event.country, event.venue].filter(Boolean).join(' — ');
+      const ticketText = event.ticket_link ? 'Get Tickets' : 'Details Soon';
+      const ticketHref = event.ticket_link || '#';
+      return `<div class="event-row" data-city="${citySlug(event.city)}">
+        <div class="event-row-date"><div class="month">${month}</div>${day}</div>
+        <div class="event-row-info">
+          <div class="name">${escapeHtml(event.name)}</div>
+          <div class="location">${escapeHtml(location)}</div>
+        </div>
+        <div class="event-row-action"><a href="${escapeHtml(ticketHref)}" ${event.ticket_link ? 'target="_blank" rel="noopener"' : 'onclick="return false"'}>${ticketText}</a></div>
+      </div>`;
+    }).join('');
+  }
+
+  function hideFeaturedFromStaticSchedule(event) {
+    const featuredDate = String(event.event_date || '').slice(0, 10);
+    const featuredName = String(event.name || '').trim().toLowerCase();
+
+    document.querySelectorAll('#upcomingList .event-row').forEach(row => {
+      const rowDate = row.dataset.eventDate || '';
+      const rowName = String(row.dataset.eventName || row.querySelector('.name')?.textContent || '')
+        .trim()
+        .toLowerCase();
+      const sameDate = featuredDate && rowDate === featuredDate;
+      const sameNameAndDate = featuredName && rowName.startsWith(featuredName) && (!rowDate || sameDate);
+      if (sameDate || sameNameAndDate) row.remove();
+    });
+
+    // Hide city filter buttons that no longer have any visible upcoming events.
+    document.querySelectorAll('#cityFilters .city-btn:not(:first-child)').forEach(button => {
+      const match = button.getAttribute('onclick')?.match(/filterCity\('([^']+)'/);
+      if (!match) return;
+      const city = match[1];
+      button.style.display = document.querySelector(`#upcomingList .event-row[data-city="${city}"]`) ? '' : 'none';
+    });
+  }
+
+  (async function loadEventsFromSupabase() {
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const { data: events, error } = await supa
+        .from('events')
+        .select('*')
+        .gte('event_date', today)
+        .order('event_date', { ascending: true });
+
+      if (error) throw error;
+      const upcoming = events || [];
+
+      // Keep the Upcoming Events schedule below as static HTML.
+      // Supabase is used only for the featured Next Up event.
+      const featured = upcoming.find(event => event.is_next) || upcoming[0];
+      if (featured) {
+        renderFeaturedEvent(featured);
+        hideFeaturedFromStaticSchedule(featured);
       }
-      document.getElementById('evtFeatDate').textContent = `${days[d.getDay()]}, ${fullMonths[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
-      document.getElementById('evtFeatName').textContent = next.name;
-      document.getElementById('evtFeatDetails').innerHTML = `
-        ${next.venue ? `<div class="event-detail-row"><span class="dot"></span>${next.venue}${next.city ? ', ' + next.city : ''}</div>` : ''}
-        <div class="event-detail-row"><span class="dot"></span>DJ Bullet & Friends</div>
-        <div class="event-detail-row"><span class="dot"></span>Doors open at 9 PM</div>
-      `;
-      if (next.ticket_link) document.getElementById('evtFeatTicket').href = next.ticket_link;
-    } catch(e) {}
+    } catch (error) {
+      console.error('Unable to load events:', error);
+      document.getElementById('evtFeatDetails').innerHTML = '<div class="event-detail-row"><span class="dot"></span>Unable to load event details.</div>';
+    }
   })();
 </script>
 
@@ -534,7 +638,6 @@
   <div class="city-filters" id="cityFilters">
     <button class="city-btn active" onclick="filterCity('all', this)">All Cities</button>
     <button class="city-btn" onclick="filterCity('miami', this)">Miami</button>
-    <button class="city-btn" onclick="filterCity('london', this)">London</button>
     <button class="city-btn" onclick="filterCity('new-york', this)">New York</button>
   </div>
 
@@ -542,46 +645,37 @@
   <div class="events-section-label">Upcoming</div>
   <div class="events-list" id="upcomingList">
 
-    <div class="event-row" data-city="london">
-      <div class="event-row-date"><div class="month">AUG</div>30</div>
-      <div class="event-row-info">
-        <div class="name">Tap Tap London</div>
-        <div class="location">London, UK</div>
-      </div>
-      <div class="event-row-action"><a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener">Get Tickets</a></div>
-    </div>
-
-    <div class="event-row" data-city="new-york">
+    <div class="event-row" data-city="new-york" data-event-date="2026-09-05" data-event-name="TapTap New York">
       <div class="event-row-date"><div class="month">SEP</div>5</div>
       <div class="event-row-info">
-        <div class="name">Tap Tap New York <span class="badge">Labor Day</span></div>
+        <div class="name">TapTap New York <span class="badge">Labor Day</span></div>
         <div class="location">New York, NY</div>
       </div>
       <div class="event-row-action"><a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener">Get Tickets</a></div>
     </div>
 
-    <div class="event-row" data-city="miami">
+    <div class="event-row" data-city="miami" data-event-date="2026-10-11" data-event-name="TapTap Miami">
       <div class="event-row-date"><div class="month">OCT</div>11</div>
       <div class="event-row-info">
-        <div class="name">Tap Tap Miami <span class="badge">Carnival</span></div>
+        <div class="name">TapTap Miami <span class="badge">Carnival</span></div>
         <div class="location">Miami, FL</div>
       </div>
       <div class="event-row-action"><a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener">Get Tickets</a></div>
     </div>
 
-    <div class="event-row" data-city="miami">
+    <div class="event-row" data-city="miami" data-event-date="2026-11-29" data-event-name="TapTap Miami">
       <div class="event-row-date"><div class="month">NOV</div>29</div>
       <div class="event-row-info">
-        <div class="name">Tap Tap Miami</div>
+        <div class="name">TapTap Miami</div>
         <div class="location">Miami, FL</div>
       </div>
       <div class="event-row-action"><a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener">Get Tickets</a></div>
     </div>
 
-    <div class="event-row" data-city="miami">
+    <div class="event-row" data-city="miami" data-event-date="2026-12-20" data-event-name="TapTap Miami">
       <div class="event-row-date"><div class="month">DEC</div>20</div>
       <div class="event-row-info">
-        <div class="name">Tap Tap Miami</div>
+        <div class="name">TapTap Miami</div>
         <div class="location">Miami, FL</div>
       </div>
       <div class="event-row-action"><a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener">Get Tickets</a></div>
@@ -598,7 +692,7 @@
     <div class="event-row past" data-city="miami">
       <div class="event-row-date"><div class="month">JUL</div>3</div>
       <div class="event-row-info">
-        <div class="name">Tap Tap Miami <span class="badge">4th of July</span></div>
+        <div class="name">TapTap Miami <span class="badge">4th of July</span></div>
         <div class="location">Miami, FL</div>
       </div>
       <div class="event-row-action"><a href="#" style="pointer-events:none;opacity:0.4;">Past</a></div>
@@ -608,7 +702,7 @@
     <div class="event-row past" data-city="jersey-city">
       <div class="event-row-date"><div class="month">JAN</div>16</div>
       <div class="event-row-info">
-        <div class="name">Tap Tap Jersey City</div>
+        <div class="name">TapTap Jersey City</div>
         <div class="location">Jersey City, NJ</div>
       </div>
       <div class="event-row-action"><a href="#">Sold Out</a></div>
@@ -617,7 +711,7 @@
     <div class="event-row past" data-city="miami">
       <div class="event-row-date"><div class="month">JAN</div>18</div>
       <div class="event-row-info">
-        <div class="name">Tap Tap Miami</div>
+        <div class="name">TapTap Miami</div>
         <div class="location">Miami, FL</div>
       </div>
       <div class="event-row-action"><a href="#">Sold Out</a></div>
@@ -626,7 +720,7 @@
     <div class="event-row past" data-city="miami">
       <div class="event-row-date"><div class="month">FEB</div>22</div>
       <div class="event-row-info">
-        <div class="name">Tap Tap Miami</div>
+        <div class="name">TapTap Miami</div>
         <div class="location">Miami, FL</div>
       </div>
       <div class="event-row-action"><a href="#">Sold Out</a></div>
@@ -635,7 +729,7 @@
     <div class="event-row past" data-city="toronto">
       <div class="event-row-date"><div class="month">MAR</div>28</div>
       <div class="event-row-info">
-        <div class="name">Tap Tap Toronto <span class="badge">World Cup Group Game</span></div>
+        <div class="name">TapTap Toronto <span class="badge">World Cup Group Game</span></div>
         <div class="location">Toronto, CA</div>
       </div>
       <div class="event-row-action"><a href="#">Sold Out</a></div>
@@ -644,7 +738,7 @@
     <div class="event-row past" data-city="miami">
       <div class="event-row-date"><div class="month">MAR</div>29</div>
       <div class="event-row-info">
-        <div class="name">Tap Tap Miami — 3 Years <span class="badge">Anniversary</span></div>
+        <div class="name">TapTap Miami — 3 Years <span class="badge">Anniversary</span></div>
         <div class="location">Miami, FL</div>
       </div>
       <div class="event-row-action"><a href="#">Sold Out</a></div>
@@ -653,7 +747,7 @@
     <div class="event-row past" data-city="montreal">
       <div class="event-row-date"><div class="month">APR</div>4</div>
       <div class="event-row-info">
-        <div class="name">Tap Tap Montreal</div>
+        <div class="name">TapTap Montreal</div>
         <div class="location">Montreal, CA</div>
       </div>
       <div class="event-row-action"><a href="#">Sold Out</a></div>
@@ -662,7 +756,7 @@
     <div class="event-row past" data-city="paris">
       <div class="event-row-date"><div class="month">MAY</div>8</div>
       <div class="event-row-info">
-        <div class="name">Tap Tap Paris <span class="badge">Rescheduled</span></div>
+        <div class="name">TapTap Paris <span class="badge">Rescheduled</span></div>
         <div class="location">Paris, FR</div>
       </div>
       <div class="event-row-action"><a href="#">Sold Out</a></div>
@@ -671,7 +765,7 @@
     <div class="event-row past" data-city="miami">
       <div class="event-row-date"><div class="month">MAY</div>17</div>
       <div class="event-row-info">
-        <div class="name">Tap Tap Miami <span class="badge">Flag Day</span></div>
+        <div class="name">TapTap Miami <span class="badge">Flag Day</span></div>
         <div class="location">Miami, FL</div>
       </div>
       <div class="event-row-action"><a href="#">Sold Out</a></div>
@@ -680,7 +774,7 @@
     <div class="event-row past" data-city="boston">
       <div class="event-row-date"><div class="month">JUN</div>12</div>
       <div class="event-row-info">
-        <div class="name">Tap Tap Boston <span class="badge">World Cup Tour</span></div>
+        <div class="name">TapTap Boston <span class="badge">World Cup Tour</span></div>
         <div class="location">Boston, MA — MIXX 360</div>
       </div>
       <div class="event-row-action"><a href="#">Sold Out</a></div>
@@ -689,7 +783,7 @@
     <div class="event-row past" data-city="miami">
       <div class="event-row-date"><div class="month">JUN</div>14</div>
       <div class="event-row-info">
-        <div class="name">Tap Tap Miami <span class="badge">World Cup Tour</span></div>
+        <div class="name">TapTap Miami <span class="badge">World Cup Tour</span></div>
         <div class="location">Miami, FL</div>
       </div>
       <div class="event-row-action"><a href="#">Sold Out</a></div>
@@ -698,7 +792,7 @@
     <div class="event-row past" data-city="philadelphia">
       <div class="event-row-date"><div class="month">JUN</div>19</div>
       <div class="event-row-info">
-        <div class="name">Tap Tap Philadelphia <span class="badge">World Cup Tour</span></div>
+        <div class="name">TapTap Philadelphia <span class="badge">World Cup Tour</span></div>
         <div class="location">Philadelphia, PA — ROAR</div>
       </div>
       <div class="event-row-action"><a href="#">Sold Out</a></div>
@@ -707,7 +801,7 @@
     <div class="event-row past" data-city="atlanta">
       <div class="event-row-date"><div class="month">JUN</div>24</div>
       <div class="event-row-info">
-        <div class="name">Tap Tap Atlanta <span class="badge">World Cup Tour</span></div>
+        <div class="name">TapTap Atlanta <span class="badge">World Cup Tour</span></div>
         <div class="location">Atlanta, GA — District</div>
       </div>
       <div class="event-row-action"><a href="#">Sold Out</a></div>
@@ -785,7 +879,7 @@
   <div class="site-footer-inner">
     <div class="footer-top-wrap">
       <div>
-        <img src="logo.png" alt="Tap Tap Party" class="footer-logo">
+        <img src="logo.png" alt="TapTap Party" class="footer-logo">
         <p class="footer-tagline">Once a month. Every month. 🇭🇹</p>
       </div>
       <!-- Desktop columns -->
@@ -828,7 +922,7 @@
     </div>
 
     <div class="footer-bottom">
-      <p>© 2026 Tap Tap Party. All rights reserved.</p>
+      <p>© 2026 TapTap Party. All rights reserved.</p>
       <a href="https://instagram.com/itstaptapmiami" target="_blank" rel="noopener" class="footer-ig">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
           <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
