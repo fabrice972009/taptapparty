@@ -594,6 +594,13 @@
     const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtemZvd3F6bHF5emJqY2hwbnR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM0NzQxODcsImV4cCI6MjA5OTA1MDE4N30.GB42OaMpcIt7uxopfPYEH4Vdatm7hYS37AptnivgUkU';
     const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
   </script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#080808">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="TapTap">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 </head>
 <body>
 <!-- Smoke Background -->
@@ -685,7 +692,7 @@
 <!-- Nav -->
 <nav>
   <a href="index.html" class="nav-logo">
-    <img src="logo.png" alt="TapTap Party" style="height: 40px; width: auto; display: block; mix-blend-mode: screen;">
+    <img src="logo.png" alt="Tap Tap Party" style="height: 40px; width: auto; display: block; mix-blend-mode: screen;">
   </a>
   <ul class="nav-links">
     <li><a href="index.html">Home</a></li>
@@ -777,19 +784,16 @@
 
       <!-- Featured Flyer -->
       <div class="next-event-img" id="nextFlyer" style="position:relative;">
-        <img src="flyer-london.jpg" alt="TapTap London Aug 30" id="nextFlyerImg" style="width:100%;height:100%;object-fit:contain;display:block;">
+        <img src="flyer-london.jpg" alt="Tap Tap London Aug 30" id="nextFlyerImg" style="width:100%;height:100%;object-fit:contain;display:block;">
       </div>
 
       <!-- Featured Info Middle -->
       <div class="featured-info">
         <div class="event-date-line" id="nextDateLine">Sunday, August 30, 2026</div>
-        <div class="event-name" id="nextName">TapTap London</div>
-        <div id="nextSubtitle" style="color:var(--gold);font-size:13px;letter-spacing:1.4px;margin:8px 0 18px;line-height:1.4;">Notting Hill Carnival Weekend</div>
+        <div class="event-name" id="nextName">Tap Tap London</div>
         <div class="event-details" id="nextDetails">
-          <div class="event-detail-row"><span class="dot"></span>The Camden — 65 Crowndale Rd, London NW1 1TN — London — UK</div>
-          <div class="event-detail-row"><span class="dot"></span>9 PM – 3 AM</div>
+          <div class="event-detail-row"><span class="dot"></span>London, UK</div>
           <div class="event-detail-row"><span class="dot"></span>DJ Bullet &amp; Friends</div>
-          <div class="event-detail-row"><span class="dot"></span>Konpa · Afrobeat · Dancehall · Amapiano · Soca</div>
         </div>
       </div>
 
@@ -799,15 +803,15 @@
         <div id="sidebarEvents">
           <div class="sidebar-event">
             <div class="sidebar-date"><div class="ud-month">SEP</div><div class="ud-day">5</div></div>
-            <div><div class="sidebar-name">TapTap New York</div><div class="sidebar-loc">New York, NY</div></div>
+            <div><div class="sidebar-name">Tap Tap New York</div><div class="sidebar-loc">New York, NY</div></div>
           </div>
           <div class="sidebar-event">
             <div class="sidebar-date"><div class="ud-month">OCT</div><div class="ud-day">11</div></div>
-            <div><div class="sidebar-name">TapTap Miami</div><div class="sidebar-loc">Miami, FL</div></div>
+            <div><div class="sidebar-name">Tap Tap Miami</div><div class="sidebar-loc">Miami, FL</div></div>
           </div>
           <div class="sidebar-event">
             <div class="sidebar-date"><div class="ud-month">NOV</div><div class="ud-day">29</div></div>
-            <div><div class="sidebar-name">TapTap Miami</div><div class="sidebar-loc">Miami, FL</div></div>
+            <div><div class="sidebar-name">Tap Tap Miami</div><div class="sidebar-loc">Miami, FL</div></div>
           </div>
         </div>
         <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" class="btn-primary" id="nextTicketBtn" style="display:block;text-align:center;margin-top:32px;">Get Tickets</a>
@@ -854,23 +858,23 @@
 <div class="cities-separator">
   <div class="cities-list">
     <span class="city-item" style="color:var(--white); font-weight:600;">TapTap</span>
-    <span class="cities-separator-line">|</span>
+    <span class="cities-dot">·</span>
     <span class="city-item">Miami</span>
-    <span class="cities-separator-line">|</span>
+    <span class="cities-dot">·</span>
     <span class="city-item">London</span>
-    <span class="cities-separator-line">|</span>
+    <span class="cities-dot">·</span>
     <span class="city-item">New York</span>
-    <span class="cities-separator-line">|</span>
+    <span class="cities-dot">·</span>
     <span class="city-item">Atlanta</span>
-    <span class="cities-separator-line">|</span>
+    <span class="cities-dot">·</span>
     <span class="city-item">Toronto</span>
-    <span class="cities-separator-line">|</span>
+    <span class="cities-dot">·</span>
     <span class="city-item">Paris</span>
-    <span class="cities-separator-line">|</span>
+    <span class="cities-dot">·</span>
     <span class="city-item">Boston</span>
-    <span class="cities-separator-line">|</span>
+    <span class="cities-dot">·</span>
     <span class="city-item">Montreal</span>
-    <span class="cities-separator-line">|</span>
+    <span class="cities-dot">·</span>
     <span class="city-item">Philadelphia</span>
   </div>
 </div>
@@ -902,7 +906,7 @@
     transition: color 0.2s;
   }
   .city-item:hover { color: var(--white); }
-  .cities-separator-line { color: var(--gold); font-size: 15px; font-weight:600; opacity:0.9; }
+  .cities-dot { color: var(--red); font-size: 16px; }
   @media (max-width: 800px) {
     .cities-separator { padding: 18px 20px; flex-wrap: wrap; gap: 12px; }
     .cities-list { justify-content: flex-start; flex-wrap: wrap; gap: 10px; }
@@ -925,7 +929,7 @@
         </div>
         <!-- Emblem slide -->
         <div id="wwSlide1" class="ww-slide" style="display:none;">
-          <div class="about-img"><img src="emblem.png" alt="TapTap Party emblem"></div>
+          <div class="about-img"><img src="emblem.png" alt="Tap Tap Party emblem"></div>
         </div>
         <!-- Toggle dots -->
         <div style="display:flex;justify-content:center;gap:8px;margin-top:12px;">
@@ -957,7 +961,7 @@
       <p class="section-eyebrow">Who We Are</p>
       <h2>CELEBRATING<br>HAITIAN<br><span class="red">CULTURE.</span></h2>
       <p>
-        TapTap Party is Miami's premier monthly Haitian cultural experience. We bring together the diaspora and everyone who loves Haitian music, food, art, and people — once a month, every month. DJ Bullet &amp; Friends set the soundtrack while Miami dances.
+        Tap Tap Party is Miami's premier monthly Haitian cultural experience. We bring together the diaspora and everyone who loves Haitian music, food, art, and people — once a month, every month. DJ Bullet &amp; Friends set the soundtrack while Miami dances.
       </p>
       <a href="about.html" class="btn-sm-outline" style="display:inline-block; margin-top:8px;">Learn More</a>
     </div>
@@ -1051,106 +1055,61 @@
 </section>
 
 <script>
-  function escapeHomepageHtml(value) {
-    return String(value ?? '')
-      .replaceAll('&', '&amp;')
-      .replaceAll('<', '&lt;')
-      .replaceAll('>', '&gt;')
-      .replaceAll('"', '&quot;')
-      .replaceAll("'", '&#039;');
-  }
-
   // ── AUTO NEXT EVENT from Supabase ──
   (async function() {
     try {
-      const todayISO = new Date().toISOString().split('T')[0];
+      const events = JSON.parse(localStorage.getItem('tt_events') || '[]');
+      if (!events.length) return;
+      const today = new Date(); today.setHours(0,0,0,0);
+      const future = events.filter(e => new Date(e.event_date + 'T12:00:00') >= today).sort((a,b) => new Date(a.event_date + 'T12:00:00') - new Date(b.event_date + 'T12:00:00'));
+      if (!future.length) return;
 
-      // Load all upcoming events from Supabase, ordered by date.
-      const { data: upcomingEvents, error: upcomingError } = await supa
-        .from('events')
-        .select('*')
-        .gte('event_date', todayISO)
-        .order('event_date', { ascending: true });
-
-      if (upcomingError) throw upcomingError;
-      if (!upcomingEvents || !upcomingEvents.length) return;
-
-      // Prefer the event marked "Next Up" in admin; otherwise use the nearest event.
-      const next = upcomingEvents.find(event => event.is_next === true) || upcomingEvents[0];
+      const next = future[0];
       const d = new Date(next.event_date + 'T12:00:00');
       const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
       const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
       const fullMonths = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-      // Update featured event.
-      document.getElementById('nextDateLine').textContent = `${days[d.getDay()]}, ${fullMonths[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
-      document.getElementById('nextName').textContent = next.name || 'TapTap Party';
-
+      // Update flyer — only override if Supabase has a flyer_url
       const flyerImg = document.getElementById('nextFlyerImg');
       const flyerWrap = document.getElementById('nextFlyer');
-      if (next.flyer_url && flyerImg) {
+      if (next.flyer_url) {
         flyerImg.src = next.flyer_url;
-        flyerImg.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:center top;display:block;';
-        flyerImg.alt = next.name || 'TapTap Party event flyer';
-        const tag = flyerWrap ? flyerWrap.querySelector('.coming-soon-tag') : null;
+        flyerImg.style.cssText = 'width:100%;height:100%;object-fit:contain;display:block;';
+        flyerImg.alt = next.name;
+        const tag = flyerWrap.querySelector('.coming-soon-tag');
         if (tag) tag.remove();
       }
 
-      const subtitle = document.getElementById('nextSubtitle');
-      const isLondon = /london/i.test([next.name, next.city, next.country].filter(Boolean).join(' '));
-      if (subtitle) {
-        subtitle.textContent = isLondon ? 'Notting Hill Carnival Weekend' : '';
-        subtitle.style.display = subtitle.textContent ? 'block' : 'none';
+      // Update date, name, details if Supabase has real venue data
+      document.getElementById('nextDateLine').textContent = `${days[d.getDay()]}, ${fullMonths[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+      document.getElementById('nextName').textContent = next.name;
+      if (next.venue && next.venue !== 'TBA') {
+        document.getElementById('nextDetails').innerHTML = `
+          <div class="event-detail-row"><span class="dot"></span>${next.venue}, ${next.city}</div>
+          <div class="event-detail-row"><span class="dot"></span>DJ Bullet & Friends</div>
+        `;
       }
+      if (next.ticket_link) document.getElementById('nextTicketBtn').href = next.ticket_link;
 
-      const details = [];
-      const fullLocation = [next.venue, next.street_address, next.city, next.country]
-        .filter(Boolean)
-        .join(' — ');
-      if (fullLocation) details.push(fullLocation);
-      if (next.doors_open) details.push(next.doors_open);
-      if (next.organizer) details.push(next.organizer);
-      if (next.description) details.push(next.description);
-
-      // Helpful fallbacks for the London event if an older database row is missing fields.
-      if (isLondon) {
-        if (!fullLocation) details.push('The Camden — 65 Crowndale Rd, London NW1 1TN — London — UK');
-        if (!next.doors_open) details.push('9 PM – 3 AM');
-        if (!next.organizer) details.push('DJ Bullet & Friends');
-        if (!next.description) details.push('Konpa · Afrobeat · Dancehall · Amapiano · Soca');
-      }
-
-      document.getElementById('nextDetails').innerHTML = details
-        .map(item => `<div class="event-detail-row"><span class="dot"></span>${escapeHomepageHtml(item)}</div>`)
-        .join('');
-
-      if (next.ticket_link) {
-        document.getElementById('nextTicketBtn').href = next.ticket_link;
-      }
-
-      // Show the next three upcoming events after the featured event.
-      const sidebar = upcomingEvents
-        .filter(event => event.id !== next.id)
-        .slice(0, 3);
-
+      // Update sidebar with next 3 after the featured
+      const sidebar = future.slice(1, 4);
       if (sidebar.length) {
-        document.getElementById('sidebarEvents').innerHTML = sidebar.map(event => {
-          const sd = new Date(event.event_date + 'T12:00:00');
+        document.getElementById('sidebarEvents').innerHTML = sidebar.map(e => {
+          const sd = new Date(e.event_date + 'T12:00:00');
           return `<div class="sidebar-event">
             <div class="sidebar-date">
               <div class="ud-month">${months[sd.getMonth()].toUpperCase()}</div>
               <div class="ud-day">${sd.getDate()}</div>
             </div>
             <div>
-              <div class="sidebar-name">${event.name || 'TapTap Party'}</div>
-              <div class="sidebar-loc">${event.city || ''}</div>
+              <div class="sidebar-name">${e.name}</div>
+              <div class="sidebar-loc">${e.city}</div>
             </div>
           </div>`;
         }).join('');
       }
-    } catch (error) {
-      console.error('Unable to load homepage events from Supabase:', error);
-    }
+    } catch(e) {}
   })();
 
   function getApprovedPhotos() {
@@ -1201,7 +1160,7 @@
 
       const img = document.createElement('img');
       img.src = src;
-      img.alt = 'TapTap Party';
+      img.alt = 'Tap Tap Party';
       img.loading = 'lazy';
       img.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:center top;display:block;';
       img.onerror = () => el.style.display = 'none';
@@ -1308,7 +1267,7 @@
   <div class="newsletter-inner">
     <p class="section-eyebrow">Stay In The Loop</p>
     <h2>NEVER MISS<br>A PARTY</h2>
-    <p>Sign up to get early access to tickets, event announcements, and exclusive TapTap updates.</p>
+    <p>Sign up to get early access to tickets, event announcements, and exclusive Tap Tap updates.</p>
     <div class="newsletter-form">
       <input type="email" id="newsletterEmail" placeholder="Your email address">
       <button type="submit" onclick="subscribeNewsletter()">Sign Up</button>
@@ -1387,7 +1346,7 @@
   <div class="site-footer-inner">
     <div class="footer-top-wrap">
       <div>
-        <img src="logo.png" alt="TapTap Party" class="footer-logo">
+        <img src="logo.png" alt="Tap Tap Party" class="footer-logo">
         <p class="footer-tagline">Once a month. Every month. 🇭🇹</p>
       </div>
       <!-- Desktop columns -->
@@ -1430,7 +1389,7 @@
     </div>
 
     <div class="footer-bottom">
-      <p>© 2026 TapTap Party. All rights reserved.</p>
+      <p>© 2026 Tap Tap Party. All rights reserved.</p>
       <a href="https://instagram.com/itstaptapmiami" target="_blank" rel="noopener" class="footer-ig">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
           <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
@@ -1486,116 +1445,12 @@
   document.querySelectorAll('.tt-spray').forEach(drawSpray);
 })();
 </script>
-
-<style>
-  /* Mobile fix: compact, readable Next Up section */
-  @media (max-width: 800px) {
-    .next-event {
-      padding: 36px 18px 42px;
-      overflow-x: hidden;
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
     }
-    .next-event > div {
-      width: 100%;
-      max-width: 100% !important;
-    }
-    .next-event .section-eyebrow {
-      margin-bottom: 18px !important;
-      text-align: center;
-    }
-    .next-event-inner {
-      display: flex !important;
-      flex-direction: column;
-      gap: 22px !important;
-      width: 100%;
-      min-width: 0;
-      text-align: left !important;
-    }
-    .next-event-img {
-      width: min(72vw, 230px);
-      max-width: 230px !important;
-      aspect-ratio: 4 / 5;
-      margin: 0 auto;
-      flex: none;
-    }
-    .next-event-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-    .featured-info {
-      width: 100%;
-      min-width: 0;
-      text-align: center !important;
-    }
-    .event-date-line {
-      font-size: 11px;
-      line-height: 1.45;
-      margin-bottom: 8px;
-      overflow-wrap: anywhere;
-    }
-    .event-name {
-      font-size: clamp(30px, 10vw, 40px) !important;
-      line-height: 1;
-      margin-bottom: 10px;
-      overflow-wrap: anywhere;
-    }
-    #nextSubtitle {
-      font-size: 12px !important;
-      margin: 6px auto 16px !important;
-      max-width: 300px;
-      line-height: 1.45 !important;
-      overflow-wrap: anywhere;
-    }
-    .event-details {
-      width: 100%;
-      max-width: 360px;
-      margin: 0 auto 4px;
-      gap: 10px;
-      align-items: stretch !important;
-    }
-    .event-detail-row {
-      display: grid !important;
-      grid-template-columns: 6px minmax(0, 1fr);
-      align-items: start !important;
-      justify-content: initial !important;
-      gap: 10px;
-      width: 100%;
-      text-align: left;
-      font-size: 13px;
-      line-height: 1.55;
-      overflow-wrap: anywhere;
-      word-break: normal;
-    }
-    .event-detail-row .dot {
-      margin-top: 8px;
-    }
-    .upcoming-sidebar {
-      width: 100%;
-      min-width: 0;
-      border-left: none !important;
-      border-top: 1px solid rgba(255,255,255,0.07);
-      padding: 26px 0 0 !important;
-      margin-top: 2px !important;
-      text-align: left !important;
-    }
-    .sidebar-event {
-      justify-content: flex-start !important;
-      width: 100%;
-    }
-    #nextTicketBtn {
-      width: 100%;
-      max-width: 360px;
-      margin: 24px auto 0 !important;
-      padding: 14px 20px;
-    }
-  }
-
-  @media (max-width: 380px) {
-    .next-event { padding-left: 14px; padding-right: 14px; }
-    .next-event-img { width: min(78vw, 210px); }
-    .event-detail-row { font-size: 12.5px; }
-  }
-</style>
-
+  </script>
 </body>
 </html>
