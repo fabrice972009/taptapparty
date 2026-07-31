@@ -1,4 +1,4 @@
-const CACHE = 'taptap-v2';
+const CACHE = 'taptap-v3';
 const ASSETS = [
   '/',
   '/index.html',
