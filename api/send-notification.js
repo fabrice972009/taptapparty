@@ -1,4 +1,4 @@
-const webpush = require('web-push');
+import webpush from 'web-push';
 
 webpush.setVapidDetails(
   'mailto:admin@itstaptap.com',
@@ -6,13 +6,12 @@ webpush.setVapidDetails(
   process.env.VAPID_PRIVATE_KEY
 );
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
   const { title, body, url } = req.body;
   if (!title || !body) return res.status(400).json({ error: 'Missing title or body' });
 
-  // Get all subscriptions from Supabase
   const r = await fetch(`${process.env.SUPABASE_URL}/rest/v1/push_subscriptions?select=*`, {
     headers: {
       'apikey': process.env.SUPABASE_SERVICE_KEY,
@@ -20,7 +19,7 @@ module.exports = async function handler(req, res) {
     }
   });
   const subs = await r.json();
-  if (!subs.length) return res.status(200).json({ sent: 0, total: 0 });
+  if (!Array.isArray(subs) || !subs.length) return res.status(200).json({ sent: 0, total: 0 });
 
   const payload = JSON.stringify({
     title,
@@ -39,7 +38,6 @@ module.exports = async function handler(req, res) {
       }, payload);
       sent++;
     } catch(err) {
-      // Remove expired subscriptions
       if (err.statusCode === 410) {
         await fetch(`${process.env.SUPABASE_URL}/rest/v1/push_subscriptions?endpoint=eq.${encodeURIComponent(sub.endpoint)}`, {
           method: 'DELETE',
@@ -53,4 +51,4 @@ module.exports = async function handler(req, res) {
   }));
 
   res.status(200).json({ sent, total: subs.length });
-};
+}

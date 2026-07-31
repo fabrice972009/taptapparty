@@ -1,4 +1,4 @@
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
   const { endpoint, keys } = req.body;
@@ -12,12 +12,8 @@ module.exports = async function handler(req, res) {
       'Content-Type': 'application/json',
       'Prefer': 'resolution=merge-duplicates'
     },
-    body: JSON.stringify({
-      endpoint,
-      p256dh: keys.p256dh,
-      auth: keys.auth
-    })
+    body: JSON.stringify({ endpoint, p256dh: keys.p256dh, auth: keys.auth })
   });
 
   res.status(200).json({ success: true });
-};
+}
