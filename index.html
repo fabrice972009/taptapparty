@@ -452,7 +452,6 @@
       .nav-hamburger { display: flex; z-index: 300; position: relative; margin-left: auto; }
 
       .hero { height: 70vh; padding-bottom: 0; padding-left: 20px; padding-right: 20px; }
-      .hero-video { object-fit: contain; background: #080808; transform: scale(0.85); }
       .hero-sub { font-size: 15px; }
       .hero-ctas { gap: 10px; }
       .btn-primary, .btn-outline { padding: 13px 28px; font-size: 12px; }
@@ -1519,8 +1518,7 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
       });
     };
     document.body.appendChild(bell);
-    // Auto hide after 8 seconds if not clicked
-    setTimeout(() => bell.remove(), 8000);
+
   }
 }
 </script>
