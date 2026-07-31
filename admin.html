@@ -345,11 +345,11 @@
       <div class="event-form">
         <div class="form-group">
           <label>Title</label>
-          <input type="text" id="notifTitle" placeholder="e.g. Tap Tap London tickets are LIVE 🎟">
+          <input type="text" id="notifTitle" placeholder="e.g. 🎟 Tickets are LIVE">
         </div>
         <div class="form-group">
           <label>Message</label>
-          <input type="text" id="notifBody" placeholder="e.g. August 30 at The Camden — grab yours before they sell out!">
+          <input type="text" id="notifBody" placeholder="e.g. Tap Tap London — Aug 30 at The Camden. Grab yours now!">
         </div>
         <div class="form-group">
           <label>Link — Quick Select</label>
@@ -369,14 +369,14 @@
       </div>
 
       <div style="background:var(--surface);border:1px solid rgba(255,255,255,0.06);border-radius:3px;padding:20px;margin-top:8px;">
-        <p style="font-size:13px;color:var(--muted);line-height:1.7;">
-          💡 <strong style="color:var(--white);">Tips:</strong><br>
-          • Announce new event dates<br>
-          • Alert when tickets go live<br>
-          • Send sold out warnings<br>
-          • Countdown reminders (e.g. "Tomorrow night — London!")<br><br>
-          Notifications go to everyone who tapped <strong style="color:var(--white);">Allow</strong> on the site.
-        </p>
+        <p style="font-size:12px;color:var(--gold);font-weight:600;margin-bottom:12px;letter-spacing:1px;text-transform:uppercase;">Quick Templates</p>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <button onclick="fillTemplate('🎟 Tickets are LIVE','Tap Tap London — Aug 30 at The Camden. Grab yours before they sell out!','http://Taptap.eventbrite.com')" style="background:none;border:1px solid rgba(255,255,255,0.08);color:rgba(240,237,230,0.7);padding:8px 12px;text-align:left;font-size:12px;font-family:Inter,sans-serif;cursor:pointer;border-radius:2px;">🎟 Tickets Live</button>
+          <button onclick="fillTemplate('🚨 Almost Sold Out','Only a few tickets left for Tap Tap London — Aug 30. Don\'t miss out!','http://Taptap.eventbrite.com')" style="background:none;border:1px solid rgba(255,255,255,0.08);color:rgba(240,237,230,0.7);padding:8px 12px;text-align:left;font-size:12px;font-family:Inter,sans-serif;cursor:pointer;border-radius:2px;">🚨 Almost Sold Out</button>
+          <button onclick="fillTemplate('❌ SOLD OUT','Tap Tap London is officially sold out. Stay tuned for the next date!','https://itstaptap.com/events.html')" style="background:none;border:1px solid rgba(255,255,255,0.08);color:rgba(240,237,230,0.7);padding:8px 12px;text-align:left;font-size:12px;font-family:Inter,sans-serif;cursor:pointer;border-radius:2px;">❌ Sold Out</button>
+          <button onclick="fillTemplate('📅 New Date Just Dropped','Tap Tap New York — September 5. Tickets on sale now!','http://Taptap.eventbrite.com')" style="background:none;border:1px solid rgba(255,255,255,0.08);color:rgba(240,237,230,0.7);padding:8px 12px;text-align:left;font-size:12px;font-family:Inter,sans-serif;cursor:pointer;border-radius:2px;">📅 New Date</button>
+          <button onclick="fillTemplate('🔥 Tomorrow Night!','Tap Tap London is TOMORROW — The Camden, doors open 9PM. See you there!','https://itstaptap.com/events.html')" style="background:none;border:1px solid rgba(255,255,255,0.08);color:rgba(240,237,230,0.7);padding:8px 12px;text-align:left;font-size:12px;font-family:Inter,sans-serif;cursor:pointer;border-radius:2px;">🔥 Event Tomorrow</button>
+        </div>
       </div>
     </div>
 
@@ -641,6 +641,14 @@
     a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
     a.download = 'taptap-subscribers.csv'; a.click();
     toast('CSV exported ✓','success');
+  }
+
+  function fillTemplate(title, body, url) {
+    document.getElementById('notifTitle').value = title;
+    document.getElementById('notifBody').value = body;
+    document.getElementById('notifUrl').value = url;
+    document.getElementById('notifUrl').style.display = 'block';
+    document.getElementById('notifQuickLink').value = '';
   }
 
   // ── PUSH NOTIFICATIONS ──
