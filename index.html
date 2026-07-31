@@ -1501,17 +1501,26 @@ async function subscribeToPush() {
   } catch(e) {}
 }
 
-// Ask after 3 seconds
+// Show notification bell button if supported and not yet granted
 if ('serviceWorker' in navigator && 'PushManager' in window) {
-  setTimeout(() => {
-    if (Notification.permission === 'default') {
+  if (Notification.permission === 'granted') {
+    subscribeToPush();
+  } else if (Notification.permission !== 'denied') {
+    // Add a subtle bell button to footer
+    const bell = document.createElement('button');
+    bell.id = 'notifBell';
+    bell.innerHTML = '🔔 Get event alerts';
+    bell.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--red);color:#fff;border:none;padding:10px 20px;font-family:Inter,sans-serif;font-size:12px;font-weight:600;letter-spacing:1px;cursor:pointer;z-index:500;border-radius:2px;box-shadow:0 4px 20px rgba(212,32,39,0.4);';
+    bell.onclick = () => {
       Notification.requestPermission().then(p => {
-        if (p === 'granted') subscribeToPush();
+        if (p === 'granted') { subscribeToPush(); bell.remove(); }
+        else bell.remove();
       });
-    } else if (Notification.permission === 'granted') {
-      subscribeToPush();
-    }
-  }, 3000);
+    };
+    document.body.appendChild(bell);
+    // Auto hide after 8 seconds if not clicked
+    setTimeout(() => bell.remove(), 8000);
+  }
 }
 </script>
 </body>
