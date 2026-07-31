@@ -352,8 +352,17 @@
           <input type="text" id="notifBody" placeholder="e.g. August 30 at The Camden — grab yours before they sell out!">
         </div>
         <div class="form-group">
-          <label>Link (optional)</label>
-          <input type="text" id="notifUrl" placeholder="https://itstaptap.com/events.html">
+          <label>Link — Quick Select</label>
+          <select id="notifQuickLink" onchange="applyQuickLink(this.value)" style="width:100%;background:var(--surface2);border:1px solid rgba(255,255,255,0.08);color:var(--white);padding:10px 14px;font-size:13px;font-family:'Inter','DM Sans',sans-serif;border-radius:2px;outline:none;margin-bottom:8px;">
+            <option value="">— Choose a page —</option>
+            <option value="https://itstaptap.com">🏠 Home</option>
+            <option value="https://itstaptap.com/events.html">📅 Events Page</option>
+            <option value="http://Taptap.eventbrite.com">🎟 Buy Tickets (Eventbrite)</option>
+            <option value="https://itstaptap.com/community.html">👥 Community</option>
+            <option value="https://itstaptap.com/about.html">ℹ️ About</option>
+            <option value="custom">✏️ Custom URL</option>
+          </select>
+          <input type="text" id="notifUrl" placeholder="Or type a custom URL..." style="display:none;">
         </div>
         <button class="btn-add" onclick="sendNotification()">Send Notification 🔔</button>
         <p id="notifResult" style="margin-top:12px;font-size:13px;color:var(--green);"></p>
@@ -635,10 +644,25 @@
   }
 
   // ── PUSH NOTIFICATIONS ──
+  function applyQuickLink(val) {
+    const input = document.getElementById('notifUrl');
+    if (val === 'custom') {
+      input.style.display = 'block';
+      input.focus();
+      input.value = '';
+    } else if (val) {
+      input.style.display = 'block';
+      input.value = val;
+    } else {
+      input.style.display = 'none';
+      input.value = '';
+    }
+  }
+
   async function sendNotification() {
     const title = document.getElementById('notifTitle').value.trim();
     const body  = document.getElementById('notifBody').value.trim();
-    const url   = document.getElementById('notifUrl').value.trim();
+    const url   = document.getElementById('notifUrl').value.trim() || 'https://itstaptap.com';
     const result = document.getElementById('notifResult');
 
     if (!title || !body) { toast('Please fill in title and message', 'error'); return; }
@@ -651,7 +675,7 @@
       const res = await fetch('/api/send-notification', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ title, body, url: url || 'https://itstaptap.com' })
+        body: JSON.stringify({ title, body, url })
       });
       const data = await res.json();
       result.textContent = `✅ Sent to ${data.sent} of ${data.total} subscribers`;
@@ -659,6 +683,8 @@
       document.getElementById('notifTitle').value = '';
       document.getElementById('notifBody').value = '';
       document.getElementById('notifUrl').value = '';
+      document.getElementById('notifQuickLink').selectedIndex = 0;
+      document.getElementById('notifUrl').style.display = 'none';
     } catch(e) {
       result.textContent = '❌ Failed to send. Try again.';
       result.style.color = '#ff6b6b';
