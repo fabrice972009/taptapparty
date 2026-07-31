@@ -605,49 +605,20 @@
 <body>
 
 <!-- SPLASH SCREEN -->
-<div id="splash" style="position:fixed;inset:0;z-index:9999;background:#080808;display:flex;align-items:center;justify-content:center;flex-direction:column;">
-  <video id="splashVideo" playsinline muted style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#080808;opacity:0;transition:opacity 0.6s;">
-    <source src="hero.mp4" type="video/mp4">
-  </video>
-  <!-- Dark overlay -->
-  <div style="position:absolute;inset:0;background:rgba(8,8,8,0.2);z-index:1;"></div>
-  <!-- Progress bar -->
-  <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:rgba(255,255,255,0.1);z-index:3;">
-    <div id="splashBar" style="height:100%;width:0%;background:var(--red);transition:width 10s linear;"></div>
-  </div>
-  <!-- Skip button -->
-  <button id="splashSkip" onclick="endSplash()" style="position:absolute;bottom:24px;right:24px;z-index:4;background:none;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.5);font-family:'Inter',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:8px 16px;cursor:pointer;transition:all 0.2s;opacity:0;">Skip →</button>
+<div id="splash" style="position:fixed;inset:0;z-index:9999;background:#080808;display:flex;align-items:center;justify-content:center;">
+  <img id="splashImg" src="og-image.png" style="max-width:60%;max-height:70%;object-fit:contain;opacity:0;transition:opacity 0.5s ease;">
 </div>
 
 <script>
 (function(){
-  // Show every visit
   const splash = document.getElementById('splash');
-  const video  = document.getElementById('splashVideo');
-  const bar    = document.getElementById('splashBar');
-  const skip   = document.getElementById('splashSkip');
-
-  // Start video + progress bar
-  video.play().catch(() => {});
+  const img    = document.getElementById('splashImg');
+  setTimeout(() => img.style.opacity = '1', 100);
   setTimeout(() => {
-    video.style.opacity = '1';
-    bar.style.width = '100%';
-    skip.style.opacity = '1';
-  }, 300);
-
-  // End after 8 seconds
-  const timer = setTimeout(endSplash, 10000);
-
-  function endSplash() {
-    clearTimeout(timer);
-    splash.style.transition = 'opacity 0.8s ease';
+    splash.style.transition = 'opacity 0.6s ease';
     splash.style.opacity = '0';
-    setTimeout(() => {
-      splash.style.display = 'none';
-      video.pause();
-    }, 800);
-    localStorage.setItem('tt_visited', '1');
-  }
+    setTimeout(() => splash.style.display = 'none', 600);
+  }, 2000);
 })();
 </script>
 <!-- Smoke Background -->
@@ -759,7 +730,7 @@
 
 <!-- Hero -->
 <section class="hero">
-  <video class="hero-video" autoplay muted loop playsinline webkit-playsinline x-webkit-airplay="deny">
+  <video class="hero-video" autoplay muted loop playsinline webkit-playsinline>
     <source src="hero.mp4" type="video/mp4">
   </video>
   <div class="hero-overlay"></div>
