@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TapTap — The Ultimate Caribbean Nightlife Experience</title>
+  <meta name="description" content="TapTap — The Ultimate Caribbean Nightlife Experience. DJ Bullet & Friends present a monthly Haitian culture experience. Music, food, art & people. Miami, New York, London and beyond.">
+  <meta property="og:title" content="TapTap — The Ultimate Caribbean Nightlife Experience">
+  <meta property="og:description" content="Once a month. Haitian music, food, art & people. DJ Bullet & Friends.">
+  <meta property="og:image" content="https://taptapparty.vercel.app/og-image.png">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Anton&family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080808;
+      --red: #D42027;
+      --blue: #003A8C;
+      --gold: #F5C518;
+      --white: #F0EDE6;
+      --surface: #111111;
+      --surface2: #1A1A1A;
+      --muted: #666;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Inter', 'DM Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* ── STRIPE ── */
+    .tt-stripe { display: flex; height: 6px; width: 100%; }
+    .tt-stripe span { flex: 1; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      background: linear-gradient(180deg, rgba(8,8,8,0.92) 0%, rgba(8,8,8,0.78) 100%);
+      padding: 0 48px;
+      height: 64px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .nav-logo {
+      font-family: 'Anton', 'Bebas Neue', sans-serif;
+      font-size: 26px;
+      letter-spacing: 3px;
+      color: var(--white);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-links { display: flex; gap: 32px; list-style: none; align-items: center; justify-content: center; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.2s, border-color 0.2s;
+      padding-bottom: 4px;
+      border-bottom: 1px solid transparent;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--white); border-bottom-color: var(--gold); }
+    .nav-cta {
+      background: transparent;
+      color: var(--red);
+      border: 1px solid var(--red);
+      padding: 10px 22px;
+      border-radius: 2px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    .nav-cta:hover { background: var(--red); color: var(--white); }
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .nav-hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--white); border-radius: 1px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      height: 75vh;
+      padding-top: 69px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      padding-left: 24px;
+      padding-right: 24px;
+      padding-bottom: 0;
+    }
+    .hero-video {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(8,8,8,0.25);
+      z-index: 1;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      max-width: 900px;
+    }
+    .hero-eyebrow {
+      font-size: 11px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+    .hero-title {
+      font-family: 'Anton', 'Bebas Neue', sans-serif;
+      font-size: clamp(80px, 16vw, 200px);
+      letter-spacing: 6px;
+      line-height: 0.88;
+      color: var(--white);
+      margin-bottom: 24px;
+    }
+    .hero-title .red { color: var(--red); }
+    .hero-sub {
+      font-size: clamp(15px, 1.6vw, 18px);
+      color: rgba(240,237,230,0.72);
+      max-width: 420px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+    .hero-ctas {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: var(--red);
+      color: var(--white);
+      padding: 15px 40px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 2px;
+      display: inline-block;
+      transition: opacity 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-outline {
+      border: 1px solid rgba(240,237,230,0.3);
+      color: var(--white);
+      padding: 15px 40px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 2px;
+      display: inline-block;
+      transition: border-color 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--white); }
+
+    /* ── SECTION SHARED ── */
+    .section-eyebrow {
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+    .section-title {
+      font-family: 'Anton', 'Bebas Neue', sans-serif;
+      font-size: clamp(40px, 5vw, 64px);
+      letter-spacing: 2px;
+      line-height: 1;
+    }
+
+    /* ── NEXT EVENT ── */
+    .next-event {
+      padding: 72px 48px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .next-event-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .next-event-img {
+      aspect-ratio: 4/5;
+      background: var(--surface2);
+      border-radius: 3px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 1px;
+      max-width: 320px;
+    }
+    .next-event-img img { width: 100%; height: 100%; object-fit: contain; }
+    .next-event-info { }
+    .event-date-line {
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .event-name {
+      font-family: 'Anton', 'Bebas Neue', sans-serif;
+      font-size: clamp(36px, 4vw, 52px);
+      letter-spacing: 2px;
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+    .event-details {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 32px;
+    }
+    .event-detail-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: rgba(240,237,230,0.65);
+    }
+    .event-detail-row span.dot {
+      width: 4px; height: 4px;
+      background: var(--red);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ── ABOUT ── */
+    .about-section {
+      padding: 100px 48px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .about-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.6fr 0.8fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .about-img {
+      background: var(--bg);
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      min-height: 420px;
+    }
+    .about-img img { width: 100%; height: 100%; object-fit: contain; }
+    .about-text h2 {
+      font-family: 'Anton', 'Bebas Neue', sans-serif;
+      font-size: clamp(44px, 5vw, 68px);
+      letter-spacing: 2px;
+      line-height: 0.95;
+      margin-bottom: 24px;
+    }
+    .about-text h2 .red { color: var(--red); }
+    .about-text p {
+      color: rgba(240,237,230,0.6);
+      line-height: 1.85;
+      font-size: 15px;
+      margin-bottom: 40px;
+    }
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+    .stat-num {
+      font-family: 'Anton', 'Bebas Neue', sans-serif;
+      font-size: 48px;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .stat-lbl {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    /* ── GALLERY ── */
+    .gallery-section {
+      padding: 80px 48px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .gallery-head {
+      max-width: 1000px;
+      margin: 0 auto 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .btn-sm-outline {
+      border: 1px solid rgba(240,237,230,0.2);
+      color: var(--white);
+      padding: 10px 22px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: border-color 0.2s;
+    }
+    .btn-sm-outline:hover { border-color: var(--white); }
+    .gallery-grid {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-rows: 260px 260px;
+      gap: 6px;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .g-item {
+      background: var(--surface2);
+      position: relative;
+      overflow: hidden;
+    }
+    .g-item img { width: 100%; height: 100%; object-fit: cover; }
+    .g-item:first-child { grid-row: 1 / 3; }
+    .g-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(8,8,8,0);
+      transition: background 0.3s;
+    }
+    .g-item:hover .g-overlay { background: rgba(8,8,8,0.3); }
+
+    /* ── NEWSLETTER ── */
+    .newsletter-section {
+      padding: 100px 48px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      text-align: center;
+    }
+    .newsletter-inner {
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    .newsletter-inner h2 {
+      font-family: 'Anton', 'Bebas Neue', sans-serif;
+      font-size: clamp(40px, 5vw, 60px);
+      letter-spacing: 3px;
+      margin-bottom: 14px;
+    }
+    .newsletter-inner p {
+      color: rgba(240,237,230,0.55);
+      font-size: 15px;
+      margin-bottom: 36px;
+      line-height: 1.7;
+    }
+    .newsletter-form {
+      display: flex;
+      gap: 0;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+    .newsletter-form input {
+      flex: 1;
+      background: var(--surface2);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-right: none;
+      color: var(--white);
+      padding: 14px 20px;
+      font-size: 14px;
+      font-family: 'Inter', 'DM Sans', sans-serif;
+      border-radius: 2px 0 0 2px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .newsletter-form input::placeholder { color: var(--muted); }
+    .newsletter-form input:focus { border-color: rgba(255,255,255,0.25); }
+    .newsletter-form button {
+      background: var(--red);
+      color: var(--white);
+      border: none;
+      padding: 14px 28px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 0 2px 2px 0;
+      font-family: 'Inter', 'DM Sans', sans-serif;
+      transition: opacity 0.2s;
+    }
+    .newsletter-form button:hover { opacity: 0.85; }
+    .newsletter-note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 14px;
+    }
+
+    footer {
+      padding: 64px 48px 40px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 800px) {
+      nav { padding: 0 20px; height: 56px; top: 6px; display: flex !important; justify-content: space-between; align-items: center; }
+      .nav-logo img { height: 32px; }
+      .nav-links { display: none; }
+      .nav-cta { display: none; }
+      .nav-hamburger { display: flex; z-index: 300; position: relative; margin-left: auto; }
+
+      .hero { height: 50vh; padding-bottom: 0; padding-left: 20px; padding-right: 20px; }
+      .hero-sub { font-size: 15px; }
+      .hero-ctas { gap: 10px; }
+      .btn-primary, .btn-outline { padding: 13px 28px; font-size: 12px; }
+
+      .next-event { padding: 48px 20px; }
+      .next-event-inner { grid-template-columns: 1fr; gap: 28px; text-align: center; }
+      .next-event-img { max-width: 280px; margin: 0 auto; }
+      .event-name { font-size: 32px; }
+      .event-details { align-items: center; }
+      .event-detail-row { justify-content: center; }
+      .upcoming-sidebar { border-left: none; border-top: 1px solid rgba(255,255,255,0.07); padding-left: 0; padding-top: 32px; margin-top: 8px; text-align: center; }
+      .sidebar-event { justify-content: center; }
+      .featured-info { text-align: center; }
+
+      .about-section { padding: 56px 20px; }
+      .about-inner { grid-template-columns: 1fr; gap: 24px; }
+      .about-img { display: flex; min-height: 240px; }
+      .about-text h2 { font-size: 48px; }
+      .about-stats { grid-template-columns: 1fr 1fr; gap: 16px; }
+      .stat-num { font-size: 40px; }
+
+      .about-stats-row { grid-template-columns: 1fr 1fr; }
+      .stat-block:nth-child(2) { border-right: none; }
+      .stat-block:nth-child(3) { border-top: 1px solid rgba(255,255,255,0.07); }
+      .stat-block:nth-child(4) { border-top: 1px solid rgba(255,255,255,0.07); }
+      .stat-big { font-size: 28px; }
+      .gallery-section { padding: 48px 20px; }
+      .gallery-head { flex-direction: column; align-items: flex-start; gap: 16px; }
+      #galleryThree { grid-template-columns: 1fr 1fr !important; gap: 4px !important; }
+
+      .newsletter-section { padding: 56px 20px; }
+      .reviews-peek { padding: 56px 20px !important; }
+      .reviews-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+      .newsletter-form { flex-direction: column; }
+      .newsletter-form input {
+        border-right: 1px solid rgba(255,255,255,0.1);
+        border-bottom: none;
+        border-radius: 2px 2px 0 0;
+      }
+      .newsletter-form button { border-radius: 0 0 2px 2px; padding: 14px; }
+
+      .footer-cols { display: none !important; }
+      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; align-items: center; }
+
+      .sched-pill { font-size: 12px; padding: 8px 14px; }
+    }
+
+    /* ── MOBILE MENU ── */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(8,8,8,0.98);
+      z-index: 190;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      padding: 80px 24px 40px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: 'Anton', 'Bebas Neue', sans-serif;
+      font-size: 24px;
+      letter-spacing: 4px;
+      color: var(--white);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .mobile-menu a:hover { color: var(--red); }
+    .mobile-menu .mobile-cta {
+      margin-top: 16px;
+      background: var(--red);
+      color: var(--white) !important;
+      padding: 16px 48px;
+      border-radius: 2px;
+      font-size: 32px !important;
+    }
+    .mobile-menu .mobile-socials {
+      margin-top: 16px;
+      display: flex;
+      gap: 16px;
+    }
+    .mobile-menu .mobile-socials a {
+      font-size: 14px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 10px 20px;
+      border-radius: 2px;
+    }
+    .nav-hamburger.is-open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .nav-hamburger.is-open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.is-open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+    .nav-hamburger span { transition: transform 0.2s, opacity 0.2s; }
+
+    /* ── FOOTER ── */
+    .site-footer { border-top: 1px solid rgba(255,255,255,0.05); padding: 56px 48px 36px; }
+    .site-footer-inner { max-width: 1000px; margin: 0 auto; }
+    .footer-top-wrap { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
+    .footer-logo { height: 36px; width: auto; display: block; mix-blend-mode: screen; margin-bottom: 6px; }
+    .footer-tagline { font-size: 13px; color: #666; }
+    .footer-desktop-cols { display: flex; gap: 64px; }
+    .footer-dcol h4 { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #F5C518; margin-bottom: 16px; font-weight: 500; }
+    .footer-dcol ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-dcol a { color: #666; text-decoration: none; font-size: 14px; transition: color 0.2s; }
+    .footer-dcol a:hover { color: #F0EDE6; }
+    .footer-mobile-row { display: none; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 28px; border-top: 1px solid rgba(255,255,255,0.05); }
+    .footer-bottom p { font-size: 13px; color: #666; }
+    .footer-ig { color: #666; display: flex; align-items: center; transition: color 0.2s; text-decoration: none; }
+    .footer-ig:hover { color: #F0EDE6; }
+
+    @media (max-width: 800px) {
+      .site-footer { padding: 32px 20px 24px; }
+      .footer-tagline { margin-bottom: 20px; }
+      .site-footer-inner { display: flex; flex-direction: column; align-items: center; text-align: center; }
+      .footer-top-wrap { flex-direction: column; align-items: center; }
+      .footer-logo { margin: 0 auto 6px; }
+      .footer-desktop-cols { display: none; }
+      .footer-mobile-row { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 20px; }
+      .footer-mobile-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #F5C518; font-weight: 500; }
+      .footer-mobile-links { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px 10px; }
+      .footer-mobile-links a { font-size: 12px; color: rgba(240,237,230,0.6); text-decoration: none; }
+      .footer-mobile-links a:hover { color: #F0EDE6; }
+      .footer-buy { color: #D42027 !important; font-weight: 600; }
+      .fsep { color: rgba(255,255,255,0.2); font-size: 11px; }
+      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+    }
+
+  .g-thumb { overflow: hidden; }
+  .g-thumb img { transition: transform 0.4s ease; display: block; }
+  .g-thumb:hover img { transform: scale(1.05); }
+  </style>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPA_URL = 'https://rmzfowqzlqyzbjchpntv.supabase.co';
+    const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtemZvd3F6bHF5emJqY2hwbnR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM0NzQxODcsImV4cCI6MjA5OTA1MDE4N30.GB42OaMpcIt7uxopfPYEH4Vdatm7hYS37AptnivgUkU';
+    const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
+  </script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#080808">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="TapTap">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+</head>
+<body>
+
+<!-- SPLASH SCREEN -->
+<div id="splash" style="position:fixed;inset:0;z-index:9999;background:#080808;display:flex;align-items:center;justify-content:center;">
+  <img id="splashImg" src="og-image.png" style="max-width:60%;max-height:70%;object-fit:contain;opacity:0;transition:opacity 0.5s ease;">
+</div>
+
+<script>
+(function(){
+  const splash = document.getElementById('splash');
+  const img    = document.getElementById('splashImg');
+  setTimeout(() => img.style.opacity = '1', 100);
+  setTimeout(() => {
+    splash.style.transition = 'opacity 0.6s ease';
+    splash.style.opacity = '0';
+    setTimeout(() => splash.style.display = 'none', 600);
+  }, 2000);
+})();
+</script>
+<!-- Smoke Background -->
+<canvas id="smokeCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('smokeCanvas');
+  const ctx = canvas.getContext('2d');
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const BLUE = '#003A8C', RED = '#D42027';
+  const particles = [];
+
+  function Particle(init) {
+    this.reset = function(init) {
+      this.x = Math.random() * canvas.width;
+      this.y = init ? Math.random() * canvas.height : canvas.height + 30;
+      this.size = 80 + Math.random() * 160;
+      this.speedY = -(0.4 + Math.random() * 0.7);
+      this.speedX = (Math.random() - 0.5) * 0.5;
+      this.life = init ? Math.random() * 300 : 0;
+      this.maxLife = 250 + Math.random() * 350;
+      this.maxOpacity = 0.03 + Math.random() * 0.04;
+      this.opacity = init ? this.maxOpacity * Math.random() : 0;
+      this.color = Math.random() > 0.5 ? BLUE : RED;
+      this.rotation = Math.random() * Math.PI * 2;
+      this.rotSpeed = (Math.random() - 0.5) * 0.006;
+      this.wobble = Math.random() * Math.PI * 2;
+    };
+    this.update = function() {
+      this.life++;
+      this.wobble += 0.015;
+      this.x += this.speedX + Math.sin(this.wobble) * 0.5;
+      this.y += this.speedY;
+      this.rotation += this.rotSpeed;
+      this.size += 0.3;
+      const p = this.life / this.maxLife;
+      if (p < 0.15) this.opacity = (p / 0.15) * this.maxOpacity;
+      else if (p > 0.65) this.opacity = ((1 - p) / 0.35) * this.maxOpacity;
+      else this.opacity = this.maxOpacity;
+      if (this.life >= this.maxLife || this.y < -this.size) this.reset(false);
+    };
+    this.draw = function() {
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.rotation);
+      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, this.size);
+      const hex = Math.round(this.opacity * 255).toString(16).padStart(2,'0');
+      const hex2 = Math.round(this.opacity * 0.4 * 255).toString(16).padStart(2,'0');
+      g.addColorStop(0,   this.color + hex);
+      g.addColorStop(0.5, this.color + hex2);
+      g.addColorStop(1,   this.color + '00');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(0, 0, this.size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    };
+    this.reset(init);
+  }
+
+  for (let i = 0; i < 30; i++) particles.push(new Particle(true));
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+</script>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" style="z-index:190;" id="mobileMenu">
+  <a href="index.html" onclick="closeMenu()">Home</a>
+  <a href="events.html" onclick="closeMenu()">Events</a>
+<a href="community.html" onclick="closeMenu()">Community</a>
+  <a href="about.html" onclick="closeMenu()">About</a>
+  <a href="contact.html" onclick="closeMenu()">Contact</a>
+  <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" class="mobile-cta" onclick="closeMenu()">Get Tickets</a>
+  <div class="mobile-socials">
+    <a href="https://instagram.com/itstaptapmiami" target="_blank">Instagram</a>
+  </div>
+</div>
+
+
+<!-- Nav -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="logo.png" alt="Tap Tap Party" style="height: 40px; width: auto; display: block; mix-blend-mode: screen;">
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="events.html">Events</a></li>
+    <li><a href="community.html">Community</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" class="nav-cta">Get Tickets</a>
+  <button class="nav-hamburger" aria-label="Open menu" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<canvas class="tt-spray" id="navStripe" style="position:fixed;top:70px;left:0;right:0;width:100%;height:10px;z-index:199;" width="1400" height="10"></canvas>
+
+<!-- Stripe below nav, above video -->
+
+<!-- Hero -->
+<section class="hero">
+  <video class="hero-video" autoplay muted loop playsinline webkit-playsinline>
+    <source src="hero.mp4" type="video/mp4">
+  </video>
+  <div class="hero-overlay"></div>
+</section>
+
+<!-- Hero Text Below Video -->
+<div style="text-align:center; padding: 6px 24px 16px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+  <p style="font-size:11px; letter-spacing:5px; text-transform:uppercase; color:var(--gold); margin-bottom:14px; font-weight:500;">DJ Bullet &amp; Friends</p>
+  <p style="font-size:clamp(16px,2vw,20px); color:rgba(240,237,230,0.75); max-width:480px; margin:0 auto 36px; line-height:1.7;">TapTap — The Ultimate Caribbean Nightlife Experience.</p>
+  <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
+    <a href="events.html" class="btn-primary">Next Event →</a>
+    <a href="about.html" class="btn-outline">Our Story</a>
+  </div>
+</div>
+
+<!-- Stripe -->
+
+<!-- VIBE VIDEO -->
+<div style="text-align:center; padding: 48px 24px 24px;">
+  <p style="font-family:'Inter','DM Sans',sans-serif; font-size:clamp(14px,1.8vw,18px); letter-spacing:3px; color:rgba(240,237,230,0.6); font-weight:500;">Music. People. Culture. 🇭🇹</p>
+</div>
+<section class="vibe-section">
+  <video class="vibe-video" id="vibeVideo" autoplay muted loop playsinline webkit-playsinline x-webkit-airplay="deny">
+    <source src="vibe.mp4" type="video/mp4">
+  </video>
+  <div class="vibe-overlay"></div>
+</section>
+
+<style>
+  .vibe-section {
+    position: relative;
+    width: 100%;
+    height: 480px;
+    overflow: hidden;
+    background: #000;
+  }
+  .vibe-video {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .vibe-overlay {
+    position: absolute; inset: 0;
+    background: rgba(8,8,8,0.2);
+  }
+  .vibe-controls {
+    position: absolute; bottom: 20px; right: 20px;
+    z-index: 10;
+  }
+  .vibe-mute {
+    width: 36px; height: 36px;
+    background: rgba(8,8,8,0.65);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 50%;
+    color: var(--white); font-size: 14px;
+    cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .vibe-mute:hover { background: rgba(8,8,8,0.9); }
+  @media (max-width: 800px) { .vibe-section { height: 260px; } }
+</style>
+
+<!-- Next Event -->
+<section class="next-event">
+  <div style="max-width:1000px; margin:0 auto;">
+    <p class="section-eyebrow" style="margin-bottom:28px;">Next Up</p>
+    <div class="next-event-inner">
+
+      <!-- Featured Flyer -->
+      <div class="next-event-img" id="nextFlyer" style="position:relative;">
+        <img src="flyer-london.jpg" alt="Tap Tap London Aug 30" id="nextFlyerImg" style="width:100%;height:100%;object-fit:contain;display:block;">
+      </div>
+
+      <!-- Featured Info Middle -->
+      <div class="featured-info">
+        <div class="event-date-line" id="nextDateLine">Sunday, August 30, 2026</div>
+        <div class="event-name" id="nextName">Tap Tap London</div>
+        <div class="event-details" id="nextDetails">
+          <div class="event-detail-row"><span class="dot"></span>London, UK</div>
+          <div class="event-detail-row"><span class="dot"></span>DJ Bullet &amp; Friends</div>
+        </div>
+      </div>
+
+      <!-- Upcoming Sidebar Right -->
+      <div class="upcoming-sidebar">
+        <p style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:20px;">Also Coming Up</p>
+        <div id="sidebarEvents">
+          <div class="sidebar-event">
+            <div class="sidebar-date"><div class="ud-month">SEP</div><div class="ud-day">5</div></div>
+            <div><div class="sidebar-name">Tap Tap New York</div><div class="sidebar-loc">New York, NY</div></div>
+          </div>
+          <div class="sidebar-event">
+            <div class="sidebar-date"><div class="ud-month">OCT</div><div class="ud-day">11</div></div>
+            <div><div class="sidebar-name">Tap Tap Miami</div><div class="sidebar-loc">Miami, FL</div></div>
+          </div>
+          <div class="sidebar-event">
+            <div class="sidebar-date"><div class="ud-month">NOV</div><div class="ud-day">29</div></div>
+            <div><div class="sidebar-name">Tap Tap Miami</div><div class="sidebar-loc">Miami, FL</div></div>
+          </div>
+        </div>
+        <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" class="btn-primary" id="nextTicketBtn" style="display:block;text-align:center;margin-top:32px;">Get Tickets</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .next-event-inner {
+    display: grid;
+    grid-template-columns: auto 1fr 280px;
+    gap: 40px;
+    align-items: start;
+  }
+  .featured-event { display: flex; flex-direction: column; gap: 20px; }
+  .featured-info { }
+  .upcoming-sidebar {
+    border-left: 1px solid rgba(255,255,255,0.07);
+    padding-left: 40px;
+    padding-top: 4px;
+  }
+  .sidebar-event {
+    display: flex; gap: 16px; align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .sidebar-event:first-of-type { border-top: 1px solid rgba(255,255,255,0.06); }
+  .sidebar-date { text-align: center; min-width: 40px; }
+  .ud-month { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); }
+  .ud-day { font-family: 'Anton', 'Bebas Neue', sans-serif; font-size: 32px; line-height: 1; }
+  .sidebar-name { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+  .sidebar-loc { font-size: 12px; color: var(--muted); }
+
+  @media (max-width: 800px) {
+    .next-event-inner { grid-template-columns: 1fr; }
+    .upcoming-sidebar { border-left: none; border-top: 1px solid rgba(255,255,255,0.07); padding-left: 0; padding-top: 32px; margin-top: 8px; }
+  }
+</style>
+
+
+<!-- CITIES SEPARATOR -->
+<div class="cities-separator">
+  <div class="cities-list">
+    <span class="city-item" style="color:var(--white); font-weight:600;">TapTap</span>
+    <span class="cities-dot">·</span>
+    <span class="city-item">Miami</span>
+    <span class="cities-dot">·</span>
+    <span class="city-item">London</span>
+    <span class="cities-dot">·</span>
+    <span class="city-item">New York</span>
+    <span class="cities-dot">·</span>
+    <span class="city-item">Atlanta</span>
+    <span class="cities-dot">·</span>
+    <span class="city-item">Toronto</span>
+    <span class="cities-dot">·</span>
+    <span class="city-item">Paris</span>
+    <span class="cities-dot">·</span>
+    <span class="city-item">Boston</span>
+    <span class="cities-dot">·</span>
+    <span class="city-item">Montreal</span>
+    <span class="cities-dot">·</span>
+    <span class="city-item">Philadelphia</span>
+  </div>
+</div>
+
+<style>
+  .cities-separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 22px 48px;
+    background: var(--surface);
+    border-top: 1px solid rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .cities-list {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .city-item {
+    font-family: 'Inter', 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    color: rgba(240,237,230,0.5);
+    transition: color 0.2s;
+  }
+  .city-item:hover { color: var(--white); }
+  .cities-dot { color: var(--red); font-size: 16px; }
+  @media (max-width: 800px) {
+    .cities-separator { padding: 18px 20px; flex-wrap: wrap; gap: 12px; }
+    .cities-list { justify-content: flex-start; flex-wrap: wrap; gap: 10px; }
+    .city-item { font-size: 15px; }
+  }
+</style>
+
+<!-- About -->
+<section class="about-section">
+  <div class="about-inner">
+    <div class="about-img-wrap">
+
+      <!-- Slideshow: Emblem ↔ Video -->
+      <div style="position:relative;">
+        <!-- Video slide (first) -->
+        <div id="wwSlide0" class="ww-slide">
+          <video id="wwaVideo" muted playsinline autoplay loop style="width:100%;border-radius:3px;display:block;">
+            <source src="whoweare.mp4" type="video/mp4">
+          </video>
+        </div>
+        <!-- Emblem slide -->
+        <div id="wwSlide1" class="ww-slide" style="display:none;">
+          <div class="about-img"><img src="emblem.png" alt="Tap Tap Party emblem"></div>
+        </div>
+        <!-- Toggle dots -->
+        <div style="display:flex;justify-content:center;gap:8px;margin-top:12px;">
+          <span id="wwDot0" onclick="showWWSlide(0)" style="width:8px;height:8px;border-radius:50%;background:var(--white);cursor:pointer;transition:background 0.2s;"></span>
+          <span id="wwDot1" onclick="showWWSlide(1)" style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.3);cursor:pointer;transition:background 0.2s;"></span>
+        </div>
+      </div>
+
+      <div class="about-stats-row">
+        <div class="stat-block">
+          <div class="stat-big">50<span class="stat-plus">+</span></div>
+          <div class="stat-tag">Events</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-big">10<span class="stat-plus">+</span></div>
+          <div class="stat-tag">Cities</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-big">3<span class="stat-plus">+</span></div>
+          <div class="stat-tag">Years</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-big">🇭🇹</div>
+          <div class="stat-tag">Culture</div>
+        </div>
+      </div>
+    </div>
+    <div class="about-text">
+      <p class="section-eyebrow">Who We Are</p>
+      <h2>CELEBRATING<br>HAITIAN<br><span class="red">CULTURE.</span></h2>
+      <p>
+        Tap Tap Party is Miami's premier monthly Haitian cultural experience. We bring together the diaspora and everyone who loves Haitian music, food, art, and people — once a month, every month. DJ Bullet &amp; Friends set the soundtrack while Miami dances.
+      </p>
+      <a href="about.html" class="btn-sm-outline" style="display:inline-block; margin-top:8px;">Learn More</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  function showWWSlide(n) {
+    const slides = [document.getElementById('wwSlide0'), document.getElementById('wwSlide1')];
+    const dots   = [document.getElementById('wwDot0'),   document.getElementById('wwDot1')];
+    const video  = document.getElementById('wwaVideo');
+    slides.forEach((s, i) => s.style.display = i === n ? 'block' : 'none');
+    dots.forEach((d, i) => d.style.background = i === n ? 'var(--white)' : 'rgba(255,255,255,0.3)');
+    if (n === 0) { video.play(); }
+    else { video.pause(); }
+  }
+  // Autoplay video on page load
+  window.addEventListener('load', () => {
+    const v = document.getElementById('wwaVideo');
+    if (v) v.play().catch(() => {});
+  });
+</script>
+
+<style>
+  .ww-slide { transition: opacity 0.3s; }
+  .about-img-wrap { display: flex; flex-direction: column; gap: 16px; }
+  .about-stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 20px;
+  }
+  .stat-block {
+    padding: 18px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    border-right: 1px solid rgba(255,255,255,0.07);
+    background: rgba(255,255,255,0.02);
+    transition: background 0.2s;
+  }
+  .stat-block:last-child { border-right: none; }
+  .stat-block:hover { background: rgba(255,255,255,0.05); }
+  .stat-big {
+    font-family: 'Anton', 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: var(--gold);
+    line-height: 1;
+    letter-spacing: 1px;
+  }
+  .stat-plus { font-size: 22px; color: var(--red); vertical-align: super; }
+  .stat-tag {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+  }
+</style>
+
+<!-- Stripe -->
+
+
+<!-- Gallery -->
+<section class="gallery-section">
+  <div class="gallery-head">
+    <div>
+      <p class="section-eyebrow">The Vibes</p>
+      <h2 class="section-title">GALLERY</h2>
+    </div>
+    <a href="community.html" class="btn-sm-outline">Share Your Photo →</a>
+  </div>
+  <div style="max-width:1000px; margin:0 auto; position:relative;">
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:8px; border-radius:3px; overflow:hidden;" id="galleryThree">
+      <div id="gthumb0" style="aspect-ratio:3/4; background:var(--surface2); overflow:hidden;"></div>
+      <div id="gthumb1" style="aspect-ratio:3/4; background:var(--surface2); overflow:hidden;"></div>
+      <div id="gthumb2" style="aspect-ratio:3/4; background:var(--surface2); overflow:hidden;"></div>
+      <div id="gthumb3" style="aspect-ratio:3/4; background:var(--surface2); overflow:hidden;"></div>
+    </div>
+    <!-- Controls -->
+    <div style="display:flex; align-items:center; justify-content:center; gap:16px; margin-top:16px;">
+      <button onclick="prevGallery()" style="background:none;border:1px solid rgba(255,255,255,0.15);color:var(--white);width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--white)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">‹</button>
+      <div id="galleryDots" style="display:flex;gap:6px;align-items:center;"></div>
+      <button onclick="nextGallery()" style="background:none;border:1px solid rgba(255,255,255,0.15);color:var(--white);width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--white)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">›</button>
+    </div>
+  </div>
+</section>
+
+<script>
+  // ── AUTO NEXT EVENT from Supabase ──
+  (async function() {
+    try {
+      const events = JSON.parse(localStorage.getItem('tt_events') || '[]');
+      if (!events.length) return;
+      const today = new Date(); today.setHours(0,0,0,0);
+      const future = events.filter(e => new Date(e.event_date + 'T12:00:00') >= today).sort((a,b) => new Date(a.event_date + 'T12:00:00') - new Date(b.event_date + 'T12:00:00'));
+      if (!future.length) return;
+
+      const next = future[0];
+      const d = new Date(next.event_date + 'T12:00:00');
+      const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const fullMonths = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+      // Update flyer — only override if Supabase has a flyer_url
+      const flyerImg = document.getElementById('nextFlyerImg');
+      const flyerWrap = document.getElementById('nextFlyer');
+      if (next.flyer_url) {
+        flyerImg.src = next.flyer_url;
+        flyerImg.style.cssText = 'width:100%;height:100%;object-fit:contain;display:block;';
+        flyerImg.alt = next.name;
+        const tag = flyerWrap.querySelector('.coming-soon-tag');
+        if (tag) tag.remove();
+      }
+
+      // Update date, name, details if Supabase has real venue data
+      document.getElementById('nextDateLine').textContent = `${days[d.getDay()]}, ${fullMonths[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+      document.getElementById('nextName').textContent = next.name;
+      if (next.venue && next.venue !== 'TBA') {
+        document.getElementById('nextDetails').innerHTML = `
+          <div class="event-detail-row"><span class="dot"></span>${next.venue}, ${next.city}</div>
+          <div class="event-detail-row"><span class="dot"></span>DJ Bullet & Friends</div>
+        `;
+      }
+      if (next.ticket_link) document.getElementById('nextTicketBtn').href = next.ticket_link;
+
+      // Update sidebar with next 3 after the featured
+      const sidebar = future.slice(1, 4);
+      if (sidebar.length) {
+        document.getElementById('sidebarEvents').innerHTML = sidebar.map(e => {
+          const sd = new Date(e.event_date + 'T12:00:00');
+          return `<div class="sidebar-event">
+            <div class="sidebar-date">
+              <div class="ud-month">${months[sd.getMonth()].toUpperCase()}</div>
+              <div class="ud-day">${sd.getDate()}</div>
+            </div>
+            <div>
+              <div class="sidebar-name">${e.name}</div>
+              <div class="sidebar-loc">${e.city}</div>
+            </div>
+          </div>`;
+        }).join('');
+      }
+    } catch(e) {}
+  })();
+
+  function getApprovedPhotos() {
+    try { return JSON.parse(localStorage.getItem('tt_approved_photos') || '[]'); } catch { return []; }
+  }
+  function getApprovedReviews() {
+    try { return JSON.parse(localStorage.getItem('tt_approved_reviews') || '[]'); } catch { return []; }
+  }
+
+    const basePhotos = [
+    'assets/gallery/photo1.jpg','assets/gallery/photo2.jpg','assets/gallery/photo3.jpg',
+    'assets/gallery/photo4.jpg','assets/gallery/photo5.jpg','assets/gallery/photo6.jpg',
+    'assets/gallery/photo7.jpg','assets/gallery/photo8.jpg','assets/gallery/photo9.jpg',
+    'assets/gallery/photo10.jpg','assets/gallery/photo11.jpg','assets/gallery/photo12.jpg',
+    'assets/gallery/photo13.jpg','assets/gallery/photo14.jpg','assets/gallery/photo15.jpg',
+    'assets/gallery/photo16.jpg','assets/gallery/photo17.jpg','assets/gallery/photo18.jpg',
+    'assets/gallery/photo19.jpg','assets/gallery/photo20.jpg','assets/gallery/photo21.jpg',
+    'assets/gallery/photo22.jpg','assets/gallery/photo23.jpg','assets/gallery/photo24.jpg',
+    'assets/gallery/photo25.jpg','assets/gallery/photo26.jpg','assets/gallery/photo27.jpg',
+    'assets/gallery/photo28.jpg','assets/gallery/photo29.jpg','assets/gallery/photo30.jpg',
+    'assets/gallery/photo31.jpg','assets/gallery/photo32.jpg','assets/gallery/photo33.jpg',
+    'assets/gallery/photo34.jpg','assets/gallery/photo35.jpg','assets/gallery/photo36.jpg',
+    'assets/gallery/photo37.jpg','assets/gallery/photo38.jpg','assets/gallery/photo39.jpg',
+  ];
+
+  const communityPhotos = getApprovedPhotos().map(p => p.dataUrl);
+  const allPhotos = [...basePhotos, ...communityPhotos].sort(() => Math.random() - 0.5);
+
+  // Split into groups of 4 — pad last group if needed
+  const groups = [];
+  for (let i = 0; i < allPhotos.length; i += 4) {
+    const group = allPhotos.slice(i, i + 4);
+    while (group.length < 4) {
+      // Fill with random photo already shown
+      group.push(allPhotos[Math.floor(Math.random() * Math.max(i, 1))]);
+    }
+    groups.push(group);
+  }
+
+  let currentGroup = 0;
+
+  function renderGroup(index) {
+    groups[index].forEach((src, i) => {
+      const el = document.getElementById('gthumb' + i);
+      if (!el) return;
+      el.innerHTML = '';
+      el.style.background = '#0d0d0d';
+
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = 'Tap Tap Party';
+      img.loading = 'lazy';
+      img.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:center top;display:block;';
+      img.onerror = () => el.style.display = 'none';
+      el.appendChild(img);
+    });
+    // Update dots
+    document.querySelectorAll('#galleryDots span').forEach((d, i) => {
+      d.style.background = i === index ? 'var(--white)' : 'rgba(255,255,255,0.3)';
+    });
+  }
+
+  function nextGallery() {
+    currentGroup = (currentGroup + 1) % groups.length;
+    renderGroup(currentGroup);
+  }
+
+  function prevGallery() {
+    currentGroup = (currentGroup - 1 + groups.length) % groups.length;
+    renderGroup(currentGroup);
+  }
+
+  // Build dots
+  const dotsEl = document.getElementById('galleryDots');
+  groups.forEach((_, i) => {
+    const dot = document.createElement('span');
+    dot.style.cssText = `width:7px;height:7px;border-radius:50%;cursor:pointer;transition:background 0.2s;background:${i===0?'var(--white)':'rgba(255,255,255,0.3)'};`;
+    dot.onclick = () => { currentGroup = i; renderGroup(i); };
+    dotsEl.appendChild(dot);
+  });
+
+  renderGroup(0);
+</script>
+
+<!-- REVIEWS SNEAK PEEK -->
+<section class="reviews-peek" style="padding: 80px 48px; border-bottom: 1px solid rgba(255,255,255,0.05); background: var(--surface);">
+  <div style="max-width:1000px; margin:0 auto;">
+    <p class="section-eyebrow" style="margin-bottom:8px;">What They Say</p>
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,5vw,56px);letter-spacing:2px;margin-bottom:40px;">THE PEOPLE SPEAK</h2>
+
+    <!-- Review slideshow -->
+    <div style="position:relative; overflow:hidden;">
+      <div id="reviewTrack" style="display:flex; transition:transform 0.5s ease;"></div>
+      <button onclick="slideReview(-1)" style="position:absolute;left:0;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;padding:8px;">‹</button>
+      <button onclick="slideReview(1)" style="position:absolute;right:0;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;padding:8px;">›</button>
+    </div>
+    <div style="text-align:center; margin-top:32px;">
+      <a href="community.html" class="btn-sm-outline">See All Reviews →</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  // BASE REVIEWS — always shown
+  const baseReviews = [
+    { stars: 5, text: '"DJ Bullet is on another level. The way he reads the crowd is a masterclass. You don\'t just hear the music at TapTap, you feel it in your chest."', name: 'Jerry R.', event: 'Miami, March 2026', initials: 'JR', color: 'var(--red)' },
+    { stars: 5, text: '"P-Dous is the heart of TapTap. He\'s not just a host, he\'s the soul of the party. The way he connects with everyone and keeps the culture front and center — absolute legend."', name: 'Kenza F.', event: 'Miami, May 2026', initials: 'KF', color: '#2a1a2a' },
+    { stars: 5, text: '"I\'m not even Haitian and TapTap is my favorite party of the year. The culture, the fashion, the music — you feel the love the second you walk in."', name: 'Sophia C.', event: 'Atlanta, June 2026', initials: 'SC', color: 'var(--gold)' },
+    { stars: 5, text: '"Ted Bounce had the whole room going crazy. That man does not stop — the energy he brings on stage is unmatched. I was sweating from the first drop to the last track."', name: 'Christelle B.', event: 'Atlanta, June 2026', initials: 'CB', color: 'var(--blue)' },
+    { stars: 5, text: '"DJ K9 came in and completely flipped the energy. Nobody wanted to leave. Pure talent on the decks — TapTap always brings the best out."', name: 'Daniel L.', event: 'Boston, June 2026', initials: 'DL', color: '#1a3a1a' },
+  ];
+
+  const approvedReviews = getApprovedReviews();
+  const allReviews = [...baseReviews, ...approvedReviews.map(r => ({
+    stars: r.rating, text: `"${r.text}"`, name: r.name, event: r.event || 'TapTap Party', initials: r.name.substring(0,2).toUpperCase(), color: 'var(--red)'
+  }))];
+
+  const reviewTrack = document.getElementById('reviewTrack');
+  let currentReview = 0;
+  let autoReview;
+
+  allReviews.forEach(r => {
+    const slide = document.createElement('div');
+    slide.style.cssText = 'min-width:100%;padding:0 40px;box-sizing:border-box;';
+    slide.innerHTML = `
+      <div style="background:var(--surface2);border:1px solid rgba(255,255,255,0.06);border-radius:3px;padding:32px;display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start;">
+        <div style="width:48px;height:48px;border-radius:50%;background:${r.color};display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;color:${r.color==='var(--gold)'?'#080808':'var(--white)'};flex-shrink:0;">${r.initials}</div>
+        <div>
+          <div style="color:var(--gold);font-size:15px;margin-bottom:10px;">${'★'.repeat(Math.floor(r.stars))}${r.stars % 1 ? '½' : ''}</div>
+          <p style="font-size:15px;color:rgba(240,237,230,0.8);line-height:1.75;margin-bottom:12px;font-style:italic;">${r.text}</p>
+          <p style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">${r.name} · ${r.event}</p>
+        </div>
+      </div>`;
+    reviewTrack.appendChild(slide);
+  });
+
+  function slideReview(dir) {
+    clearInterval(autoReview);
+    currentReview = (currentReview + dir + allReviews.length) % allReviews.length;
+    reviewTrack.style.transform = `translateX(-${currentReview * 100}%)`;
+    startAutoReview();
+  }
+
+  function startAutoReview() {
+    autoReview = setInterval(() => {
+      currentReview = (currentReview + 1) % allReviews.length;
+      reviewTrack.style.transform = `translateX(-${currentReview * 100}%)`;
+    }, 5000);
+  }
+  startAutoReview();
+</script>
+
+<!-- Newsletter -->
+<section class="newsletter-section">
+  <div class="newsletter-inner">
+    <p class="section-eyebrow">Stay In The Loop</p>
+    <h2>NEVER MISS<br>A PARTY</h2>
+    <p>Sign up to get early access to tickets, event announcements, and exclusive Tap Tap updates.</p>
+    <div class="newsletter-form">
+      <input type="email" id="newsletterEmail" placeholder="Your email address">
+      <button type="submit" onclick="subscribeNewsletter()">Sign Up</button>
+    </div>
+    <p class="newsletter-note" id="newsletterMsg">No spam. Unsubscribe anytime.</p>
+  </div>
+</section>
+
+<script>
+  async function subscribeNewsletter() {
+    const email = document.getElementById('newsletterEmail').value.trim();
+    const msg   = document.getElementById('newsletterMsg');
+    if (!email || !email.includes('@')) {
+      msg.textContent = 'Please enter a valid email.';
+      msg.style.color = '#ff6b6b';
+      return;
+    }
+    const btn = document.querySelector('.newsletter-form button');
+    btn.textContent = '...';
+    btn.disabled = true;
+
+    // Save to Supabase
+    const { error } = await supa.from('newsletter').insert([{ email }]);
+
+    if (error && error.code !== '23505') {
+      msg.textContent = 'Something went wrong. Try again.';
+      msg.style.color = '#ff6b6b';
+      btn.textContent = 'Sign Up';
+      btn.disabled = false;
+      return;
+    }
+
+    // Sync to Brevo via secure serverless function
+    try {
+      await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+    } catch(e) { console.log('Brevo sync error', e); }
+
+    if (error && error.code === '23505') {
+      msg.textContent = "You\'re already subscribed! 🇭🇹";
+      msg.style.color = '#F5C518';
+    } else {
+      msg.textContent = '✅ You\'re in! See you at the next TapTap 🇭🇹';
+      msg.style.color = '#2DB358';
+      document.getElementById('newsletterEmail').value = '';
+    }
+    btn.textContent = 'Sign Up';
+    btn.disabled = false;
+  }
+</script>
+
+<!-- Stripe -->
+
+
+
+<script>
+  function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    const btn = document.querySelector('.nav-hamburger');
+    menu.classList.toggle('open');
+    btn.classList.toggle('is-open');
+    document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+  }
+  function closeMenu() {
+    document.getElementById('mobileMenu').classList.remove('open');
+    document.querySelector('.nav-hamburger').classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+</script>
+
+<canvas class="tt-spray" style="display:block;width:100%;height:10px;" width="1400" height="10"></canvas>
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="footer-top-wrap">
+      <div>
+        <img src="logo.png" alt="Tap Tap Party" class="footer-logo">
+        <p class="footer-tagline">Once a month. Every month. 🇭🇹</p>
+      </div>
+      <!-- Desktop columns -->
+      <div class="footer-desktop-cols">
+        <div class="footer-dcol">
+          <h4>Pages</h4>
+          <ul>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="community.html">Community</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-dcol">
+          <h4>Tickets</h4>
+          <ul>
+            <li><a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener">Buy Tickets</a></li>
+            <li><a href="events.html">Upcoming Events</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    </div>
+
+    <!-- Mobile links -->
+    <div class="footer-mobile-row">
+      <p class="footer-mobile-label">Pages</p>
+      <div class="footer-mobile-links">
+        <a href="events.html">Events</a>
+        <span class="fsep">|</span>
+        <a href="community.html">Community</a>
+        <span class="fsep">|</span>
+        <a href="about.html">About</a>
+        <span class="fsep">|</span>
+        <a href="contact.html">Contact</a>
+        <span class="fsep">|</span>
+        <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" class="footer-buy">Buy Tickets</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2026 Tap Tap Party. All rights reserved.</p>
+      <a href="https://instagram.com/itstaptapmiami" target="_blank" rel="noopener" class="footer-ig">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <circle cx="12" cy="12" r="4"/>
+          <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+
+
+<script>
+(function(){
+  function drawSpray(c) {
+    const ctx = c.getContext('2d');
+    const W = c.width, H = c.height;
+    ctx.clearRect(0,0,W,H);
+
+    // Blue left with feathered right edge
+    for(let y=0;y<H;y++){
+      const noise = Math.sin(y*2.1)*1.5;
+      const grad = ctx.createLinearGradient(0,0,W/2+60+noise,0);
+      grad.addColorStop(0,'rgba(0,58,140,1)');
+      grad.addColorStop(0.75,'rgba(0,58,140,0.95)');
+      grad.addColorStop(1,'rgba(0,58,140,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0,y,W/2+60+noise,1);
+    }
+
+    // Red right with feathered left edge
+    for(let y=0;y<H;y++){
+      const noise = Math.sin(y*1.7)*1.5;
+      const grad = ctx.createLinearGradient(W,0,W/2-60+noise,0);
+      grad.addColorStop(0,'rgba(212,32,39,1)');
+      grad.addColorStop(0.75,'rgba(212,32,39,0.95)');
+      grad.addColorStop(1,'rgba(212,32,39,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(W/2-60+noise,y,W/2+60,1);
+    }
+
+    // Spray texture
+    for(let i=0;i<2500;i++){
+      const x = Math.random()*W;
+      const col = x < W/2 ? '0,58,140' : '212,32,39';
+      ctx.beginPath();
+      ctx.arc(x,Math.random()*H,Math.random()*1.5,0,Math.PI*2);
+      ctx.fillStyle = `rgba(${col},${Math.random()*0.45})`;
+      ctx.fill();
+    }
+  }
+  document.querySelectorAll('.tt-spray').forEach(drawSpray);
+})();
+</script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>
