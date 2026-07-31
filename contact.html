@@ -200,6 +200,13 @@
     const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtemZvd3F6bHF5emJqY2hwbnR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM0NzQxODcsImV4cCI6MjA5OTA1MDE4N30.GB42OaMpcIt7uxopfPYEH4Vdatm7hYS37AptnivgUkU';
     const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
   </script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#080808">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="TapTap">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 </head>
 <body>
 <!-- Smoke Background -->
@@ -569,6 +576,57 @@
   }
   document.querySelectorAll('.tt-spray').forEach(drawSpray);
 })();
+</script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
+  </script>
+
+<script>
+// Push notification subscription
+const VAPID_PUBLIC = 'BPhsJChNLhs3d93VKX-0U7FVKjprKPaeTtUSp6StCcQ994i90rO9rTHvjJZjDxI-En1ui8lPXQLWH2uAWEEHjKM';
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = atob(base64);
+  return new Uint8Array([...rawData].map(c => c.charCodeAt(0)));
+}
+
+async function subscribeToPush() {
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    const existing = await reg.pushManager.getSubscription();
+    if (existing) return;
+
+    const sub = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC)
+    });
+
+    await fetch('/api/save-subscription', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(sub)
+    });
+  } catch(e) {}
+}
+
+// Ask after 3 seconds
+if ('serviceWorker' in navigator && 'PushManager' in window) {
+  setTimeout(() => {
+    if (Notification.permission === 'default') {
+      Notification.requestPermission().then(p => {
+        if (p === 'granted') subscribeToPush();
+      });
+    } else if (Notification.permission === 'granted') {
+      subscribeToPush();
+    }
+  }, 3000);
+}
 </script>
 </body>
 </html>

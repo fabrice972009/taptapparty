@@ -1470,5 +1470,49 @@
       });
     }
   </script>
+
+<script>
+// Push notification subscription
+const VAPID_PUBLIC = 'BPhsJChNLhs3d93VKX-0U7FVKjprKPaeTtUSp6StCcQ994i90rO9rTHvjJZjDxI-En1ui8lPXQLWH2uAWEEHjKM';
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = atob(base64);
+  return new Uint8Array([...rawData].map(c => c.charCodeAt(0)));
+}
+
+async function subscribeToPush() {
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    const existing = await reg.pushManager.getSubscription();
+    if (existing) return;
+
+    const sub = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC)
+    });
+
+    await fetch('/api/save-subscription', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(sub)
+    });
+  } catch(e) {}
+}
+
+// Ask after 3 seconds
+if ('serviceWorker' in navigator && 'PushManager' in window) {
+  setTimeout(() => {
+    if (Notification.permission === 'default') {
+      Notification.requestPermission().then(p => {
+        if (p === 'granted') subscribeToPush();
+      });
+    } else if (Notification.permission === 'granted') {
+      subscribeToPush();
+    }
+  }, 3000);
+}
+</script>
 </body>
 </html>
