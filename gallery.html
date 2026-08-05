@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gallery — TapTap Party</title>
+  <link rel="icon" type="image/png" href="logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -195,6 +196,11 @@
       footer > div { flex-direction: column; gap: 16px; text-align: center; }
     }
   </style>
+  <meta property="og:image" content="https://taptapparty.vercel.app/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://taptapparty.vercel.app/og-image.png">
 </head>
 <body>
 
@@ -325,12 +331,7 @@
     <p class="section-eyebrow">Share The Vibes</p>
     <h2>WERE YOU THERE?</h2>
     <p>Share your photos and videos from the party. The best ones get featured right here.</p>
-    <div class="upload-box" onclick="document.getElementById('fileInput').click()">
-      <div class="upload-icon">📸</div>
-      <p><span>Click to upload</span> or drag and drop<br>Photos & videos welcome</p>
-    </div>
-    <input type="file" id="fileInput" accept="image/*,video/*" multiple onchange="handleUpload(this)">
-    <a href="community.html" class="btn-primary">Visit Community Page</a>
+    <a href="community.html" class="btn-primary" style="display:inline-block;margin-top:24px;">Share Your Photos</a>
   </div>
 </section>
 
