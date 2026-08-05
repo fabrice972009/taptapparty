@@ -452,6 +452,7 @@
       .nav-hamburger { display: flex; z-index: 300; position: relative; margin-left: auto; }
 
       .hero { height: 70vh; padding-bottom: 0; padding-left: 20px; padding-right: 20px; }
+      .hero-video { transform: scale(0.92); }
       .hero-sub { font-size: 15px; }
       .hero-ctas { gap: 10px; }
       .btn-primary, .btn-outline { padding: 13px 28px; font-size: 12px; }
@@ -536,12 +537,13 @@
       gap: 16px;
     }
     .mobile-menu .mobile-socials a {
-      font-size: 14px;
-      letter-spacing: 2px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       color: var(--muted);
       border: 1px solid rgba(255,255,255,0.1);
-      padding: 10px 20px;
-      border-radius: 2px;
+      padding: 12px;
+      border-radius: 50%;
     }
     .nav-hamburger.is-open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
     .nav-hamburger.is-open span:nth-child(2) { opacity: 0; }
@@ -757,7 +759,9 @@
   <a href="contact.html" onclick="closeMenu()">Contact</a>
   <a href="#" onclick="closeMenu();setTimeout(openTicketModal,300)" class="mobile-cta">Get Tickets</a>
   <div class="mobile-socials">
-    <a href="https://instagram.com/itstaptapmiami" target="_blank">Instagram</a>
+    <a href="https://instagram.com/itstaptapmiami" target="_blank" aria-label="Instagram">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg>
+    </a>
   </div>
 </div>
 
@@ -1347,7 +1351,7 @@
 <section class="newsletter-section">
   <div class="newsletter-inner">
     <p class="section-eyebrow">Stay In The Loop</p>
-    <h2>NEVER MISS<br>A PARTY</h2>
+    <h2>NEVER MISS<br>A TAPTAP</h2>
     <p>Sign up to get early access to tickets, event announcements, and exclusive Tap Tap updates.</p>
     <div class="newsletter-form">
       <input type="email" id="newsletterEmail" placeholder="Your email address">
