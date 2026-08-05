@@ -255,6 +255,7 @@
         <div class="stat-card"><div class="num" id="statApproved">0</div><div class="lbl">Approved</div></div>
         <div class="stat-card"><div class="num" id="statEvents">0</div><div class="lbl">Events</div></div>
         <div class="stat-card"><div class="num" id="statSubs">0</div><div class="lbl">Subscribers</div></div>
+        <div class="stat-card"><div class="num" id="statPush">0</div><div class="lbl">Push Enabled 🔔</div></div>
       </div>
       <div style="background:var(--surface);border:1px solid rgba(255,255,255,0.06);border-radius:3px;padding:24px;">
         <h3 style="font-size:14px;font-weight:600;margin-bottom:12px;color:var(--gold);">Quick Links</h3>
@@ -458,13 +459,14 @@
   }
 
   async function updateStats() {
-    const [pp, pr, ev, nl, ap, ar] = await Promise.all([
+    const [pp, pr, ev, nl, ap, ar, push] = await Promise.all([
       supa.from('community_photos').select('id',{count:'exact',head:true}).eq('status','pending'),
       supa.from('community_reviews').select('id',{count:'exact',head:true}).eq('status','pending'),
       supa.from('events').select('id',{count:'exact',head:true}),
       supa.from('newsletter').select('id',{count:'exact',head:true}),
       supa.from('community_photos').select('id',{count:'exact',head:true}).eq('status','approved'),
       supa.from('community_reviews').select('id',{count:'exact',head:true}).eq('status','approved'),
+      supa.from('push_subscriptions').select('id',{count:'exact',head:true}),
     ]);
     const pending  = (pp.count||0) + (pr.count||0);
     const approved = (ap.count||0) + (ar.count||0);
@@ -472,6 +474,7 @@
     document.getElementById('statApproved').textContent = approved;
     document.getElementById('statEvents').textContent   = ev.count||0;
     document.getElementById('statSubs').textContent     = nl.count||0;
+    document.getElementById('statPush').textContent     = push.count||0;
     document.getElementById('pendingBadge').textContent = pending;
     document.getElementById('pendingBadge').style.display = pending > 0 ? 'inline' : 'none';
   }

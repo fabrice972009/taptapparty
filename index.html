@@ -958,6 +958,10 @@
 
       <div class="about-stats-row">
         <div class="stat-block">
+          <div class="stat-big">75K<span class="stat-plus">+</span></div>
+          <div class="stat-tag">Attendees</div>
+        </div>
+        <div class="stat-block">
           <div class="stat-big">50<span class="stat-plus">+</span></div>
           <div class="stat-tag">Events</div>
         </div>
@@ -1008,7 +1012,7 @@
   .about-img-wrap { display: flex; flex-direction: column; gap: 16px; }
   .about-stats-row {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 0;
     border: 1px solid rgba(255,255,255,0.07);
     border-radius: 2px;
@@ -1510,7 +1514,7 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
     const bell = document.createElement('button');
     bell.id = 'notifBell';
     bell.innerHTML = '🔔 Get event alerts';
-    bell.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--red);color:#fff;border:none;padding:10px 20px;font-family:Inter,sans-serif;font-size:12px;font-weight:600;letter-spacing:1px;cursor:pointer;z-index:500;border-radius:2px;box-shadow:0 4px 20px rgba(212,32,39,0.4);';
+    bell.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--red);color:#fff;border:none;padding:10px 20px;font-family:Inter,sans-serif;font-size:12px;font-weight:600;letter-spacing:1px;cursor:pointer;z-index:500;border-radius:2px;box-shadow:0 4px 20px rgba(212,32,39,0.4);white-space:nowrap;';
     bell.onclick = () => {
       Notification.requestPermission().then(p => {
         if (p === 'granted') { subscribeToPush(); bell.remove(); }
