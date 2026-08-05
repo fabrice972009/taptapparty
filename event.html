@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">Event Details — TapTap Party</title>
+  <meta id="metaDescription" name="description" content="See details for this TapTap event and get your tickets.">
+  <link rel="icon" type="image/png" href="logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080808;
+      --red: #D42027;
+      --blue: #003A8C;
+      --gold: #F5C518;
+      --white: #F0EDE6;
+      --surface: #111111;
+      --surface2: #1A1A1A;
+      --muted: #666;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--white); font-family: 'Inter', 'DM Sans', sans-serif; font-size: 16px; line-height: 1.6; }
+
+    /* ── STRIPE ── */
+    .tt-stripe { display: flex; height: 6px; width: 100%; }
+    .tt-stripe span { flex: 1; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      background: linear-gradient(180deg, rgba(8,8,8,0.92) 0%, rgba(8,8,8,0.78) 100%);
+      padding: 0 48px;
+      height: 64px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .nav-logo { text-decoration: none; }
+    .nav-logo img { height: 40px; width: auto; display: block; mix-blend-mode: screen; }
+    .nav-links { display: flex; gap: 32px; list-style: none; align-items: center; justify-content: center; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none; font-size: 12px;
+      font-weight: 500; letter-spacing: 1px; text-transform: uppercase; transition: color 0.2s, border-color 0.2s;
+      padding-bottom: 4px; border-bottom: 1px solid transparent;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--white); border-bottom-color: var(--gold); }
+    .nav-cta {
+      background: transparent; color: var(--red); border: 1px solid var(--red);
+      padding: 10px 22px; border-radius: 2px;
+      font-size: 12px; font-weight: 600; letter-spacing: 1px;
+      text-transform: uppercase; text-decoration: none; transition: background 0.2s, color 0.2s;
+    }
+    .nav-cta:hover { background: var(--red); color: var(--white); }
+    .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--white); border-radius: 1px; }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      padding: 140px 48px 80px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .section-eyebrow {
+      font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 12px; font-weight: 500;
+    }
+    .page-title {
+      font-family: 'Anton', 'Bebas Neue', sans-serif;
+      font-size: clamp(64px, 10vw, 120px);
+      letter-spacing: 4px; line-height: 0.9;
+    }
+    .page-title span { color: var(--red); }
+
+    /* ── NEXT UP ── */
+    .next-up {
+      padding: 0 48px 80px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .next-up-inner {
+      max-width: 1000px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 64px; align-items: center;
+    }
+    .event-img {
+      aspect-ratio: 3/4;
+      background: var(--surface2);
+      border-radius: 3px; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted); font-size: 13px; letter-spacing: 1px;
+    }
+    .event-img img { width: 100%; height: 100%; object-fit: contain; }
+    .event-tag {
+      display: inline-block;
+      background: var(--red);
+      color: var(--white);
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: 5px 12px; border-radius: 2px;
+      margin-bottom: 16px;
+    }
+    .event-date { font-size: 13px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+    .event-name {
+      font-family: 'Anton', 'Bebas Neue', sans-serif;
+      font-size: clamp(36px, 4vw, 54px);
+      letter-spacing: 2px; line-height: 1.05; margin-bottom: 20px;
+    }
+    .event-details { display: flex; flex-direction: column; gap: 8px; margin-bottom: 28px; }
+    .event-detail-row { display: flex; align-items: center; gap: 10px; font-size: 14px; color: rgba(240,237,230,0.65); }
+    .event-detail-row span.dot { width: 4px; height: 4px; background: var(--red); border-radius: 50%; flex-shrink: 0; }
+    .ticket-box {
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 3px; padding: 24px;
+      margin-bottom: 0;
+    }
+    .ticket-box h4 { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+    .ticket-tiers { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+    .ticket-tier {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 16px;
+      background: var(--surface2);
+      border-radius: 2px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .ticket-tier:hover { border-color: rgba(255,255,255,0.12); }
+    .ticket-tier.selected { border-color: var(--red); }
+    .tier-name { font-size: 14px; font-weight: 500; }
+    .tier-price { font-family: 'Anton', 'Bebas Neue', sans-serif; font-size: 22px; color: var(--gold); letter-spacing: 1px; }
+    .tier-desc { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .qty-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .qty-row label { font-size: 13px; color: var(--muted); }
+    .qty-select {
+      background: var(--surface2); border: 1px solid rgba(255,255,255,0.1);
+      color: var(--white); padding: 8px 12px; border-radius: 2px;
+      font-family: 'Inter', 'DM Sans', sans-serif; font-size: 14px; cursor: pointer;
+    }
+    .btn-primary {
+      display: block; width: 100%;
+      background: var(--red); color: var(--white);
+      padding: 16px; text-align: center;
+      font-size: 13px; font-weight: 600; letter-spacing: 1.5px;
+      text-transform: uppercase; text-decoration: none;
+      border-radius: 2px; border: none; cursor: pointer;
+      font-family: 'Inter', 'DM Sans', sans-serif;
+      transition: opacity 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+    .stripe-note { font-size: 11px; color: var(--muted); text-align: center; margin-top: 10px; }
+
+    /* ── ALL EVENTS ── */
+    .all-events {
+      padding: 32px 48px 80px;
+      max-width: 1000px; margin: 0 auto;
+    }
+    .events-list { display: flex; flex-direction: column; gap: 0; }
+    .event-row {
+      display: grid;
+      grid-template-columns: 100px 1fr auto;
+      gap: 32px; align-items: center;
+      padding: 24px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      transition: background 0.2s;
+    }
+    .event-row:first-child { border-top: 1px solid rgba(255,255,255,0.06); }
+    .event-row.past { opacity: 0.4; }
+    /* ── CITY FILTERS ── */
+    .city-filters {
+      display: flex; flex-wrap: wrap; gap: 10px;
+      margin-bottom: 36px;
+    }
+    .city-btn {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--muted);
+      padding: 9px 20px;
+      font-size: 12px; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase;
+      border-radius: 2px; cursor: pointer;
+      font-family: 'Inter', 'DM Sans', sans-serif;
+      transition: all 0.2s;
+    }
+    .city-btn:hover { border-color: rgba(255,255,255,0.3); color: var(--white); }
+    .city-btn.active { background: var(--red); border-color: var(--red); color: var(--white); }
+    .events-section-label {
+      font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 4px; font-weight: 500;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .toggle-past {
+      background: none; border: 1px solid rgba(255,255,255,0.1);
+      color: var(--muted); padding: 4px 12px; font-size: 11px;
+      letter-spacing: 1px; text-transform: uppercase;
+      cursor: pointer; border-radius: 2px; font-family: 'Inter', 'DM Sans', sans-serif;
+      transition: all 0.2s;
+    }
+    .toggle-past:hover { color: var(--white); border-color: rgba(255,255,255,0.3); }
+    .event-row.hidden { display: none; }
+    .event-row-date {
+      font-family: 'Anton', 'Bebas Neue', sans-serif;
+      font-size: 14px; letter-spacing: 2px;
+      color: var(--muted); line-height: 1.3;
+    }
+    .event-row-date .month { font-size: 11px; letter-spacing: 3px; color: var(--gold); }
+    .event-row-info .name { font-size: 16px; font-weight: 500; margin-bottom: 4px; }
+    .event-row-info .location { font-size: 13px; color: var(--muted); }
+    .event-row-info .badge {
+      display: inline-block; font-size: 10px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 2px; margin-left: 8px;
+      background: rgba(245,197,24,0.12); color: var(--gold);
+    }
+    .event-row-action a {
+      border: 1px solid rgba(240,237,230,0.15);
+      color: var(--white); padding: 9px 20px;
+      font-size: 11px; font-weight: 600; letter-spacing: 1.5px;
+      text-transform: uppercase; text-decoration: none;
+      border-radius: 2px; white-space: nowrap;
+      transition: border-color 0.2s;
+    }
+    .event-row-action a:hover { border-color: var(--white); }
+    .event-row.past .event-row-action a {
+      color: var(--muted); cursor: default; pointer-events: none;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 800px) {
+      nav { padding: 0 20px; height: 56px; top: 6px; display: flex !important; justify-content: space-between; align-items: center; }
+      .nav-logo img { height: 32px; }
+      .nav-links { display: none; }
+      .nav-cta { display: none; }
+      .nav-hamburger { display: flex; z-index: 300; position: relative; }
+
+      .page-header { padding: 100px 20px 40px; }
+      .page-title { font-size: 72px; }
+
+      .next-up { padding: 0 20px 48px; }
+      .next-up-inner { grid-template-columns: 1fr; gap: 28px; }
+      .event-img { aspect-ratio: 3/4; }
+      .event-name { font-size: 32px; }
+      .ticket-box { padding: 20px; }
+      .tier-price { font-size: 20px; }
+
+      .all-events { padding: 48px 20px; }
+      .event-row {
+        grid-template-columns: 72px 1fr;
+        gap: 14px;
+        padding: 18px 0;
+      }
+      .event-row-action { display: none; }
+      .event-row-info .name { font-size: 14px; }
+      .event-row-info .badge { display: none; }
+
+    
+      .site-footer { padding: 32px 20px 24px; }
+      .site-footer-inner { display: flex; flex-direction: column; align-items: center; text-align: center; }
+      .footer-top-wrap { flex-direction: column; align-items: center; }
+      .footer-logo { margin: 0 auto 6px; }
+      .footer-desktop-cols { display: none !important; }
+      .footer-mobile-row { display: flex !important; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 20px; }
+      .footer-mobile-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #F5C518; font-weight: 500; }
+      .footer-mobile-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 10px; }
+      .footer-mobile-links a { font-size: 12px; color: rgba(240,237,230,0.6); text-decoration: none; }
+      .footer-buy { color: #D42027 !important; font-weight: 600; }
+      .fsep { color: rgba(255,255,255,0.2); font-size: 11px; }
+      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; align-items: center; }
+    }
+
+    /* ── MOBILE MENU ── */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(8,8,8,0.98);
+      z-index: 190;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      padding: 80px 24px 40px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: 'Anton', 'Bebas Neue', sans-serif;
+      font-size: 24px;
+      letter-spacing: 4px;
+      color: var(--white);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .mobile-menu a:hover { color: var(--red); }
+    .mobile-menu .mobile-cta {
+      margin-top: 16px;
+      background: var(--red);
+      color: var(--white) !important;
+      padding: 16px 48px;
+      border-radius: 2px;
+      font-size: 32px !important;
+    }
+    .mobile-menu .mobile-socials {
+      margin-top: 16px;
+      display: flex;
+      gap: 16px;
+    }
+    .mobile-menu .mobile-socials a {
+      font-size: 14px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 10px 20px;
+      border-radius: 2px;
+    }
+    .nav-hamburger.is-open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .nav-hamburger.is-open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.is-open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+    .nav-hamburger span { transition: transform 0.2s, opacity 0.2s; }
+    /* ── FOOTER ── */
+    .site-footer { border-top: 1px solid rgba(255,255,255,0.05); padding: 56px 48px 36px; }
+    .site-footer-inner { max-width: 1000px; margin: 0 auto; }
+    .footer-top-wrap { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
+    .footer-logo { height: 36px; width: auto; display: block; mix-blend-mode: screen; margin-bottom: 6px; }
+    .footer-tagline { font-size: 13px; color: #666; }
+    .footer-desktop-cols { display: flex; gap: 64px; }
+    .footer-dcol h4 { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #F5C518; margin-bottom: 16px; font-weight: 500; }
+    .footer-dcol ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-dcol a { color: #666; text-decoration: none; font-size: 14px; transition: color 0.2s; }
+    .footer-dcol a:hover { color: #F0EDE6; }
+    .footer-mobile-row { display: none; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 28px; border-top: 1px solid rgba(255,255,255,0.05); }
+    .footer-bottom p { font-size: 13px; color: #666; }
+    .footer-ig { color: #666; display: flex; align-items: center; transition: color 0.2s; text-decoration: none; }
+    .footer-ig:hover { color: #F0EDE6; }
+  /* TICKET SELECTOR MODAL */
+  .ticket-modal-overlay {
+    position: fixed; inset: 0; z-index: 9000;
+    background: rgba(8,8,8,0.85); backdrop-filter: blur(4px);
+    display: none; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .ticket-modal-overlay.open { display: flex; }
+  .ticket-modal {
+    background: #111; border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 4px; width: 100%; max-width: 480px;
+    overflow: hidden;
+  }
+  .ticket-modal-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .ticket-modal-header h3 {
+    font-family: 'Anton','Bebas Neue',sans-serif;
+    font-size: 22px; letter-spacing: 0.05em; text-transform: uppercase;
+  }
+  .ticket-modal-close {
+    background: none; border: none; color: var(--muted);
+    font-size: 22px; cursor: pointer; padding: 4px 8px; line-height: 1;
+  }
+  .ticket-modal-close:hover { color: var(--white); }
+  .ticket-event-list { padding: 8px 0; }
+  .ticket-event-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 24px; cursor: pointer;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: background 0.15s; text-decoration: none; color: var(--white);
+  }
+  .ticket-event-item:last-child { border-bottom: none; }
+  .ticket-event-item:hover { background: rgba(255,255,255,0.04); }
+  .ticket-event-info .t-name { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .ticket-event-info .t-meta { font-size: 12px; color: var(--muted); display: flex; gap: 10px; }
+  .ticket-event-info .t-meta span { display: flex; align-items: center; gap: 4px; }
+  .ticket-event-arrow { color: var(--red); font-size: 18px; flex-shrink: 0; }
+  .ticket-modal-loading { padding: 32px; text-align: center; color: var(--muted); font-size: 14px; }
+  </style>
+  <meta id="metaOgTitle" property="og:title" content="TapTap Event Details">
+  <meta id="metaOgImage" property="og:image" content="https://taptapparty.vercel.app/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta id="metaTwitterImage" name="twitter:image" content="https://taptapparty.vercel.app/og-image.png">
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPA_URL = 'https://rmzfowqzlqyzbjchpntv.supabase.co';
+    const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtemZvd3F6bHF5emJqY2hwbnR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM0NzQxODcsImV4cCI6MjA5OTA1MDE4N30.GB42OaMpcIt7uxopfPYEH4Vdatm7hYS37AptnivgUkU';
+    const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
+  </script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#080808">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="TapTap">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+</head>
+<body>
+<!-- TICKET SELECTOR MODAL -->
+<div class="ticket-modal-overlay" id="ticketModal" onclick="if(event.target===this)closeTicketModal()">
+  <div class="ticket-modal">
+    <div class="ticket-modal-header">
+      <h3>Select Your Event</h3>
+      <button class="ticket-modal-close" onclick="closeTicketModal()">✕</button>
+    </div>
+    <div class="ticket-event-list" id="ticketEventList">
+      <div class="ticket-modal-loading">Loading events...</div>
+    </div>
+  </div>
+</div>
+<!-- Smoke Background -->
+<canvas id="smokeCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('smokeCanvas');
+  const ctx = canvas.getContext('2d');
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const BLUE = '#003A8C', RED = '#D42027';
+  const particles = [];
+
+  function Particle(init) {
+    this.reset = function(init) {
+      this.x = Math.random() * canvas.width;
+      this.y = init ? Math.random() * canvas.height : canvas.height + 30;
+      this.size = 80 + Math.random() * 160;
+      this.speedY = -(0.4 + Math.random() * 0.7);
+      this.speedX = (Math.random() - 0.5) * 0.5;
+      this.life = init ? Math.random() * 300 : 0;
+      this.maxLife = 250 + Math.random() * 350;
+      this.maxOpacity = 0.05 + Math.random() * 0.06;
+      this.opacity = init ? this.maxOpacity * Math.random() : 0;
+      this.color = Math.random() > 0.5 ? BLUE : RED;
+      this.rotation = Math.random() * Math.PI * 2;
+      this.rotSpeed = (Math.random() - 0.5) * 0.006;
+      this.wobble = Math.random() * Math.PI * 2;
+    };
+    this.update = function() {
+      this.life++;
+      this.wobble += 0.015;
+      this.x += this.speedX + Math.sin(this.wobble) * 0.5;
+      this.y += this.speedY;
+      this.rotation += this.rotSpeed;
+      this.size += 0.3;
+      const p = this.life / this.maxLife;
+      if (p < 0.15) this.opacity = (p / 0.15) * this.maxOpacity;
+      else if (p > 0.65) this.opacity = ((1 - p) / 0.35) * this.maxOpacity;
+      else this.opacity = this.maxOpacity;
+      if (this.life >= this.maxLife || this.y < -this.size) this.reset(false);
+    };
+    this.draw = function() {
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.rotation);
+      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, this.size);
+      const hex = Math.round(this.opacity * 255).toString(16).padStart(2,'0');
+      const hex2 = Math.round(this.opacity * 0.4 * 255).toString(16).padStart(2,'0');
+      g.addColorStop(0,   this.color + hex);
+      g.addColorStop(0.5, this.color + hex2);
+      g.addColorStop(1,   this.color + '00');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(0, 0, this.size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    };
+    this.reset(init);
+  }
+
+  for (let i = 0; i < 25; i++) particles.push(new Particle(true));
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+</script>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html" onclick="closeMenu()">Home</a>
+  <a href="events.html" onclick="closeMenu()">Events</a>
+<a href="community.html" onclick="closeMenu()">Community</a>
+  <a href="about.html" onclick="closeMenu()">About</a>
+  <a href="contact.html" onclick="closeMenu()">Contact</a>
+  <a href="#" onclick="closeMenu();setTimeout(openTicketModal,300)" class="mobile-cta">Get Tickets</a>
+  <div class="mobile-socials">
+    <a href="https://instagram.com/itstaptapmiami" target="_blank">Instagram</a>
+  </div>
+</div>
+
+
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="logo.png" alt="TapTap Party">
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="events.html">Events</a></li>
+    <li><a href="community.html">Community</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="#" onclick="event.preventDefault();openTicketModal()" class="nav-cta">Get Tickets</a>
+  <button class="nav-hamburger" aria-label="Open menu" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<canvas class="tt-spray" id="navStripe" style="position:fixed;top:70px;left:0;right:0;width:100%;height:10px;z-index:199;" width="1400" height="10"></canvas>
+
+<!-- Fixed stripe below nav -->
+
+<!-- Page Header -->
+<div class="page-header" style="padding-bottom:24px;">
+  <p class="section-eyebrow">DJ Bullet &amp; Friends</p>
+  <h1 class="page-title" style="font-size:clamp(36px,6vw,64px);">EVENT<br><span>DETAILS</span></h1>
+</div>
+
+<!-- Loading state -->
+<div id="eventLoading" style="max-width:1000px;margin:0 auto;padding:0 48px 80px;color:var(--muted);font-size:14px;letter-spacing:1px;">Loading event…</div>
+
+<!-- Not found state -->
+<div id="eventNotFound" style="display:none;max-width:1000px;margin:0 auto;padding:0 48px 100px;">
+  <h2 style="font-family:'Anton','Bebas Neue',sans-serif;font-size:clamp(28px,4vw,40px);margin-bottom:16px;">Event Not Found</h2>
+  <p style="color:var(--muted);margin-bottom:28px;max-width:480px;">This event may have already happened, or the link isn't quite right.</p>
+  <a href="events.html" class="btn-primary" style="display:inline-block;width:auto;padding:14px 32px;">See All Events</a>
+</div>
+
+<!-- Event -->
+<section class="next-up" id="eventSection" style="padding-top:0; display:none;">
+  <div class="next-up-inner">
+    <div class="event-img" id="evtFeatImg" style="position:relative;">
+      <img src="og-image.png" alt="TapTap event flyer" id="evtFeatImgEl">
+    </div>
+    <div>
+      <span class="event-tag" id="evtFeatTag">Event</span>
+      <div class="event-date" id="evtFeatDate"></div>
+      <div class="event-name" id="evtFeatName"></div>
+      <div class="event-details" id="evtFeatDetails"></div>
+      <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:24px;">
+        <a href="#" onclick="event.preventDefault();openTicketModal()" class="btn-primary" id="evtFeatTicket" style="flex:1; min-width:180px; width:auto; margin-top:0;">Buy Tickets</a>
+        <a href="#" id="evtDirections" target="_blank" rel="noopener" style="display:none; flex:1; min-width:180px; text-align:center; padding:16px; border:1px solid rgba(255,255,255,0.15); color:var(--white); text-decoration:none; border-radius:2px; font-size:13px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">Get Directions</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div style="text-align:center; padding:8px 20px 80px;">
+  <a href="events.html" style="color:var(--muted); font-size:13px; letter-spacing:1px; text-decoration:none; border-bottom:1px solid rgba(255,255,255,0.15); padding-bottom:2px;">View All Events →</a>
+</div>
+
+<script>
+  // Load one specific event by its Supabase id (?id=...)
+  (async function() {
+    const params = new URLSearchParams(window.location.search);
+    const eventId = params.get('id');
+    const loadingEl = document.getElementById('eventLoading');
+    const notFoundEl = document.getElementById('eventNotFound');
+    const sectionEl = document.getElementById('eventSection');
+
+    function showNotFound() {
+      loadingEl.style.display = 'none';
+      sectionEl.style.display = 'none';
+      notFoundEl.style.display = 'block';
+    }
+
+    if (!eventId) { showNotFound(); return; }
+
+    try {
+      const { data: ev, error } = await supa.from('events').select('*').eq('id', eventId).single();
+      if (error || !ev) { showNotFound(); return; }
+
+      const d = new Date(ev.event_date + 'T12:00:00');
+      const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      const fullMonths = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      const dateStr = `${days[d.getDay()]}, ${fullMonths[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+
+      document.getElementById('pageTitle').textContent = `${ev.name} — TapTap Party`;
+      document.getElementById('metaDescription').setAttribute('content', `${dateStr}${ev.city ? ' · ' + ev.city : ''}`);
+      document.getElementById('metaOgTitle').setAttribute('content', `${ev.name} — TapTap Party`);
+      if (ev.flyer_url) {
+        document.getElementById('metaOgImage').setAttribute('content', ev.flyer_url);
+        document.getElementById('metaTwitterImage').setAttribute('content', ev.flyer_url);
+      }
+
+      if (ev.flyer_url) document.getElementById('evtFeatImgEl').src = ev.flyer_url;
+      document.getElementById('evtFeatDate').textContent = dateStr;
+      document.getElementById('evtFeatName').textContent = ev.name;
+
+      let venueLine = '';
+      if (ev.venue && ev.venue !== 'TBA' && ev.address) {
+        venueLine = `${ev.venue} — ${ev.address}`;
+      } else if (ev.venue && ev.venue !== 'TBA') {
+        venueLine = `${ev.venue}${ev.city ? ', ' + ev.city : ''}`;
+      } else if (ev.city) {
+        venueLine = ev.city;
+      }
+      const rows = [];
+      if (venueLine) rows.push(venueLine);
+      rows.push('DJ Bullet &amp; Friends');
+      rows.push('Doors open at 9 PM');
+      document.getElementById('evtFeatDetails').innerHTML = rows.map(r => `<div class="event-detail-row"><span class="dot"></span>${r}</div>`).join('');
+
+      const ticketBtn = document.getElementById('evtFeatTicket');
+      if (ev.ticket_link) {
+        ticketBtn.href = ev.ticket_link;
+        ticketBtn.target = '_blank';
+        ticketBtn.rel = 'noopener';
+        ticketBtn.removeAttribute('onclick');
+        ticketBtn.textContent = 'Buy Tickets';
+      } else {
+        ticketBtn.removeAttribute('href');
+        ticketBtn.removeAttribute('onclick');
+        ticketBtn.style.opacity = '0.5';
+        ticketBtn.style.cursor = 'default';
+        ticketBtn.textContent = 'Tickets Coming Soon';
+      }
+
+      const mapQuery = ev.address || ev.venue || ev.city;
+      if (mapQuery) {
+        const dirs = document.getElementById('evtDirections');
+        dirs.href = `https://maps.google.com/?q=${encodeURIComponent(mapQuery)}`;
+        dirs.style.display = 'block';
+      }
+
+      loadingEl.style.display = 'none';
+      sectionEl.style.display = 'block';
+    } catch (e) {
+      console.error('Event load error:', e);
+      showNotFound();
+    }
+  })();
+</script>
+
+
+
+<script>
+  function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    const btn = document.querySelector('.nav-hamburger');
+    menu.classList.toggle('open');
+    btn.classList.toggle('is-open');
+    document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+  }
+  function closeMenu() {
+    document.getElementById('mobileMenu').classList.remove('open');
+    document.querySelector('.nav-hamburger').classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+</script>
+
+<canvas class="tt-spray" style="display:block;width:100%;height:10px;" width="1400" height="10"></canvas>
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="footer-top-wrap">
+      <div>
+        <img src="logo.png" alt="TapTap Party" class="footer-logo">
+        <p class="footer-tagline">Once a month. Every month. 🇭🇹</p>
+      </div>
+      <!-- Desktop columns -->
+      <div class="footer-desktop-cols">
+        <div class="footer-dcol">
+          <h4>Pages</h4>
+          <ul>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="community.html">Community</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-dcol">
+          <h4>Tickets</h4>
+          <ul>
+            <li><a href="#" onclick="event.preventDefault();openTicketModal()">Buy Tickets</a></li>
+            <li><a href="events.html">Upcoming Events</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    </div>
+
+    <!-- Mobile links -->
+    <div class="footer-mobile-row">
+      <p class="footer-mobile-label">Pages</p>
+      <div class="footer-mobile-links">
+        <a href="events.html">Events</a>
+        <span class="fsep">|</span>
+        <a href="community.html">Community</a>
+        <span class="fsep">|</span>
+        <a href="about.html">About</a>
+        <span class="fsep">|</span>
+        <a href="contact.html">Contact</a>
+        <span class="fsep">|</span>
+        <a href="#" onclick="event.preventDefault();openTicketModal()" class="footer-buy">Buy Tickets</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2026 TapTap Party. All rights reserved.</p>
+      <a href="https://instagram.com/itstaptapmiami" target="_blank" rel="noopener" class="footer-ig">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <circle cx="12" cy="12" r="4"/>
+          <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+
+
+<script>
+(function(){
+  function drawSpray(c) {
+    const ctx = c.getContext('2d');
+    const W = c.width, H = c.height;
+    ctx.clearRect(0,0,W,H);
+
+    // Blue left with feathered right edge
+    for(let y=0;y<H;y++){
+      const noise = Math.sin(y*2.1)*1.5;
+      const grad = ctx.createLinearGradient(0,0,W/2+60+noise,0);
+      grad.addColorStop(0,'rgba(0,58,140,1)');
+      grad.addColorStop(0.75,'rgba(0,58,140,0.95)');
+      grad.addColorStop(1,'rgba(0,58,140,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0,y,W/2+60+noise,1);
+    }
+
+    // Red right with feathered left edge
+    for(let y=0;y<H;y++){
+      const noise = Math.sin(y*1.7)*1.5;
+      const grad = ctx.createLinearGradient(W,0,W/2-60+noise,0);
+      grad.addColorStop(0,'rgba(212,32,39,1)');
+      grad.addColorStop(0.75,'rgba(212,32,39,0.95)');
+      grad.addColorStop(1,'rgba(212,32,39,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(W/2-60+noise,y,W/2+60,1);
+    }
+
+    // Spray texture
+    for(let i=0;i<2500;i++){
+      const x = Math.random()*W;
+      const col = x < W/2 ? '0,58,140' : '212,32,39';
+      ctx.beginPath();
+      ctx.arc(x,Math.random()*H,Math.random()*1.5,0,Math.PI*2);
+      ctx.fillStyle = `rgba(${col},${Math.random()*0.45})`;
+      ctx.fill();
+    }
+  }
+  document.querySelectorAll('.tt-spray').forEach(drawSpray);
+})();
+</script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
+  </script>
+
+<script>
+// Push notification subscription
+const VAPID_PUBLIC = 'BODexxFQuWya_x_Nbu-Lo7Mns1K4DrKVjMoq5rmwytY3ba14MzYleYaliwAAxhHesHYPn_tuPSuF36B1ckkSyyU';
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = atob(base64);
+  return new Uint8Array([...rawData].map(c => c.charCodeAt(0)));
+}
+
+async function subscribeToPush() {
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    const existing = await reg.pushManager.getSubscription();
+    if (existing) return;
+
+    const sub = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC)
+    });
+
+    await fetch('/api/save-subscription', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(sub)
+    });
+  } catch(e) {}
+}
+
+// Ask after 3 seconds
+if ('serviceWorker' in navigator && 'PushManager' in window) {
+  setTimeout(() => {
+    if (Notification.permission === 'default') {
+      Notification.requestPermission().then(p => {
+        if (p === 'granted') subscribeToPush();
+      });
+    } else if (Notification.permission === 'granted') {
+      subscribeToPush();
+    }
+  }, 3000);
+}
+</script>
+<script>
+// HARDCODED events as fallback (Supabase will override)
+const HARDCODED_EVENTS = [
+  { name: 'TapTap London', city: 'London, UK', event_date: '2026-08-30', ticket_link: 'http://Taptaplondon.frontlineticketing.com' },
+  { name: 'TapTap New York', city: 'New York, NY', event_date: '2026-09-05', ticket_link: '' },
+  { name: 'TapTap Miami', city: 'Miami, FL', event_date: '2026-10-11', ticket_link: '' },
+  { name: 'TapTap Miami', city: 'Miami, FL', event_date: '2026-11-29', ticket_link: '' },
+  { name: 'TapTap Miami', city: 'Miami, FL', event_date: '2026-12-20', ticket_link: '' },
+];
+
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+async function openTicketModal() {
+  document.getElementById('ticketModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  const list = document.getElementById('ticketEventList');
+  list.innerHTML = '<div class="ticket-modal-loading">Loading events...</div>';
+
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    const { data: events } = await supa.from('events')
+      .select('*').gte('event_date', today).order('event_date', {ascending: true});
+
+    const items = (events?.length ? events : HARDCODED_EVENTS);
+
+    list.innerHTML = items.map(e => {
+      const d = new Date(e.event_date + 'T12:00:00');
+      const dateStr = `${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+      const isLive = e.ticket_link && e.ticket_link.length > 0;
+      if (isLive) {
+        return `<a class="ticket-event-item" href="${e.ticket_link}" target="_blank" rel="noopener" onclick="closeTicketModal()">
+          <div class="ticket-event-info">
+            <div class="t-name">${e.name}</div>
+            <div class="t-meta"><span>📅 ${dateStr}</span><span>📍 ${e.city}</span></div>
+          </div>
+          <div class="ticket-event-arrow" style="color:var(--red);">🎟 →</div>
+        </a>`;
+      } else {
+        return `<div class="ticket-event-item" style="cursor:default;opacity:0.6;">
+          <div class="ticket-event-info">
+            <div class="t-name">${e.name}</div>
+            <div class="t-meta"><span>📅 ${dateStr}</span><span>📍 ${e.city}</span></div>
+          </div>
+          <div style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Coming Soon</div>
+        </div>`;
+      }
+    }).join('');
+  } catch(err) {
+    list.innerHTML = HARDCODED_EVENTS.map(e => {
+      const d = new Date(e.event_date + 'T12:00:00');
+      const dateStr = `${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+      const isLive = e.ticket_link && e.ticket_link.length > 0;
+      if (isLive) {
+        return `<a class="ticket-event-item" href="${e.ticket_link}" target="_blank" rel="noopener" onclick="closeTicketModal()">
+          <div class="ticket-event-info">
+            <div class="t-name">${e.name}</div>
+            <div class="t-meta"><span>📅 ${dateStr}</span><span>📍 ${e.city}</span></div>
+          </div>
+          <div class="ticket-event-arrow" style="color:var(--red);">🎟 →</div>
+        </a>`;
+      } else {
+        return `<div class="ticket-event-item" style="cursor:default;opacity:0.6;">
+          <div class="ticket-event-info">
+            <div class="t-name">${e.name}</div>
+            <div class="t-meta"><span>📅 ${dateStr}</span><span>📍 ${e.city}</span></div>
+          </div>
+          <div style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Coming Soon</div>
+        </div>`;
+      }
+    }).join('');
+  }
+}
+
+function closeTicketModal() {
+  document.getElementById('ticketModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Close on Escape key
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTicketModal(); });
+</script>
+</body>
+</html>
