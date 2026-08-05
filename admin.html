@@ -637,11 +637,18 @@
     if (!name || !city || !date) { toast('Please fill in name, city and date','error'); return; }
 
     let flyer_url = null;
+    let flyerError = null;
     if (flyerFile) {
       const ext = flyerFile.name.split('.').pop();
       const fn  = `flyer_${Date.now()}.${ext}`;
       const { error: upErr } = await supa.storage.from('community-photos').upload(fn, flyerFile);
-      if (!upErr) { const { data } = supa.storage.from('community-photos').getPublicUrl(fn); flyer_url = data.publicUrl; }
+      if (!upErr) {
+        const { data } = supa.storage.from('community-photos').getPublicUrl(fn);
+        flyer_url = data.publicUrl;
+      } else {
+        flyerError = upErr.message || 'Unknown storage error';
+        console.error('Flyer upload failed:', upErr);
+      }
     }
 
     await supa.from('events').insert([{ name, city, event_date: date, venue, ticket_link: link||'http://Taptap.eventbrite.com', flyer_url, is_next: false }]);
@@ -649,7 +656,12 @@
     document.getElementById('evtFlyer').value='';
     document.getElementById('flyerPreview').style.display='none';
     document.getElementById('flyerUploadBox').textContent='📸 Click to upload flyer';
-    loadAll(); toast('Event added ✓','success');
+    loadAll();
+    if (flyerError) {
+      toast(`Event added, but flyer upload failed: ${flyerError}`, 'error');
+    } else {
+      toast('Event added ✓','success');
+    }
   }
 
   async function setNext(id) {
