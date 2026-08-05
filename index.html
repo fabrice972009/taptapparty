@@ -755,7 +755,7 @@
 <a href="community.html" onclick="closeMenu()">Community</a>
   <a href="about.html" onclick="closeMenu()">About</a>
   <a href="contact.html" onclick="closeMenu()">Contact</a>
-  <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" class="mobile-cta" onclick="closeMenu()">Get Tickets</a>
+  <a href="#" onclick="closeMenu();setTimeout(openTicketModal,300)" class="mobile-cta">Get Tickets</a>
   <div class="mobile-socials">
     <a href="https://instagram.com/itstaptapmiami" target="_blank">Instagram</a>
   </div>
@@ -1161,7 +1161,9 @@
 
       // Update date, name, details if Supabase has real venue data
       document.getElementById('nextDateLine').textContent = `${days[d.getDay()]}, ${fullMonths[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
-      document.getElementById('nextName').innerHTML = `<a href="${next.ticket_link||'http://Taptap.eventbrite.com'}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:2px solid var(--red);">${next.name}</a>`;
+      document.getElementById('nextName').innerHTML = next.ticket_link
+        ? `<a href="${next.ticket_link}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:2px solid var(--red);">${next.name}</a>`
+        : `<a href="#" onclick="event.preventDefault();openTicketModal()" style="color:inherit;text-decoration:none;border-bottom:2px solid var(--red);">${next.name}</a>`;
       if (next.venue && next.venue !== 'TBA') {
         document.getElementById('nextDetails').innerHTML = `
           <div class="event-detail-row"><span class="dot"></span>${next.venue}, ${next.city}</div>
@@ -1442,7 +1444,7 @@
         <div class="footer-dcol">
           <h4>Tickets</h4>
           <ul>
-            <li><a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener">Buy Tickets</a></li>
+            <li><a href="#" onclick="event.preventDefault();openTicketModal()">Buy Tickets</a></li>
             <li><a href="events.html">Upcoming Events</a></li>
           </ul>
         </div>
@@ -1463,7 +1465,7 @@
         <span class="fsep">|</span>
         <a href="contact.html">Contact</a>
         <span class="fsep">|</span>
-        <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" class="footer-buy">Buy Tickets</a>
+        <a href="#" onclick="event.preventDefault();openTicketModal()" class="footer-buy">Buy Tickets</a>
       </div>
     </div>
 
@@ -1613,17 +1615,24 @@ async function openTicketModal() {
     list.innerHTML = items.map(e => {
       const d = new Date(e.event_date + 'T12:00:00');
       const dateStr = `${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
-      const link = e.ticket_link || 'http://Taptap.eventbrite.com';
-      return `<a class="ticket-event-item" href="${link}" target="_blank" rel="noopener" onclick="closeTicketModal()">
-        <div class="ticket-event-info">
-          <div class="t-name">${e.name}</div>
-          <div class="t-meta">
-            <span>📅 ${dateStr}</span>
-            <span>📍 ${e.city}</span>
+      const isLive = e.ticket_link && e.ticket_link.length > 0;
+      if (isLive) {
+        return `<a class="ticket-event-item" href="${e.ticket_link}" target="_blank" rel="noopener" onclick="closeTicketModal()">
+          <div class="ticket-event-info">
+            <div class="t-name">${e.name}</div>
+            <div class="t-meta"><span>📅 ${dateStr}</span><span>📍 ${e.city}</span></div>
           </div>
-        </div>
-        <div class="ticket-event-arrow">→</div>
-      </a>`;
+          <div class="ticket-event-arrow" style="color:var(--red);">🎟 →</div>
+        </a>`;
+      } else {
+        return `<div class="ticket-event-item" style="cursor:default;opacity:0.6;">
+          <div class="ticket-event-info">
+            <div class="t-name">${e.name}</div>
+            <div class="t-meta"><span>📅 ${dateStr}</span><span>📍 ${e.city}</span></div>
+          </div>
+          <div style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Coming Soon</div>
+        </div>`;
+      }
     }).join('');
   } catch(err) {
     list.innerHTML = HARDCODED_EVENTS.map(e => {
