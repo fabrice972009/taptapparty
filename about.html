@@ -260,7 +260,8 @@
       <h3>Select Your Event</h3>
       <button class="ticket-modal-close" onclick="closeTicketModal()">✕</button>
     </div>
-    <div class="ticket-event-list" id="ticketEventList"></div>
+    <div class="ticket-event-list" id="ticketEventList">
+      <div class="ticket-modal-loading">Loading events...</div>
     </div>
   </div>
 </div>
@@ -735,6 +736,72 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
   }, 3000);
 }
 </script>
+<script>
+// HARDCODED events as fallback (Supabase will override)
+const HARDCODED_EVENTS = [
+  { name: 'TapTap London', city: 'London, UK', event_date: '2026-08-30', ticket_link: 'http://Taptaplondon.frontlineticketing.com' },
+  { name: 'TapTap New York', city: 'New York, NY', event_date: '2026-09-05', ticket_link: '' },
+  { name: 'TapTap Miami', city: 'Miami, FL', event_date: '2026-10-11', ticket_link: '' },
+  { name: 'TapTap Miami', city: 'Miami, FL', event_date: '2026-11-29', ticket_link: '' },
+  { name: 'TapTap Miami', city: 'Miami, FL', event_date: '2026-12-20', ticket_link: '' },
+];
 
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+async function openTicketModal() {
+  document.getElementById('ticketModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  const list = document.getElementById('ticketEventList');
+  list.innerHTML = '<div class="ticket-modal-loading">Loading events...</div>';
+
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    const { data: events } = await supa.from('events')
+      .select('*').gte('event_date', today).order('event_date', {ascending: true});
+
+    const items = (events?.length ? events : HARDCODED_EVENTS);
+
+    list.innerHTML = items.map(e => {
+      const d = new Date(e.event_date + 'T12:00:00');
+      const dateStr = `${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+      const link = e.ticket_link || 'http://Taptap.eventbrite.com';
+      return `<a class="ticket-event-item" href="${link}" target="_blank" rel="noopener" onclick="closeTicketModal()">
+        <div class="ticket-event-info">
+          <div class="t-name">${e.name}</div>
+          <div class="t-meta">
+            <span>📅 ${dateStr}</span>
+            <span>📍 ${e.city}</span>
+          </div>
+        </div>
+        <div class="ticket-event-arrow">→</div>
+      </a>`;
+    }).join('');
+  } catch(err) {
+    list.innerHTML = HARDCODED_EVENTS.map(e => {
+      const d = new Date(e.event_date + 'T12:00:00');
+      const dateStr = `${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+      return `<a class="ticket-event-item" href="${e.ticket_link}" target="_blank" rel="noopener" onclick="closeTicketModal()">
+        <div class="ticket-event-info">
+          <div class="t-name">${e.name}</div>
+          <div class="t-meta">
+            <span>📅 ${dateStr}</span>
+            <span>📍 ${e.city}</span>
+          </div>
+        </div>
+        <div class="ticket-event-arrow">→</div>
+      </a>`;
+    }).join('');
+  }
+}
+
+function closeTicketModal() {
+  document.getElementById('ticketModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Close on Escape key
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTicketModal(); });
+</script>
 </body>
 </html>
