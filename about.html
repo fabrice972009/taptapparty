@@ -229,7 +229,8 @@
       .footer-buy { color: #D42027 !important; font-weight: 600; }
       .fsep { color: rgba(255,255,255,0.2); font-size: 11px; }
       .footer-bottom { flex-direction: column; gap: 12px; text-align: center; align-items: center; }
-    }  </style>
+    }  /* TICKET SELECTOR MODAL */
+  </style>
   <meta property="og:image" content="https://taptapparty.vercel.app/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -252,6 +253,18 @@
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 </head>
 <body>
+<!-- TICKET SELECTOR MODAL -->
+<div class="ticket-modal-overlay" id="ticketModal" onclick="if(event.target===this)closeTicketModal()">
+  <div class="ticket-modal">
+    <div class="ticket-modal-header">
+      <h3>Select Your Event</h3>
+      <button class="ticket-modal-close" onclick="closeTicketModal()">✕</button>
+    </div>
+    <div class="ticket-event-list" id="ticketEventList">
+      <div class="ticket-modal-loading">Loading events...</div>
+    </div>
+  </div>
+</div>
 <!-- Smoke Background -->
 <canvas id="smokeCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
 <script>
@@ -343,7 +356,7 @@
     <li><a href="about.html" class="active">About</a></li>
     <li><a href="contact.html">Contact</a></li>
   </ul>
-  <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" class="nav-cta">Get Tickets</a>
+  <a href="#" onclick="event.preventDefault();openTicketModal()" class="nav-cta">Get Tickets</a>
   <button class="nav-hamburger" aria-label="Open menu" onclick="toggleMenu()">
     <span></span><span></span><span></span>
   </button>
@@ -722,6 +735,73 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
     }
   }, 3000);
 }
+</script>
+<script>
+// HARDCODED events as fallback (Supabase will override)
+const HARDCODED_EVENTS = [
+  { name: 'TapTap London', city: 'London, UK', event_date: '2026-08-30', ticket_link: 'http://Taptaplondon.frontlineticketing.com' },
+  { name: 'TapTap New York', city: 'New York, NY', event_date: '2026-09-05', ticket_link: '' },
+  { name: 'TapTap Miami', city: 'Miami, FL', event_date: '2026-10-11', ticket_link: '' },
+  { name: 'TapTap Miami', city: 'Miami, FL', event_date: '2026-11-29', ticket_link: '' },
+  { name: 'TapTap Miami', city: 'Miami, FL', event_date: '2026-12-20', ticket_link: '' },
+];
+
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+async function openTicketModal() {
+  document.getElementById('ticketModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  const list = document.getElementById('ticketEventList');
+  list.innerHTML = '<div class="ticket-modal-loading">Loading events...</div>';
+
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    const { data: events } = await supa.from('events')
+      .select('*').gte('event_date', today).order('event_date', {ascending: true});
+
+    const items = (events?.length ? events : HARDCODED_EVENTS);
+
+    list.innerHTML = items.map(e => {
+      const d = new Date(e.event_date + 'T12:00:00');
+      const dateStr = `${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+      const link = e.ticket_link || 'http://Taptap.eventbrite.com';
+      return `<a class="ticket-event-item" href="${link}" target="_blank" rel="noopener" onclick="closeTicketModal()">
+        <div class="ticket-event-info">
+          <div class="t-name">${e.name}</div>
+          <div class="t-meta">
+            <span>📅 ${dateStr}</span>
+            <span>📍 ${e.city}</span>
+          </div>
+        </div>
+        <div class="ticket-event-arrow">→</div>
+      </a>`;
+    }).join('');
+  } catch(err) {
+    list.innerHTML = HARDCODED_EVENTS.map(e => {
+      const d = new Date(e.event_date + 'T12:00:00');
+      const dateStr = `${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+      return `<a class="ticket-event-item" href="${e.ticket_link}" target="_blank" rel="noopener" onclick="closeTicketModal()">
+        <div class="ticket-event-info">
+          <div class="t-name">${e.name}</div>
+          <div class="t-meta">
+            <span>📅 ${dateStr}</span>
+            <span>📍 ${e.city}</span>
+          </div>
+        </div>
+        <div class="ticket-event-arrow">→</div>
+      </a>`;
+    }).join('');
+  }
+}
+
+function closeTicketModal() {
+  document.getElementById('ticketModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Close on Escape key
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTicketModal(); });
 </script>
 </body>
 </html>
