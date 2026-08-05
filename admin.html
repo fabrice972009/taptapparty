@@ -238,6 +238,7 @@
       <div class="nav-item" onclick="showPage('events')"><span class="nav-icon">📅</span> Events</div>
       <div class="nav-item" onclick="showPage('newsletter')"><span class="nav-icon">📧</span> Newsletter</div>
       <div class="nav-item" onclick="showPage('notifications')"><span class="nav-icon">🔔</span> Notifications</div>
+      <div class="nav-item" onclick="showPage('scheduled')"><span class="nav-icon">⏰</span> Scheduled</div>
     </nav>
     <div class="sidebar-footer">
       <button class="btn-logout" onclick="logout()">Sign Out</button>
@@ -381,6 +382,52 @@
       </div>
     </div>
 
+    <!-- SCHEDULED NOTIFICATIONS -->
+    <div class="page" id="pageScheduled">
+      <div class="page-title">Scheduled Notifications</div>
+      <div class="page-sub">Schedule notifications to send automatically at a specific date and time</div>
+
+      <div class="event-form">
+        <h3 style="font-size:14px;font-weight:600;margin-bottom:16px;">Schedule New Notification</h3>
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" id="schedTitle" placeholder="e.g. 🎟 Tickets are LIVE">
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <input type="text" id="schedBody" placeholder="e.g. Tap Tap London — Aug 30 at The Camden. Grab yours now!">
+        </div>
+        <div class="form-row2">
+          <div class="form-group">
+            <label>Date & Time</label>
+            <input type="datetime-local" id="schedTime">
+          </div>
+          <div class="form-group">
+            <label>Link</label>
+            <select id="schedQuickLink" onchange="applySchedLink(this.value)">
+              <option value="https://itstaptap.com">🏠 Home</option>
+              <option value="https://itstaptap.com/events.html">📅 Events</option>
+              <option value="http://Taptap.eventbrite.com">🎟 Buy Tickets</option>
+              <option value="https://itstaptap.com/community.html">👥 Community</option>
+              <option value="custom">✏️ Custom URL</option>
+            </select>
+            <input type="text" id="schedUrl" placeholder="Custom URL..." style="display:none;margin-top:8px;">
+          </div>
+        </div>
+        <button class="btn-add" onclick="scheduleNotification()">Schedule Notification ⏰</button>
+        <p id="schedResult" style="margin-top:12px;font-size:13px;"></p>
+      </div>
+
+      <div class="section-head" style="margin-top:32px;">
+        <h3>Upcoming</h3>
+        <button class="btn-export" onclick="loadScheduled()">Refresh</button>
+      </div>
+      <div id="scheduledList"><div class="empty-state">No scheduled notifications</div></div>
+
+      <div class="section-head" style="margin-top:32px;"><h3>Sent History</h3></div>
+      <div id="sentList"><div class="empty-state">No sent notifications yet</div></div>
+    </div>
+
     <!-- NEWSLETTER -->
     <div class="page" id="pageNewsletter">
       <div class="page-title">Newsletter Subscribers</div>
@@ -454,7 +501,7 @@
 
   // ── DATA ──
   async function loadAll() {
-    await Promise.all([loadPending(), loadApproved(), loadEvents(), loadNewsletter()]);
+    await Promise.all([loadPending(), loadApproved(), loadEvents(), loadNewsletter(), loadScheduled()]);
     await updateStats();
   }
 
@@ -652,6 +699,84 @@
     document.getElementById('notifUrl').value = url;
     document.getElementById('notifUrl').style.display = 'block';
     document.getElementById('notifQuickLink').value = '';
+  }
+
+  // ── SCHEDULED NOTIFICATIONS ──
+  function applySchedLink(val) {
+    const input = document.getElementById('schedUrl');
+    input.style.display = val === 'custom' ? 'block' : 'none';
+    if (val !== 'custom') input.value = '';
+  }
+
+  async function scheduleNotification() {
+    const title = document.getElementById('schedTitle').value.trim();
+    const body  = document.getElementById('schedBody').value.trim();
+    const time  = document.getElementById('schedTime').value;
+    const linkSel = document.getElementById('schedQuickLink').value;
+    const customUrl = document.getElementById('schedUrl').value.trim();
+    const url = linkSel === 'custom' ? customUrl : linkSel;
+    const result = document.getElementById('schedResult');
+
+    if (!title || !body || !time) { toast('Please fill in all fields', 'error'); return; }
+    if (new Date(time) <= new Date()) { toast('Please choose a future date and time', 'error'); return; }
+
+    const btn = document.querySelector('#pageScheduled .btn-add');
+    btn.textContent = 'Scheduling...'; btn.disabled = true;
+
+    const { error } = await supa.from('scheduled_notifications').insert([{
+      title, body, url: url || 'https://itstaptap.com',
+      scheduled_at: new Date(time).toISOString()
+    }]);
+
+    if (error) {
+      result.textContent = '❌ Failed to schedule.';
+      result.style.color = '#ff6b6b';
+    } else {
+      result.textContent = `✅ Scheduled for ${new Date(time).toLocaleString()}`;
+      result.style.color = 'var(--green)';
+      document.getElementById('schedTitle').value = '';
+      document.getElementById('schedBody').value = '';
+      document.getElementById('schedTime').value = '';
+      loadScheduled();
+    }
+    btn.textContent = 'Schedule Notification ⏰'; btn.disabled = false;
+  }
+
+  async function loadScheduled() {
+    const { data: upcoming } = await supa.from('scheduled_notifications')
+      .select('*').eq('sent', false).order('scheduled_at', {ascending: true});
+    const { data: sent } = await supa.from('scheduled_notifications')
+      .select('*').eq('sent', true).order('sent_at', {ascending: false}).limit(10);
+
+    const upEl = document.getElementById('scheduledList');
+    const sentEl = document.getElementById('sentList');
+
+    upEl.innerHTML = !upcoming?.length ? '<div class="empty-state">No scheduled notifications</div>' :
+      upcoming.map(n => `<div class="item-card">
+        <div class="item-info">
+          <div class="item-name">${n.title}</div>
+          <div class="item-meta">⏰ ${new Date(n.scheduled_at).toLocaleString()}</div>
+          <div class="item-text">${n.body}</div>
+        </div>
+        <div class="item-actions">
+          <button class="btn-remove" onclick="cancelScheduled('${n.id}')">Cancel</button>
+        </div>
+      </div>`).join('');
+
+    sentEl.innerHTML = !sent?.length ? '<div class="empty-state">No sent notifications yet</div>' :
+      sent.map(n => `<div class="item-card">
+        <div class="item-info">
+          <div class="item-name" style="color:var(--muted);">${n.title}</div>
+          <div class="item-meta">✅ Sent ${new Date(n.sent_at).toLocaleString()}</div>
+          <div class="item-text">${n.body}</div>
+        </div>
+      </div>`).join('');
+  }
+
+  async function cancelScheduled(id) {
+    await supa.from('scheduled_notifications').delete().eq('id', id);
+    loadScheduled();
+    toast('Notification cancelled', 'error');
   }
 
   // ── PUSH NOTIFICATIONS ──

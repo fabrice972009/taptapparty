@@ -91,7 +91,7 @@
 
     /* STATS ROW */
     .stats-row {
-      display: grid; grid-template-columns: repeat(4, 1fr);
+      display: grid; grid-template-columns: repeat(5, 1fr);
       gap: 0;
       border: 1px solid rgba(255,255,255,0.07);
       border-radius: 3px; overflow: hidden;
@@ -201,10 +201,11 @@
       .section { padding: 56px 20px; }
       .two-col { grid-template-columns: 1fr; gap: 32px; }
       .performers-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
-      .stats-row { grid-template-columns: 1fr 1fr; }
-      .stat-box:nth-child(2) { border-right: none; }
-      .stat-box:nth-child(3) { border-top: 1px solid rgba(255,255,255,0.07); }
+      .stats-row { grid-template-columns: 1fr 1fr 1fr; }
+      .stat-box:nth-child(3) { border-right: none; }
       .stat-box:nth-child(4) { border-top: 1px solid rgba(255,255,255,0.07); }
+      .stat-box:nth-child(5) { border-top: 1px solid rgba(255,255,255,0.07); }
+      .stat-box .num { font-size: 36px; }
       .team-grid { grid-template-columns: 1fr; }
       .bouyon-section { padding: 56px 20px; }
       .about-cta { padding: 56px 20px; }
