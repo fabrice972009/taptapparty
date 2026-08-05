@@ -90,22 +90,43 @@
     }
     .pull-quote em { color: var(--gold); font-style: normal; }
 
-    /* STATS ROW */
-    .stats-row {
-      display: grid; grid-template-columns: repeat(5, 1fr);
+    /* STATS ROW — matches index.html's about-stats-row for consistency */
+    .about-stats-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
       gap: 0;
       border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 3px; overflow: hidden;
+      border-radius: 2px;
+      overflow: hidden;
       margin-top: 48px;
     }
-    .stat-box {
-      padding: 32px 24px;
+    .stat-block {
+      padding: 18px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
       border-right: 1px solid rgba(255,255,255,0.07);
-      text-align: center;
+      background: rgba(255,255,255,0.02);
+      transition: background 0.2s;
     }
-    .stat-box:last-child { border-right: none; }
-    .stat-box .num { font-family: 'Anton', 'Bebas Neue', sans-serif; font-size: 52px; color: var(--gold); line-height: 1; }
-    .stat-box .lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; margin-top: 4px; }
+    .stat-block:last-child { border-right: none; }
+    .stat-block:hover { background: rgba(255,255,255,0.05); }
+    .stat-big {
+      font-family: 'Anton', 'Bebas Neue', sans-serif;
+      font-size: 36px;
+      color: var(--gold);
+      line-height: 1;
+      letter-spacing: 1px;
+    }
+    .stat-plus { font-size: 22px; color: var(--red); vertical-align: super; }
+    .stat-tag {
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+    }
 
     /* TEAM */
     .team-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 40px; }
@@ -202,11 +223,11 @@
       .section { padding: 56px 20px; }
       .two-col { grid-template-columns: 1fr; gap: 32px; }
       .performers-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
-      .stats-row { grid-template-columns: 1fr 1fr 1fr; }
-      .stat-box:nth-child(3) { border-right: none; }
-      .stat-box:nth-child(4) { border-top: 1px solid rgba(255,255,255,0.07); }
-      .stat-box:nth-child(5) { border-top: 1px solid rgba(255,255,255,0.07); }
-      .stat-box .num { font-size: 36px; }
+      .about-stats-row { grid-template-columns: 1fr 1fr; }
+      .stat-block:nth-child(2) { border-right: none; }
+      .stat-block:nth-child(3) { border-top: 1px solid rgba(255,255,255,0.07); }
+      .stat-block:nth-child(4) { border-top: 1px solid rgba(255,255,255,0.07); }
+      .stat-big { font-size: 28px; }
       .team-grid { grid-template-columns: 1fr; }
       .bouyon-section { padding: 56px 20px; }
       .about-cta { padding: 56px 20px; }
@@ -427,7 +448,7 @@
     <p class="section-eyebrow">How It Started</p>
     <div class="two-col">
       <div>
-        <h2 class="section-title">THE IDEA OF<br>THE <span>TAP TAP</span></h2>
+        <h2 class="section-title">THE IDEA OF<br><span>TAP TAP</span></h2>
         <div class="section-body">
           <p>
             It started with a phone call. DJ Bullet and his partner Jones got a call from Jason — who runs Shrine on Saturdays — about a growing wave of Haitians showing up every week looking for something that felt like home. The question became clear: why isn't there a party built for us?
@@ -446,12 +467,27 @@
       </div>
     </div>
 
-    <div class="stats-row">
-      <div class="stat-box"><div class="num">75K+</div><div class="lbl">Attendees</div></div>
-      <div class="stat-box"><div class="num">3+</div><div class="lbl">Years Running</div></div>
-      <div class="stat-box"><div class="num">50+</div><div class="lbl">Events</div></div>
-      <div class="stat-box"><div class="num">10+</div><div class="lbl">Cities</div></div>
-      <div class="stat-box"><div class="num">1</div><div class="lbl">🇭🇹 Culture</div></div>
+    <div class="about-stats-row">
+      <div class="stat-block">
+        <div class="stat-big">75K<span class="stat-plus">+</span></div>
+        <div class="stat-tag">Attendees</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-big">50<span class="stat-plus">+</span></div>
+        <div class="stat-tag">Events</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-big">10<span class="stat-plus">+</span></div>
+        <div class="stat-tag">Cities</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-big">3<span class="stat-plus">+</span></div>
+        <div class="stat-tag">Years</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-big">🇭🇹</div>
+        <div class="stat-tag">Culture</div>
+      </div>
     </div>
   </div>
 </section>

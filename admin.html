@@ -132,6 +132,51 @@
     .toast.show { opacity:1; }
     .toast.success { border-color:rgba(45,179,88,0.4); color:var(--green); }
     .toast.error { border-color:rgba(212,32,39,0.4); color:#ff6b6b; }
+
+    /* MOBILE TOP BAR (hidden on desktop) */
+    .mobile-topbar { display:none; }
+    .sidebar-overlay { display:none; }
+
+    /* MOBILE LAYOUT */
+    @media (max-width: 800px) {
+      .mobile-topbar {
+        display:flex; align-items:center; justify-content:space-between;
+        position:fixed; top:0; left:0; right:0; height:56px;
+        background:var(--surface); border-bottom:1px solid rgba(255,255,255,0.06);
+        padding:0 16px; z-index:150;
+      }
+      .mobile-topbar .brand { font-weight:700; font-size:14px; color:var(--gold); letter-spacing:1px; }
+      .hamburger-btn {
+        background:none; border:1px solid rgba(255,255,255,0.12); color:var(--white);
+        width:36px; height:36px; border-radius:2px; font-size:16px; cursor:pointer;
+        display:flex; align-items:center; justify-content:center;
+      }
+      .sidebar {
+        top:56px;
+        transform:translateX(-100%);
+        transition:transform 0.25s ease;
+        width:240px;
+        z-index:200;
+      }
+      .sidebar.open { transform:translateX(0); }
+      .sidebar-overlay.show {
+        display:block; position:fixed; top:56px; left:0; right:0; bottom:0;
+        background:rgba(0,0,0,0.5); z-index:190;
+      }
+      .main { margin-left:0; padding:76px 16px 32px; }
+      .stats-row { grid-template-columns:1fr 1fr; gap:10px; }
+      .form-row2 { grid-template-columns:1fr; gap:0; }
+      .form-group input, .form-group select, .form-group textarea, .field-input { font-size:16px; }
+      .event-row { flex-wrap:wrap; }
+      .event-thumb { width:40px !important; height:40px !important; }
+      .event-date { width:auto; order:1; }
+      .event-info { order:2; flex-basis:calc(100% - 60px); }
+      .event-actions { order:3; flex-basis:100%; margin-top:8px; }
+      .item-card { flex-direction:column; }
+      .item-actions { width:100%; }
+      .sub-row { flex-wrap:wrap; gap:6px; }
+      .section-head { flex-wrap:wrap; gap:10px; }
+    }
   </style>
 
   <!-- Supabase -->
@@ -231,7 +276,12 @@
 
 <!-- APP -->
 <div id="appScreen">
-  <div class="sidebar">
+  <div class="mobile-topbar">
+    <span class="brand">TAP TAP ADMIN</span>
+    <button class="hamburger-btn" onclick="toggleSidebar()" id="hamburgerBtn">☰</button>
+  </div>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+  <div class="sidebar" id="sidebar">
     <div class="sidebar-brand">
       <div class="sidebar-brand-name">TAP TAP</div>
       <div class="sidebar-brand-sub">Admin Panel</div>
@@ -513,6 +563,17 @@
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById('page' + name.charAt(0).toUpperCase() + name.slice(1)).classList.add('active');
     event.currentTarget.classList.add('active');
+    closeSidebar(); // on mobile, picking a page should close the off-canvas menu
+  }
+
+  // ── MOBILE SIDEBAR TOGGLE ──
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebarOverlay').classList.toggle('show');
+  }
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebarOverlay').classList.remove('show');
   }
 
   // ── DATA ──
@@ -622,13 +683,13 @@
     const el = document.getElementById('eventsList');
     if (!events?.length) { el.innerHTML = '<div class="empty-state">No events added yet</div>'; return; }
     el.innerHTML = events.map(e => `<div class="event-row">
-      ${e.flyer_url ? `<img src="${e.flyer_url}" style="width:48px;height:48px;object-fit:cover;border-radius:2px;flex-shrink:0;">` : '<div style="width:48px;height:48px;background:var(--surface2);border-radius:2px;flex-shrink:0;"></div>'}
+      ${e.flyer_url ? `<img class="event-thumb" src="${e.flyer_url}" style="width:48px;height:48px;object-fit:cover;border-radius:2px;flex-shrink:0;">` : '<div class="event-thumb" style="width:48px;height:48px;background:var(--surface2);border-radius:2px;flex-shrink:0;"></div>'}
       <div class="event-date">${e.event_date}</div>
-      <div style="flex:1;">
+      <div class="event-info" style="flex:1;">
         <div class="event-name">${e.name} ${e.is_next?'<span class="next-badge">NEXT UP</span>':''}</div>
         <div class="event-city">${e.venue?e.venue+' · ':''}${e.city}</div>
       </div>
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+      <div class="event-actions" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
         <button class="btn-edit" onclick="copyEventLink('${e.id}')">Copy Link</button>
         <button class="btn-edit" onclick="editEvent('${e.id}')">Edit</button>
         ${!e.is_next?`<button class="btn-setnext" onclick="setNext('${e.id}')">Set as Next Up</button>`:''}
