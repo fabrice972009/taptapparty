@@ -26,18 +26,18 @@
 
     /* NAV */
     nav {
-      position: fixed; top: 6px; left: 0; right: 0; z-index: 200;
-      background: rgba(8,8,8,0.82); padding: 0 48px; height: 64px;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      background: linear-gradient(180deg, rgba(8,8,8,0.92) 0%, rgba(8,8,8,0.78) 100%); padding: 0 48px; height: 64px;
       display: grid; grid-template-columns: auto 1fr auto; align-items: center;
       border-bottom: 1px solid rgba(255,255,255,0.05);
     }
     .nav-logo { text-decoration: none; }
     .nav-logo img { height: 40px; width: auto; display: block; mix-blend-mode: screen; }
     .nav-links { display: flex; gap: 32px; list-style: none; align-items: center; justify-content: center; }
-    .nav-links a { color: var(--muted); text-decoration: none; font-size: 12px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; transition: color 0.2s; }
-    .nav-links a:hover, .nav-links a.active { color: var(--white); }
-    .nav-cta { background: var(--red); color: var(--white); padding: 10px 22px; border-radius: 2px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; transition: opacity 0.2s; }
-    .nav-cta:hover { opacity: 0.85; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 12px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; transition: color 0.2s, border-color 0.2s; padding-bottom: 4px; border-bottom: 1px solid transparent; }
+    .nav-links a:hover, .nav-links a.active { color: var(--white); border-bottom-color: var(--gold); }
+    .nav-cta { background: transparent; color: var(--red); border: 1px solid var(--red); padding: 10px 22px; border-radius: 2px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; transition: background 0.2s, color 0.2s; }
+    .nav-cta:hover { background: var(--red); color: var(--white); }
     .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
     .nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--white); border-radius: 1px; transition: transform 0.2s, opacity 0.2s; }
     .nav-hamburger.is-open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
