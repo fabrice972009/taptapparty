@@ -25,7 +25,7 @@ function escapeHtml(str) {
     .replace(/'/g, '&#039;');
 }
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
   const id = (req.query && req.query.id) || '';
   const userAgent = (req.headers && req.headers['user-agent']) || '';
   const isBot = BOT_UA_REGEX.test(userAgent);
