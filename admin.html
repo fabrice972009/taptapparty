@@ -683,6 +683,35 @@
     document.getElementById('eventFormCancelBtn').style.display = 'none';
   }
 
+  // Resizes/compresses a flyer client-side before it ever reaches Supabase.
+  // Uploaded flyers are often full-resolution Instagram exports (several MB),
+  // which WhatsApp's link-preview crawler will silently give up on — it's
+  // far stricter about fetch time/size than Facebook or iMessage. Capping
+  // the long side at 1350px and re-encoding as JPEG keeps files comfortably
+  // small without any visible quality loss for a flyer image. Animated GIFs
+  // are left untouched so we don't flatten them to a single frame.
+  function compressImage(file, maxDim = 1350, quality = 0.82) {
+    if (file.type === 'image/gif') return Promise.resolve(file);
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        let { width, height } = img;
+        if (width > maxDim || height > maxDim) {
+          if (width > height) { height = Math.round(height * (maxDim / width)); width = maxDim; }
+          else { width = Math.round(width * (maxDim / height)); height = maxDim; }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width; canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+        canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('Compression produced no image')), 'image/jpeg', quality);
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Could not load image for compression')); };
+      img.src = url;
+    });
+  }
+
   function previewFlyer(input) {
     const file = input.files[0]; if (!file) return;
     const reader = new FileReader();
@@ -711,9 +740,16 @@
     let flyer_url = existing ? (existing.flyer_url || null) : null;
     let flyerError = null;
     if (flyerFile) {
-      const ext = flyerFile.name.split('.').pop();
-      const fn  = `flyer_${Date.now()}.${ext}`;
-      const { error: upErr } = await supa.storage.from('community-photos').upload(fn, flyerFile);
+      let uploadBlob = flyerFile;
+      let ext = flyerFile.name.split('.').pop();
+      try {
+        uploadBlob = await compressImage(flyerFile);
+        if (uploadBlob !== flyerFile) ext = 'jpg'; // re-encoded to JPEG (GIFs pass through unchanged)
+      } catch (compressErr) {
+        console.error('Flyer compression failed, uploading original file instead:', compressErr);
+      }
+      const fn = `flyer_${Date.now()}.${ext}`;
+      const { error: upErr } = await supa.storage.from('community-photos').upload(fn, uploadBlob, { contentType: uploadBlob.type || flyerFile.type });
       if (!upErr) {
         const { data } = supa.storage.from('community-photos').getPublicUrl(fn);
         flyer_url = data.publicUrl;
