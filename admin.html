@@ -624,12 +624,22 @@
         <div class="event-name">${e.name} ${e.is_next?'<span class="next-badge">NEXT UP</span>':''}</div>
         <div class="event-city">${e.venue?e.venue+' · ':''}${e.city}</div>
       </div>
-      <div style="display:flex;gap:8px;align-items:center;">
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <button class="btn-edit" onclick="copyEventLink('${e.id}')">Copy Link</button>
         <button class="btn-edit" onclick="editEvent('${e.id}')">Edit</button>
         ${!e.is_next?`<button class="btn-setnext" onclick="setNext('${e.id}')">Set as Next Up</button>`:''}
         <button class="btn-remove" onclick="removeEvent('${e.id}')">Remove</button>
       </div>
     </div>`).join('');
+  }
+
+  function copyEventLink(id) {
+    const url = `${window.location.origin}/e/${id}`;
+    navigator.clipboard.writeText(url).then(() => {
+      toast('Event link copied ✓','success');
+    }).catch(() => {
+      toast(url, 'success');
+    });
   }
 
   function editEvent(id) {
