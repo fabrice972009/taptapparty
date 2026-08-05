@@ -1139,11 +1139,10 @@
   // ── AUTO NEXT EVENT from Supabase ──
   (async function() {
     try {
-      const events = JSON.parse(localStorage.getItem('tt_events') || '[]');
-      if (!events.length) return;
-      const today = new Date(); today.setHours(0,0,0,0);
-      const future = events.filter(e => new Date(e.event_date + 'T12:00:00') >= today).sort((a,b) => new Date(a.event_date + 'T12:00:00') - new Date(b.event_date + 'T12:00:00'));
-      if (!future.length) return;
+      const todayStr = new Date().toISOString().split('T')[0];
+      const { data: future } = await supa.from('events')
+        .select('*').gte('event_date', todayStr).order('event_date', {ascending: true});
+      if (!future?.length) return;
 
       const next = future[0];
       const d = new Date(next.event_date + 'T12:00:00');
