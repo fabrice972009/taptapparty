@@ -25,6 +25,45 @@ function escapeHtml(str) {
     .replace(/'/g, '&#039;');
 }
 
+// WhatsApp (unlike Facebook/iMessage) often refuses to render a link preview
+// image unless og:image:width and og:image:height are present. We don't store
+// dimensions in Supabase, so this reads just the image file's header bytes
+// (not the whole file) and parses them out directly — no image libraries
+// needed. Falls back to a sensible flyer-shaped default if parsing fails.
+async function getImageDimensions(url) {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 3000);
+    const resp = await fetch(url, {
+      headers: { Range: 'bytes=0-65535' },
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
+    const buf = Buffer.from(await resp.arrayBuffer());
+
+    // PNG: 8-byte signature, then IHDR chunk holds width/height at fixed offsets.
+    if (buf.length > 24 && buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4E && buf[3] === 0x47) {
+      return { width: buf.readUInt32BE(16), height: buf.readUInt32BE(20), type: 'image/png' };
+    }
+
+    // JPEG: scan markers for the SOF segment that carries dimensions.
+    if (buf.length > 4 && buf[0] === 0xFF && buf[1] === 0xD8) {
+      let offset = 2;
+      while (offset < buf.length - 9) {
+        if (buf[offset] !== 0xFF) { offset++; continue; }
+        const marker = buf[offset + 1];
+        if (marker >= 0xC0 && marker <= 0xCF && marker !== 0xC4 && marker !== 0xC8 && marker !== 0xCC) {
+          return { height: buf.readUInt16BE(offset + 5), width: buf.readUInt16BE(offset + 7), type: 'image/jpeg' };
+        }
+        offset += 2 + buf.readUInt16BE(offset + 2);
+      }
+    }
+  } catch (e) {
+    // Network hiccup, timeout, or unsupported format — caller falls back.
+  }
+  return null;
+}
+
 export default async (req, res) => {
   const id = (req.query && req.query.id) || '';
   const userAgent = (req.headers && req.headers['user-agent']) || '';
@@ -77,6 +116,24 @@ export default async (req, res) => {
   const image = event.flyer_url || 'https://taptapparty.vercel.app/og-image.png';
   const canonicalUrl = `https://www.itstaptap.com${destination}`;
 
+  // WhatsApp needs width/height to reliably show the image. If there's no
+  // custom flyer, we already know the default og-image.png is 1200x630.
+  let imgWidth = 1200, imgHeight = 630, imgType = 'image/png';
+  if (event.flyer_url) {
+    const dims = await getImageDimensions(image);
+    if (dims) {
+      imgWidth = dims.width;
+      imgHeight = dims.height;
+      imgType = dims.type;
+    } else {
+      // Couldn't read the real file header in time — fall back to a
+      // typical portrait flyer ratio rather than the wrong 1200x630 default.
+      imgWidth = 1080;
+      imgHeight = 1350;
+      imgType = 'image/jpeg';
+    }
+  }
+
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -87,6 +144,10 @@ export default async (req, res) => {
 <meta property="og:title" content="${escapeHtml(title)}">
 <meta property="og:description" content="${escapeHtml(description)}">
 <meta property="og:image" content="${escapeHtml(image)}">
+<meta property="og:image:secure_url" content="${escapeHtml(image)}">
+<meta property="og:image:width" content="${imgWidth}">
+<meta property="og:image:height" content="${imgHeight}">
+<meta property="og:image:type" content="${imgType}">
 <meta property="og:url" content="${escapeHtml(canonicalUrl)}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${escapeHtml(title)}">
