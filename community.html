@@ -221,6 +221,46 @@
       .fsep { color: rgba(255,255,255,0.2); font-size: 11px; }
       .footer-bottom { flex-direction: column; gap: 12px; text-align: center; align-items: center; }
     }  /* TICKET SELECTOR MODAL */
+  .ticket-modal-overlay {
+    position: fixed; inset: 0; z-index: 9000;
+    background: rgba(8,8,8,0.85); backdrop-filter: blur(4px);
+    display: none; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .ticket-modal-overlay.open { display: flex; }
+  .ticket-modal {
+    background: #111; border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 4px; width: 100%; max-width: 480px;
+    overflow: hidden;
+  }
+  .ticket-modal-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .ticket-modal-header h3 {
+    font-family: 'Anton','Bebas Neue',sans-serif;
+    font-size: 22px; letter-spacing: 0.05em; text-transform: uppercase;
+  }
+  .ticket-modal-close {
+    background: none; border: none; color: var(--muted);
+    font-size: 22px; cursor: pointer; padding: 4px 8px; line-height: 1;
+  }
+  .ticket-modal-close:hover { color: var(--white); }
+  .ticket-event-list { padding: 8px 0; }
+  .ticket-event-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 24px; cursor: pointer;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: background 0.15s; text-decoration: none; color: var(--white);
+  }
+  .ticket-event-item:last-child { border-bottom: none; }
+  .ticket-event-item:hover { background: rgba(255,255,255,0.04); }
+  .ticket-event-info .t-name { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .ticket-event-info .t-meta { font-size: 12px; color: var(--muted); display: flex; gap: 10px; }
+  .ticket-event-info .t-meta span { display: flex; align-items: center; gap: 4px; }
+  .ticket-event-arrow { color: var(--red); font-size: 18px; flex-shrink: 0; }
+  .ticket-modal-loading { padding: 32px; text-align: center; color: var(--muted); font-size: 14px; }
   </style>
   <meta property="og:image" content="https://taptapparty.vercel.app/og-image.png">
   <meta property="og:image:width" content="1200">
