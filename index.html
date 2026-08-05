@@ -629,9 +629,7 @@
       <h3>Select Your Event</h3>
       <button class="ticket-modal-close" onclick="closeTicketModal()">✕</button>
     </div>
-    <div class="ticket-event-list" id="ticketEventList">
-      <div class="ticket-modal-loading">Loading events...</div>
-    </div>
+    <div class="ticket-event-list" id="ticketEventList"></div>
   </div>
 </div>
 <!-- Smoke Background -->
@@ -815,8 +813,7 @@
 
       <!-- Featured Flyer -->
       <div class="next-event-img" id="nextFlyer" style="position:relative;">
-        <img src="og-image.png" alt="Tap Tap event flyer" id="nextFlyerImg">
-        <div class="coming-soon-tag" style="position:absolute;bottom:0;left:0;right:0;background:rgba(8,8,8,0.75);color:rgba(240,237,230,0.7);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-align:center;padding:10px;">More Details Coming Soon</div>
+        <img src="flyer-london.jpg" alt="TapTap London Aug 30" id="nextFlyerImg" style="width:100%;height:100%;object-fit:contain;display:block;">
       </div>
 
       <!-- Featured Info Middle -->
@@ -1055,58 +1052,34 @@
   // ── AUTO NEXT EVENT from Supabase ──
   (async function() {
     try {
-      const events = JSON.parse(localStorage.getItem('tt_events') || '[]');
-      if (!events.length) return;
-      const today = new Date(); today.setHours(0,0,0,0);
-      const future = events.filter(e => new Date(e.date + 'T12:00:00') >= today).sort((a,b) => new Date(a.date + 'T12:00:00') - new Date(b.date + 'T12:00:00'));
-      if (!future.length) return;
-
+      const today = new Date().toISOString().split('T')[0];
+      const { data: future } = await supa.from('events').select('*').gte('event_date', today).order('event_date', {ascending: true});
+      if (!future?.length) return;
       const next = future[0];
-      const d = new Date(next.date + 'T12:00:00');
+      const d = new Date(next.event_date + 'T12:00:00');
       const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
       const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
       const fullMonths = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-      // Update flyer
       const flyerImg = document.getElementById('nextFlyerImg');
       const flyerWrap = document.getElementById('nextFlyer');
       if (next.flyer_url) {
         flyerImg.src = next.flyer_url;
-        flyerImg.style.opacity = '1';
-        flyerImg.alt = next.name;
-        const tag = flyerWrap.querySelector('.coming-soon-tag');
-        if (tag) tag.remove();
-      } else {
-        flyerImg.src = 'og-image.png';
-        flyerImg.style.opacity = '1';
-        flyerImg.alt = next.name;
-        if (!flyerWrap.querySelector('.coming-soon-tag')) {
-          const tag = document.createElement('div');
-          tag.className = 'coming-soon-tag';
-          tag.style.cssText = 'position:absolute;bottom:0;left:0;right:0;background:rgba(8,8,8,0.75);color:rgba(240,237,230,0.7);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-align:center;padding:10px;';
-          tag.textContent = 'More Details Coming Soon';
-          flyerWrap.style.position = 'relative';
-          flyerWrap.appendChild(tag);
-        }
+        flyerImg.style.cssText = 'width:100%;height:100%;object-fit:contain;display:block;';
       }
 
-      // Update date line
       document.getElementById('nextDateLine').textContent = `${days[d.getDay()]}, ${fullMonths[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
-
-      // Update name
-      document.getElementById('nextName').textContent = next.name;
-
-      // Update details
-      document.getElementById('nextDetails').innerHTML = `
-        ${next.venue ? `<div class="event-detail-row"><span class="dot"></span>${next.venue}${next.city ? ', ' + next.city : ''}</div>` : ''}
-        <div class="event-detail-row"><span class="dot"></span>DJ Bullet & Friends</div>
-      `;
-
-      // Update ticket link
+      document.getElementById('nextName').innerHTML = `<a href="${next.ticket_link||'#'}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:2px solid var(--red);">${next.name}</a>`;
+      if (next.venue && next.venue !== 'TBA') {
+        document.getElementById('nextDetails').innerHTML = `
+          <div class="event-detail-row"><span class="dot"></span>${next.venue}, ${next.city}</div>
+          <div class="event-detail-row"><span class="dot"></span>DJ Bullet & Friends</div>
+          <div class="event-detail-row"><span class="dot"></span>Doors open at 9 PM</div>
+        `;
+      }
       if (next.ticket_link) document.getElementById('nextTicketBtn').href = next.ticket_link;
 
-      // Update sidebar with next 3 after the featured
-      const sidebar = events.slice(1, 4);
+      const sidebar = future.slice(1, 4);
       if (sidebar.length) {
         document.getElementById('sidebarEvents').innerHTML = sidebar.map(e => {
           const sd = new Date(e.event_date + 'T12:00:00');
@@ -1122,7 +1095,7 @@
           </div>`;
         }).join('');
       }
-    } catch(e) {}
+    } catch(e) { console.log('next event error', e); }
   })();
 
   function getApprovedPhotos() {
@@ -1469,6 +1442,8 @@
 })();
 </script>
 
+
+
 <script>
 const HARDCODED_EVENTS = [
   { name: 'TapTap London', city: 'London, UK', event_date: '2026-08-30', ticket_link: 'http://Taptaplondon.frontlineticketing.com' },
@@ -1483,10 +1458,9 @@ function renderTicketItems(items) {
   return items.map(e => {
     const d = new Date(e.event_date + 'T12:00:00');
     const dateStr = `${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
-    const link = e.ticket_link || '';
-    const isLive = link.length > 0;
+    const isLive = e.ticket_link && e.ticket_link.length > 0;
     if (isLive) {
-      return `<a class="ticket-event-item" href="${link}" target="_blank" rel="noopener" onclick="closeTicketModal()">
+      return `<a class="ticket-event-item" href="${e.ticket_link}" target="_blank" rel="noopener" onclick="closeTicketModal()">
         <div class="ticket-event-info">
           <div class="t-name">${e.name}</div>
           <div class="t-meta"><span>📅 ${dateStr}</span><span>📍 ${e.city}</span></div>
