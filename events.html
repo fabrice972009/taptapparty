@@ -566,22 +566,30 @@
         const tag = fw.querySelector('.coming-soon-tag');
         if (tag) tag.remove();
       }
-      // If no flyer_url, keep whatever is hardcoded in the HTML (flyer-london.jpg)
-      // Only update if Supabase has real venue data (not TBA)
-      if (next.venue && next.venue !== 'TBA') {
-        document.getElementById('evtFeatDate').textContent = `${days[d.getDay()]}, ${fullMonths[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
-        document.getElementById('evtFeatName').innerHTML = next.ticket_link
-          ? `<a href="${next.ticket_link}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:2px solid var(--red);">${next.name}</a>`
-          : `<a href="#" onclick="event.preventDefault();openTicketModal()" style="color:inherit;text-decoration:none;border-bottom:2px solid var(--red);">${next.name}</a>`;
-        const venueLine = next.address ? `${next.venue} — ${next.address}` : `${next.venue}, ${next.city}`;
+      // Update date, name, and ticket link unconditionally — these should always
+      // reflect the real next event, even if venue/address aren't filled in yet.
+      document.getElementById('evtFeatDate').textContent = `${days[d.getDay()]}, ${fullMonths[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+      document.getElementById('evtFeatName').innerHTML = next.ticket_link
+        ? `<a href="${next.ticket_link}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:2px solid var(--red);">${next.name}</a>`
+        : `<a href="#" onclick="event.preventDefault();openTicketModal()" style="color:inherit;text-decoration:none;border-bottom:2px solid var(--red);">${next.name}</a>`;
+
+      let venueLine = '';
+      if (next.venue && next.venue !== 'TBA' && next.address) {
+        venueLine = `${next.venue} — ${next.address}`;
+      } else if (next.venue && next.venue !== 'TBA') {
+        venueLine = `${next.venue}${next.city ? ', ' + next.city : ''}`;
+      } else if (next.city) {
+        venueLine = next.city;
+      }
+      if (venueLine) {
         document.getElementById('evtFeatDetails').innerHTML = `
           <div class="event-detail-row"><span class="dot"></span>${venueLine}</div>
           <div class="event-detail-row"><span class="dot"></span>DJ Bullet & Friends</div>
           <div class="event-detail-row"><span class="dot"></span>Doors open at 9 PM</div>
         `;
-        if (next.ticket_link) document.getElementById('evtFeatTicket').href = next.ticket_link;
       }
-    } catch(e) {}
+      if (next.ticket_link) document.getElementById('evtFeatTicket').href = next.ticket_link;
+    } catch(e) { console.error('Next event update error:', e); }
   })();
 </script>
 

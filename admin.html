@@ -115,6 +115,10 @@
     .event-city { font-size:12px; color:var(--muted); }
     .btn-setnext { background:none; border:1px solid rgba(245,197,24,0.3); color:var(--gold); padding:5px 10px; font-size:11px; cursor:pointer; border-radius:2px; font-family:'Inter','DM Sans',sans-serif; }
     .btn-setnext:hover { background:rgba(245,197,24,0.1); }
+    .btn-edit { background:none; border:1px solid rgba(74,158,255,0.3); color:#4a9eff; padding:5px 10px; font-size:11px; cursor:pointer; border-radius:2px; font-family:'Inter','DM Sans',sans-serif; }
+    .btn-edit:hover { background:rgba(74,158,255,0.1); }
+    .btn-cancel { background:none; border:1px solid rgba(255,255,255,0.15); color:var(--muted); padding:10px 24px; font-size:12px; font-weight:600; letter-spacing:1px; cursor:pointer; border-radius:2px; font-family:'Inter','DM Sans',sans-serif; transition:all 0.2s; }
+    .btn-cancel:hover { border-color:var(--white); color:var(--white); }
 
     /* NEWSLETTER */
     .sub-row { background:var(--surface); border:1px solid rgba(255,255,255,0.06); border-radius:3px; padding:12px 20px; margin-bottom:6px; display:flex; align-items:center; justify-content:space-between; }
@@ -300,7 +304,7 @@
       <div class="page-sub">Add, edit, or remove events. Set the Next Up event on the landing page.</div>
 
       <div class="event-form">
-        <h3 style="font-size:14px;font-weight:600;margin-bottom:16px;">Add New Event</h3>
+        <h3 id="eventFormTitle" style="font-size:14px;font-weight:600;margin-bottom:16px;">Add New Event</h3>
         <div class="form-row2">
           <div class="form-group">
             <label>Event Name</label>
@@ -337,7 +341,10 @@
           <input type="file" id="evtFlyer" accept="image/*" style="display:none" onchange="previewFlyer(this)">
           <img id="flyerPreview" src="" alt="Flyer preview" style="display:none;width:100%;max-height:200px;object-fit:contain;margin-top:10px;border-radius:2px;border:1px solid rgba(255,255,255,0.08);">
         </div>
-        <button class="btn-add" onclick="addEvent()">Add Event</button>
+        <div style="display:flex;gap:10px;">
+          <button class="btn-add" id="eventFormSubmitBtn" onclick="saveEvent()">Add Event</button>
+          <button class="btn-cancel" id="eventFormCancelBtn" onclick="cancelEditEvent()" style="display:none;">Cancel</button>
+        </div>
       </div>
 
       <div class="section-head"><h3>All Events</h3></div>
@@ -602,8 +609,12 @@
   async function removeApprovedReview(id) { await supa.from('community_reviews').delete().eq('id',id); loadAll(); toast('Review removed','error'); }
 
   // ── EVENTS ──
+  let editingEventId = null;
+  let cachedEvents = [];
+
   async function loadEvents() {
     const { data: events } = await supa.from('events').select('*').order('event_date',{ascending:true});
+    cachedEvents = events || [];
     const el = document.getElementById('eventsList');
     if (!events?.length) { el.innerHTML = '<div class="empty-state">No events added yet</div>'; return; }
     el.innerHTML = events.map(e => `<div class="event-row">
@@ -614,10 +625,47 @@
         <div class="event-city">${e.venue?e.venue+' · ':''}${e.city}</div>
       </div>
       <div style="display:flex;gap:8px;align-items:center;">
+        <button class="btn-edit" onclick="editEvent('${e.id}')">Edit</button>
         ${!e.is_next?`<button class="btn-setnext" onclick="setNext('${e.id}')">Set as Next Up</button>`:''}
         <button class="btn-remove" onclick="removeEvent('${e.id}')">Remove</button>
       </div>
     </div>`).join('');
+  }
+
+  function editEvent(id) {
+    const e = cachedEvents.find(ev => String(ev.id) === String(id));
+    if (!e) return;
+    editingEventId = id;
+    document.getElementById('evtName').value = e.name || '';
+    document.getElementById('evtCity').value = e.city || '';
+    document.getElementById('evtDate').value = e.event_date || '';
+    document.getElementById('evtVenue').value = e.venue || '';
+    document.getElementById('evtAddress').value = e.address || '';
+    document.getElementById('evtLink').value = (e.ticket_link && e.ticket_link !== 'http://Taptap.eventbrite.com') ? e.ticket_link : '';
+    document.getElementById('evtFlyer').value = '';
+    if (e.flyer_url) {
+      document.getElementById('flyerPreview').src = e.flyer_url;
+      document.getElementById('flyerPreview').style.display = 'block';
+      document.getElementById('flyerUploadBox').textContent = '📸 Click to replace flyer (optional)';
+    } else {
+      document.getElementById('flyerPreview').style.display = 'none';
+      document.getElementById('flyerUploadBox').textContent = '📸 Click to upload flyer';
+    }
+    document.getElementById('eventFormTitle').textContent = 'Edit Event';
+    document.getElementById('eventFormSubmitBtn').textContent = 'Update Event';
+    document.getElementById('eventFormCancelBtn').style.display = 'inline-block';
+    document.querySelector('.event-form').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function cancelEditEvent() {
+    editingEventId = null;
+    ['evtName','evtCity','evtDate','evtVenue','evtAddress','evtLink'].forEach(id => document.getElementById(id).value='');
+    document.getElementById('evtFlyer').value='';
+    document.getElementById('flyerPreview').style.display='none';
+    document.getElementById('flyerUploadBox').textContent='📸 Click to upload flyer';
+    document.getElementById('eventFormTitle').textContent = 'Add New Event';
+    document.getElementById('eventFormSubmitBtn').textContent = 'Add Event';
+    document.getElementById('eventFormCancelBtn').style.display = 'none';
   }
 
   function previewFlyer(input) {
@@ -631,7 +679,7 @@
     reader.readAsDataURL(file);
   }
 
-  async function addEvent() {
+  async function saveEvent() {
     const name  = document.getElementById('evtName').value.trim();
     const city  = document.getElementById('evtCity').value.trim();
     const date  = document.getElementById('evtDate').value;
@@ -641,7 +689,10 @@
     const flyerFile = document.getElementById('evtFlyer').files[0];
     if (!name || !city || !date) { toast('Please fill in name, city and date','error'); return; }
 
-    let flyer_url = null;
+    const isEditing = !!editingEventId;
+    const existing = isEditing ? cachedEvents.find(ev => String(ev.id) === String(editingEventId)) : null;
+
+    let flyer_url = existing ? (existing.flyer_url || null) : null;
     let flyerError = null;
     if (flyerFile) {
       const ext = flyerFile.name.split('.').pop();
@@ -656,16 +707,20 @@
       }
     }
 
-    await supa.from('events').insert([{ name, city, event_date: date, venue, address, ticket_link: link||'http://Taptap.eventbrite.com', flyer_url, is_next: false }]);
-    ['evtName','evtCity','evtDate','evtVenue','evtAddress','evtLink'].forEach(id => document.getElementById(id).value='');
-    document.getElementById('evtFlyer').value='';
-    document.getElementById('flyerPreview').style.display='none';
-    document.getElementById('flyerUploadBox').textContent='📸 Click to upload flyer';
+    const payload = { name, city, event_date: date, venue, address, ticket_link: link||'http://Taptap.eventbrite.com', flyer_url };
+
+    if (isEditing) {
+      await supa.from('events').update(payload).eq('id', editingEventId);
+    } else {
+      await supa.from('events').insert([{ ...payload, is_next: false }]);
+    }
+
+    cancelEditEvent();
     loadAll();
     if (flyerError) {
-      toast(`Event added, but flyer upload failed: ${flyerError}`, 'error');
+      toast(`Event ${isEditing ? 'updated' : 'added'}, but flyer upload failed: ${flyerError}`, 'error');
     } else {
-      toast('Event added ✓','success');
+      toast(`Event ${isEditing ? 'updated' : 'added'} ✓`,'success');
     }
   }
 

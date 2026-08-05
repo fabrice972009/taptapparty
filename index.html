@@ -1163,13 +1163,22 @@
         if (tag) tag.remove();
       }
 
-      // Update date, name, details if Supabase has real venue data
+      // Update date, name, and ticket link unconditionally — these should always
+      // reflect the real next event, even if venue/address aren't filled in yet.
       document.getElementById('nextDateLine').textContent = `${days[d.getDay()]}, ${fullMonths[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
       document.getElementById('nextName').innerHTML = next.ticket_link
         ? `<a href="${next.ticket_link}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:2px solid var(--red);">${next.name}</a>`
         : `<a href="#" onclick="event.preventDefault();openTicketModal()" style="color:inherit;text-decoration:none;border-bottom:2px solid var(--red);">${next.name}</a>`;
-      if (next.venue && next.venue !== 'TBA') {
-        const venueLine = next.address ? `${next.venue} — ${next.address}` : `${next.venue}, ${next.city}`;
+
+      let venueLine = '';
+      if (next.venue && next.venue !== 'TBA' && next.address) {
+        venueLine = `${next.venue} — ${next.address}`;
+      } else if (next.venue && next.venue !== 'TBA') {
+        venueLine = `${next.venue}${next.city ? ', ' + next.city : ''}`;
+      } else if (next.city) {
+        venueLine = next.city;
+      }
+      if (venueLine) {
         document.getElementById('nextDetails').innerHTML = `
           <div class="event-detail-row"><span class="dot"></span>${venueLine}</div>
           <div class="event-detail-row"><span class="dot"></span>DJ Bullet & Friends</div>
