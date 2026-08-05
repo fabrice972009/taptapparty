@@ -322,6 +322,10 @@
           </div>
         </div>
         <div class="form-group">
+          <label>Street Address</label>
+          <input type="text" id="evtAddress" placeholder="e.g. 1770 NE 87th St, Miami, FL 33138">
+        </div>
+        <div class="form-group">
           <label>Ticket Link</label>
           <input type="text" id="evtLink" placeholder="http://Taptap.eventbrite.com">
         </div>
@@ -632,6 +636,7 @@
     const city  = document.getElementById('evtCity').value.trim();
     const date  = document.getElementById('evtDate').value;
     const venue = document.getElementById('evtVenue').value.trim();
+    const address = document.getElementById('evtAddress').value.trim();
     const link  = document.getElementById('evtLink').value.trim();
     const flyerFile = document.getElementById('evtFlyer').files[0];
     if (!name || !city || !date) { toast('Please fill in name, city and date','error'); return; }
@@ -651,8 +656,8 @@
       }
     }
 
-    await supa.from('events').insert([{ name, city, event_date: date, venue, ticket_link: link||'http://Taptap.eventbrite.com', flyer_url, is_next: false }]);
-    ['evtName','evtCity','evtDate','evtVenue','evtLink'].forEach(id => document.getElementById(id).value='');
+    await supa.from('events').insert([{ name, city, event_date: date, venue, address, ticket_link: link||'http://Taptap.eventbrite.com', flyer_url, is_next: false }]);
+    ['evtName','evtCity','evtDate','evtVenue','evtAddress','evtLink'].forEach(id => document.getElementById(id).value='');
     document.getElementById('evtFlyer').value='';
     document.getElementById('flyerPreview').style.display='none';
     document.getElementById('flyerUploadBox').textContent='📸 Click to upload flyer';

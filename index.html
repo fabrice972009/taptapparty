@@ -446,6 +446,7 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 800px) {
+      #splashImg { max-width: 82% !important; max-height: 82% !important; }
       nav { padding: 0 20px; height: 56px; top: 6px; display: flex !important; justify-content: space-between; align-items: center; }
       .nav-logo img { height: 32px; }
       .nav-links { display: none; }
@@ -1168,8 +1169,9 @@
         ? `<a href="${next.ticket_link}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:2px solid var(--red);">${next.name}</a>`
         : `<a href="#" onclick="event.preventDefault();openTicketModal()" style="color:inherit;text-decoration:none;border-bottom:2px solid var(--red);">${next.name}</a>`;
       if (next.venue && next.venue !== 'TBA') {
+        const venueLine = next.address ? `${next.venue} — ${next.address}` : `${next.venue}, ${next.city}`;
         document.getElementById('nextDetails').innerHTML = `
-          <div class="event-detail-row"><span class="dot"></span>${next.venue}, ${next.city}</div>
+          <div class="event-detail-row"><span class="dot"></span>${venueLine}</div>
           <div class="event-detail-row"><span class="dot"></span>DJ Bullet & Friends</div>
           <div class="event-detail-row"><span class="dot"></span>Doors open at 9 PM</div>
         `;
