@@ -554,11 +554,58 @@
   </div>
 </section>
 
+<!-- Full event overview (pricing, RSVP, table rules, etc.) -->
+<div id="eventOverviewWrap" style="display:none; max-width:1000px; margin:0 auto; padding:0 48px 60px;">
+  <div style="border-top:1px solid rgba(255,255,255,0.08); padding-top:36px;">
+    <p class="section-eyebrow" style="margin-bottom:16px;">Event Overview</p>
+    <div id="eventOverview" style="font-size:14px; line-height:1.9; color:rgba(240,237,230,0.75); max-width:720px;"></div>
+  </div>
+</div>
+
 <div style="text-align:center; padding:8px 20px 80px;">
   <a href="events.html" style="color:var(--muted); font-size:13px; letter-spacing:1px; text-decoration:none; border-bottom:1px solid rgba(255,255,255,0.15); padding-bottom:2px;">View All Events →</a>
 </div>
 
 <script>
+  // Turns a pasted Eventbrite-style description into safe, formatted HTML:
+  // preserves line breaks, converts [text](url) links and bare phone numbers
+  // into clickable links, and renders lines starting with "*" as bullet rows
+  // matching the rest of the site's style.
+  function formatOverview(text) {
+    let escaped = String(text)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+
+    escaped = escaped.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
+      '<a href="$2" target="_blank" rel="noopener" style="color:var(--gold);">$1</a>');
+
+    escaped = escaped.replace(/(\(?\b\d{3}\)?[-.\s]\d{3}[-.\s]\d{4}\b)/g, (m) =>
+      `<a href="tel:${m.replace(/[^\d]/g, '')}" style="color:inherit;text-decoration:underline;">${m}</a>`);
+
+    const lines = escaped.split('\n');
+    let html = '';
+    let inParagraph = false;
+    const closeParagraph = () => { if (inParagraph) { html += '</p>'; inParagraph = false; } };
+
+    lines.forEach(line => {
+      const trimmed = line.trim();
+      if (!trimmed) {
+        closeParagraph();
+        html += '<div style="height:10px;"></div>';
+      } else if (/^\*\s*/.test(trimmed)) {
+        closeParagraph();
+        html += `<div class="event-detail-row"><span class="dot"></span>${trimmed.replace(/^\*\s*/, '')}</div>`;
+      } else {
+        if (!inParagraph) { html += '<p style="margin:0 0 4px;">'; inParagraph = true; }
+        else { html += '<br>'; }
+        html += trimmed;
+      }
+    });
+    closeParagraph();
+    return html;
+  }
+
   // Load one specific event by its Supabase id (?id=...)
   (async function() {
     const params = new URLSearchParams(window.location.search);
@@ -632,6 +679,11 @@
         dirs.style.display = 'block';
       }
 
+      if (ev.overview && ev.overview.trim()) {
+        document.getElementById('eventOverview').innerHTML = formatOverview(ev.overview);
+        document.getElementById('eventOverviewWrap').style.display = 'block';
+      }
+
       loadingEl.style.display = 'none';
       sectionEl.style.display = 'block';
     } catch (e) {
@@ -685,8 +737,6 @@
           </ul>
         </div>
       </div>
-    </div>
-
     </div>
 
     <!-- Mobile links -->

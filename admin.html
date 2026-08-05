@@ -334,6 +334,10 @@
           <input type="text" id="evtLink" placeholder="http://Taptap.eventbrite.com">
         </div>
         <div class="form-group">
+          <label>Event Overview (optional)</label>
+          <textarea id="evtOverview" rows="8" placeholder="Paste the full event description here — pricing, RSVP info, table reservation rules, age policy, Instagram link, etc. This shows on the event's own page. Line breaks and [text](link) links are preserved automatically." style="resize:vertical;font-family:'Inter','DM Sans',sans-serif;"></textarea>
+        </div>
+        <div class="form-group">
           <label>Party Flyer / Cover Photo</label>
           <div id="flyerUploadBox" onclick="document.getElementById('evtFlyer').click()" style="border:1px dashed rgba(255,255,255,0.15);border-radius:2px;padding:24px;text-align:center;cursor:pointer;color:var(--muted);font-size:13px;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">
             📸 Click to upload flyer
@@ -652,6 +656,7 @@
     document.getElementById('evtVenue').value = e.venue || '';
     document.getElementById('evtAddress').value = e.address || '';
     document.getElementById('evtLink').value = (e.ticket_link && e.ticket_link !== 'http://Taptap.eventbrite.com') ? e.ticket_link : '';
+    document.getElementById('evtOverview').value = e.overview || '';
     document.getElementById('evtFlyer').value = '';
     if (e.flyer_url) {
       document.getElementById('flyerPreview').src = e.flyer_url;
@@ -669,7 +674,7 @@
 
   function cancelEditEvent() {
     editingEventId = null;
-    ['evtName','evtCity','evtDate','evtVenue','evtAddress','evtLink'].forEach(id => document.getElementById(id).value='');
+    ['evtName','evtCity','evtDate','evtVenue','evtAddress','evtLink','evtOverview'].forEach(id => document.getElementById(id).value='');
     document.getElementById('evtFlyer').value='';
     document.getElementById('flyerPreview').style.display='none';
     document.getElementById('flyerUploadBox').textContent='📸 Click to upload flyer';
@@ -696,6 +701,7 @@
     const venue = document.getElementById('evtVenue').value.trim();
     const address = document.getElementById('evtAddress').value.trim();
     const link  = document.getElementById('evtLink').value.trim();
+    const overview = document.getElementById('evtOverview').value.trim();
     const flyerFile = document.getElementById('evtFlyer').files[0];
     if (!name || !city || !date) { toast('Please fill in name, city and date','error'); return; }
 
@@ -717,7 +723,7 @@
       }
     }
 
-    const payload = { name, city, event_date: date, venue, address, ticket_link: link||'http://Taptap.eventbrite.com', flyer_url };
+    const payload = { name, city, event_date: date, venue, address, overview, ticket_link: link||'http://Taptap.eventbrite.com', flyer_url };
 
     if (isEditing) {
       await supa.from('events').update(payload).eq('id', editingEventId);
