@@ -219,7 +219,6 @@
       align-items: center;
     }
     .next-event-img {
-      aspect-ratio: 4/5;
       background: var(--surface2);
       border-radius: 3px;
       overflow: hidden;
@@ -229,9 +228,9 @@
       color: var(--muted);
       font-size: 13px;
       letter-spacing: 1px;
-      max-width: 320px;
+      max-width: 460px;
     }
-    .next-event-img img { width: 100%; height: 100%; object-fit: contain; }
+    .next-event-img img { width: 100%; height: auto; display: block; }
     .next-event-info { }
     .event-date-line {
       font-size: 13px;
@@ -460,7 +459,7 @@
 
       .next-event { padding: 48px 20px; }
       .next-event-inner { grid-template-columns: 1fr; gap: 28px; text-align: center; }
-      .next-event-img { max-width: 280px; margin: 0 auto; }
+      .next-event-img { max-width: 340px; margin: 0 auto; }
       .event-name { font-size: 32px; }
       .event-details { align-items: center; }
       .event-detail-row { justify-content: center; }
@@ -862,7 +861,7 @@
 
       <!-- Featured Flyer -->
       <div class="next-event-img" id="nextFlyer" style="position:relative;">
-        <img src="flyer-london.jpg" alt="TapTap London Aug 30" id="nextFlyerImg" style="width:100%;height:100%;object-fit:contain;display:block;">
+        <img src="flyer-london.jpg" alt="TapTap London Aug 30" id="nextFlyerImg" style="width:100%;height:auto;display:block;">
       </div>
 
       <!-- Featured Info Middle -->
@@ -1157,7 +1156,7 @@
       const flyerWrap = document.getElementById('nextFlyer');
       if (next.flyer_url) {
         flyerImg.src = next.flyer_url;
-        flyerImg.style.cssText = 'width:100%;height:100%;object-fit:contain;display:block;';
+        flyerImg.style.cssText = 'width:100%;height:auto;display:block;';
         flyerImg.alt = next.name;
         const tag = flyerWrap.querySelector('.coming-soon-tag');
         if (tag) tag.remove();
