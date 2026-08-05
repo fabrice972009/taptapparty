@@ -8,7 +8,7 @@
   <meta property="og:title" content="TapTap — The Ultimate Caribbean Nightlife Experience">
   <meta property="og:description" content="Once a month. Haitian music, food, art & people. DJ Bullet & Friends.">
   <meta property="og:image" content="https://taptapparty.vercel.app/og-image.png">
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Anton&family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #080808;
@@ -25,7 +25,7 @@
     body {
       background: var(--bg);
       color: var(--white);
-      font-family: 'Inter', 'DM Sans', sans-serif;
+      font-family: 'DM Sans', sans-serif;
       font-size: 16px;
       line-height: 1.6;
     }
@@ -39,7 +39,9 @@
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 200;
-      background: linear-gradient(180deg, rgba(8,8,8,0.92) 0%, rgba(8,8,8,0.78) 100%);
+      background: rgba(8,8,8,0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       padding: 0 48px;
       height: 64px;
       display: grid;
@@ -48,7 +50,7 @@
       border-bottom: 1px solid rgba(255,255,255,0.05);
     }
     .nav-logo {
-      font-family: 'Anton', 'Bebas Neue', sans-serif;
+      font-family: 'Bebas Neue', sans-serif;
       font-size: 26px;
       letter-spacing: 3px;
       color: var(--white);
@@ -63,25 +65,16 @@
       font-weight: 500;
       letter-spacing: 1px;
       text-transform: uppercase;
-      transition: color 0.2s, border-color 0.2s;
-      padding-bottom: 4px;
-      border-bottom: 1px solid transparent;
+      transition: color 0.2s;
     }
-    .nav-links a:hover, .nav-links a.active { color: var(--white); border-bottom-color: var(--gold); }
+    .nav-links a:hover { color: var(--white); }
     .nav-cta {
-      background: transparent;
-      color: var(--red);
-      border: 1px solid var(--red);
+      background: var(--red) !important;
+      color: var(--white) !important;
       padding: 10px 22px;
       border-radius: 2px;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      text-decoration: none;
-      transition: background 0.2s, color 0.2s;
     }
-    .nav-cta:hover { background: var(--red); color: var(--white); }
+    .nav-cta:hover { opacity: 0.85; }
     .nav-hamburger {
       display: none;
       flex-direction: column;
@@ -138,7 +131,7 @@
       font-weight: 500;
     }
     .hero-title {
-      font-family: 'Anton', 'Bebas Neue', sans-serif;
+      font-family: 'Bebas Neue', sans-serif;
       font-size: clamp(80px, 16vw, 200px);
       letter-spacing: 6px;
       line-height: 0.88;
@@ -198,7 +191,7 @@
       font-weight: 500;
     }
     .section-title {
-      font-family: 'Anton', 'Bebas Neue', sans-serif;
+      font-family: 'Bebas Neue', sans-serif;
       font-size: clamp(40px, 5vw, 64px);
       letter-spacing: 2px;
       line-height: 1;
@@ -230,7 +223,7 @@
       letter-spacing: 1px;
       max-width: 320px;
     }
-    .next-event-img img { width: 100%; height: 100%; object-fit: contain; }
+    .next-event-img img { width: 100%; height: 100%; object-fit: contain; background: var(--surface2); }
     .next-event-info { }
     .event-date-line {
       font-size: 13px;
@@ -240,7 +233,7 @@
       margin-bottom: 12px;
     }
     .event-name {
-      font-family: 'Anton', 'Bebas Neue', sans-serif;
+      font-family: 'Bebas Neue', sans-serif;
       font-size: clamp(36px, 4vw, 52px);
       letter-spacing: 2px;
       line-height: 1.05;
@@ -290,7 +283,7 @@
     }
     .about-img img { width: 100%; height: 100%; object-fit: contain; }
     .about-text h2 {
-      font-family: 'Anton', 'Bebas Neue', sans-serif;
+      font-family: 'Bebas Neue', sans-serif;
       font-size: clamp(44px, 5vw, 68px);
       letter-spacing: 2px;
       line-height: 0.95;
@@ -311,7 +304,7 @@
       border-top: 1px solid rgba(255,255,255,0.07);
     }
     .stat-num {
-      font-family: 'Anton', 'Bebas Neue', sans-serif;
+      font-family: 'Bebas Neue', sans-serif;
       font-size: 48px;
       color: var(--gold);
       line-height: 1;
@@ -384,7 +377,7 @@
       margin: 0 auto;
     }
     .newsletter-inner h2 {
-      font-family: 'Anton', 'Bebas Neue', sans-serif;
+      font-family: 'Bebas Neue', sans-serif;
       font-size: clamp(40px, 5vw, 60px);
       letter-spacing: 3px;
       margin-bottom: 14px;
@@ -409,7 +402,7 @@
       color: var(--white);
       padding: 14px 20px;
       font-size: 14px;
-      font-family: 'Inter', 'DM Sans', sans-serif;
+      font-family: 'DM Sans', sans-serif;
       border-radius: 2px 0 0 2px;
       outline: none;
       transition: border-color 0.2s;
@@ -427,7 +420,7 @@
       text-transform: uppercase;
       cursor: pointer;
       border-radius: 0 2px 2px 0;
-      font-family: 'Inter', 'DM Sans', sans-serif;
+      font-family: 'DM Sans', sans-serif;
       transition: opacity 0.2s;
     }
     .newsletter-form button:hover { opacity: 0.85; }
@@ -451,7 +444,7 @@
       .nav-cta { display: none; }
       .nav-hamburger { display: flex; z-index: 300; position: relative; margin-left: auto; }
 
-      .hero { height: 70vh; padding-bottom: 0; padding-left: 20px; padding-right: 20px; }
+      .hero { height: 50vh; padding-bottom: 0; padding-left: 20px; padding-right: 20px; }
       .hero-sub { font-size: 15px; }
       .hero-ctas { gap: 10px; }
       .btn-primary, .btn-outline { padding: 13px 28px; font-size: 12px; }
@@ -473,11 +466,6 @@
       .about-stats { grid-template-columns: 1fr 1fr; gap: 16px; }
       .stat-num { font-size: 40px; }
 
-      .about-stats-row { grid-template-columns: 1fr 1fr; }
-      .stat-block:nth-child(2) { border-right: none; }
-      .stat-block:nth-child(3) { border-top: 1px solid rgba(255,255,255,0.07); }
-      .stat-block:nth-child(4) { border-top: 1px solid rgba(255,255,255,0.07); }
-      .stat-big { font-size: 28px; }
       .gallery-section { padding: 48px 20px; }
       .gallery-head { flex-direction: column; align-items: flex-start; gap: 16px; }
       #galleryThree { grid-template-columns: 1fr 1fr !important; gap: 4px !important; }
@@ -514,7 +502,7 @@
     }
     .mobile-menu.open { display: flex; }
     .mobile-menu a {
-      font-family: 'Anton', 'Bebas Neue', sans-serif;
+      font-family: 'Bebas Neue', sans-serif;
       font-size: 24px;
       letter-spacing: 4px;
       color: var(--white);
@@ -582,10 +570,6 @@
       .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
     }
 
-  .g-thumb { overflow: hidden; }
-  .g-thumb img { transition: transform 0.4s ease; display: block; }
-  .g-thumb:hover img { transform: scale(1.05); }
-
   /* TICKET SELECTOR MODAL */
   .ticket-modal-overlay {
     position: fixed; inset: 0; z-index: 9000;
@@ -624,7 +608,6 @@
   .ticket-event-item:hover { background: rgba(255,255,255,0.04); }
   .ticket-event-info .t-name { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
   .ticket-event-info .t-meta { font-size: 12px; color: var(--muted); display: flex; gap: 10px; }
-  .ticket-event-info .t-meta span { display: flex; align-items: center; gap: 4px; }
   .ticket-event-arrow { color: var(--red); font-size: 18px; flex-shrink: 0; }
   .ticket-modal-loading { padding: 32px; text-align: center; color: var(--muted); font-size: 14px; }
   </style>
@@ -636,13 +619,6 @@
     const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtemZvd3F6bHF5emJqY2hwbnR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM0NzQxODcsImV4cCI6MjA5OTA1MDE4N30.GB42OaMpcIt7uxopfPYEH4Vdatm7hYS37AptnivgUkU';
     const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
   </script>
-  <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#080808">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="TapTap">
-  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 </head>
 <body>
 
@@ -658,24 +634,6 @@
     </div>
   </div>
 </div>
-
-<!-- SPLASH SCREEN -->
-<div id="splash" style="position:fixed;inset:0;z-index:9999;background:#080808;display:flex;align-items:center;justify-content:center;">
-  <img id="splashImg" src="og-image.png" style="max-width:60%;max-height:70%;object-fit:contain;opacity:0;transition:opacity 0.5s ease;">
-</div>
-
-<script>
-(function(){
-  const splash = document.getElementById('splash');
-  const img    = document.getElementById('splashImg');
-  setTimeout(() => img.style.opacity = '1', 100);
-  setTimeout(() => {
-    splash.style.transition = 'opacity 0.6s ease';
-    splash.style.opacity = '0';
-    setTimeout(() => splash.style.display = 'none', 600);
-  }, 2000);
-})();
-</script>
 <!-- Smoke Background -->
 <canvas id="smokeCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
 <script>
@@ -755,7 +713,7 @@
 <a href="community.html" onclick="closeMenu()">Community</a>
   <a href="about.html" onclick="closeMenu()">About</a>
   <a href="contact.html" onclick="closeMenu()">Contact</a>
-  <a href="http://Taptap.eventbrite.com" target="_blank" rel="noopener" class="mobile-cta" onclick="closeMenu()">Get Tickets</a>
+  <a href="#" onclick="closeMenu();setTimeout(openTicketModal,100)" class="mobile-cta">Get Tickets</a>
   <div class="mobile-socials">
     <a href="https://instagram.com/itstaptapmiami" target="_blank">Instagram</a>
   </div>
@@ -765,7 +723,7 @@
 <!-- Nav -->
 <nav>
   <a href="index.html" class="nav-logo">
-    <img src="logo.png" alt="TapTap Party" style="height: 40px; width: auto; display: block; mix-blend-mode: screen;">
+    <img src="logo.png" alt="Tap Tap Party" style="height: 40px; width: auto; display: block; mix-blend-mode: screen;">
   </a>
   <ul class="nav-links">
     <li><a href="index.html">Home</a></li>
@@ -785,7 +743,7 @@
 
 <!-- Hero -->
 <section class="hero">
-  <video class="hero-video" autoplay muted loop playsinline webkit-playsinline>
+  <video class="hero-video" autoplay muted loop playsinline webkit-playsinline x-webkit-airplay="deny">
     <source src="hero.mp4" type="video/mp4">
   </video>
   <div class="hero-overlay"></div>
@@ -805,7 +763,7 @@
 
 <!-- VIBE VIDEO -->
 <div style="text-align:center; padding: 48px 24px 24px;">
-  <p style="font-family:'Inter','DM Sans',sans-serif; font-size:clamp(14px,1.8vw,18px); letter-spacing:3px; color:rgba(240,237,230,0.6); font-weight:500;">Music. People. Culture. 🇭🇹</p>
+  <p style="font-family:'DM Sans',sans-serif; font-size:clamp(14px,1.8vw,18px); letter-spacing:3px; color:rgba(240,237,230,0.6); font-weight:500;">Music. People. Culture. 🇭🇹</p>
 </div>
 <section class="vibe-section">
   <video class="vibe-video" id="vibeVideo" autoplay muted loop playsinline webkit-playsinline x-webkit-airplay="deny">
@@ -857,16 +815,16 @@
 
       <!-- Featured Flyer -->
       <div class="next-event-img" id="nextFlyer" style="position:relative;">
-        <img src="flyer-london.jpg" alt="TapTap London Aug 30" id="nextFlyerImg" style="width:100%;height:100%;object-fit:contain;display:block;">
+        <img src="og-image.png" alt="Tap Tap event flyer" id="nextFlyerImg">
+        <div class="coming-soon-tag" style="position:absolute;bottom:0;left:0;right:0;background:rgba(8,8,8,0.75);color:rgba(240,237,230,0.7);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-align:center;padding:10px;">More Details Coming Soon</div>
       </div>
 
       <!-- Featured Info Middle -->
       <div class="featured-info">
         <div class="event-date-line" id="nextDateLine">Sunday, August 30, 2026</div>
-        <div class="event-name" id="nextName"><a href="http://Taptaplondon.frontlineticketing.com" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:2px solid var(--red);">TapTap London</a></div>
+        <div class="event-name" id="nextName">Tap Tap London</div>
         <div class="event-details" id="nextDetails">
-          <div class="event-detail-row"><span class="dot"></span>The Camden — 65 Crowndale Rd, London NW1 1TN</div>
-          <div class="event-detail-row"><span class="dot"></span>9PM – 3AM · Notting Hill Carnival Weekend</div>
+          <div class="event-detail-row"><span class="dot"></span>London, UK</div>
           <div class="event-detail-row"><span class="dot"></span>DJ Bullet &amp; Friends</div>
         </div>
       </div>
@@ -877,15 +835,15 @@
         <div id="sidebarEvents">
           <div class="sidebar-event">
             <div class="sidebar-date"><div class="ud-month">SEP</div><div class="ud-day">5</div></div>
-            <div><div class="sidebar-name">TapTap New York</div><div class="sidebar-loc">New York, NY</div></div>
+            <div><div class="sidebar-name">Tap Tap New York</div><div class="sidebar-loc">New York, NY</div></div>
           </div>
           <div class="sidebar-event">
             <div class="sidebar-date"><div class="ud-month">OCT</div><div class="ud-day">11</div></div>
-            <div><div class="sidebar-name">TapTap Miami</div><div class="sidebar-loc">Miami, FL</div></div>
+            <div><div class="sidebar-name">Tap Tap Miami</div><div class="sidebar-loc">Miami, FL</div></div>
           </div>
           <div class="sidebar-event">
             <div class="sidebar-date"><div class="ud-month">NOV</div><div class="ud-day">29</div></div>
-            <div><div class="sidebar-name">TapTap Miami</div><div class="sidebar-loc">Miami, FL</div></div>
+            <div><div class="sidebar-name">Tap Tap Miami</div><div class="sidebar-loc">Miami, FL</div></div>
           </div>
         </div>
         <a href="#" onclick="event.preventDefault();openTicketModal()" class="btn-primary" id="nextTicketBtn" style="display:block;text-align:center;margin-top:32px;">Get Tickets</a>
@@ -917,7 +875,7 @@
   .sidebar-event:first-of-type { border-top: 1px solid rgba(255,255,255,0.06); }
   .sidebar-date { text-align: center; min-width: 40px; }
   .ud-month { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); }
-  .ud-day { font-family: 'Anton', 'Bebas Neue', sans-serif; font-size: 32px; line-height: 1; }
+  .ud-day { font-family: 'Bebas Neue', sans-serif; font-size: 32px; line-height: 1; }
   .sidebar-name { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
   .sidebar-loc { font-size: 12px; color: var(--muted); }
 
@@ -972,7 +930,7 @@
     gap: 16px;
   }
   .city-item {
-    font-family: 'Inter', 'DM Sans', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     font-size: 13px;
     font-weight: 500;
     letter-spacing: 0.5px;
@@ -1003,7 +961,7 @@
         </div>
         <!-- Emblem slide -->
         <div id="wwSlide1" class="ww-slide" style="display:none;">
-          <div class="about-img"><img src="emblem.png" alt="TapTap Party emblem"></div>
+          <div class="about-img"><img src="emblem.png" alt="Tap Tap Party emblem"></div>
         </div>
         <!-- Toggle dots -->
         <div style="display:flex;justify-content:center;gap:8px;margin-top:12px;">
@@ -1013,33 +971,20 @@
       </div>
 
       <div class="about-stats-row">
-        <div class="stat-block">
-          <div class="stat-big">75K<span class="stat-plus">+</span></div>
-          <div class="stat-tag">Attendees</div>
-        </div>
-        <div class="stat-block">
-          <div class="stat-big">50<span class="stat-plus">+</span></div>
-          <div class="stat-tag">Events</div>
-        </div>
-        <div class="stat-block">
-          <div class="stat-big">10<span class="stat-plus">+</span></div>
-          <div class="stat-tag">Cities</div>
-        </div>
-        <div class="stat-block">
-          <div class="stat-big">3<span class="stat-plus">+</span></div>
-          <div class="stat-tag">Years</div>
-        </div>
-        <div class="stat-block">
-          <div class="stat-big">🇭🇹</div>
-          <div class="stat-tag">Culture</div>
-        </div>
+        <div class="stat-inline"><span class="stat-num">50+</span><span class="stat-lbl">Events</span></div>
+        <span class="stat-pipe">|</span>
+        <div class="stat-inline"><span class="stat-num">10+</span><span class="stat-lbl">Cities</span></div>
+        <span class="stat-pipe">|</span>
+        <div class="stat-inline"><span class="stat-num">3+</span><span class="stat-lbl">Years Running</span></div>
+        <span class="stat-pipe">|</span>
+        <div class="stat-inline"><span class="stat-num">1</span><span class="stat-lbl">🇭🇹 Culture</span></div>
       </div>
     </div>
     <div class="about-text">
       <p class="section-eyebrow">Who We Are</p>
       <h2>CELEBRATING<br>HAITIAN<br><span class="red">CULTURE.</span></h2>
       <p>
-        TapTap Party is Miami's premier monthly Haitian cultural experience. We bring together the diaspora and everyone who loves Haitian music, food, art, and people — once a month, every month. DJ Bullet &amp; Friends set the soundtrack while Miami dances.
+        Tap Tap Party is Miami's premier monthly Haitian cultural experience. We bring together the diaspora and everyone who loves Haitian music, food, art, and people — once a month, every month. DJ Bullet &amp; Friends set the soundtrack while Miami dances.
       </p>
       <a href="about.html" class="btn-sm-outline" style="display:inline-block; margin-top:8px;">Learn More</a>
     </div>
@@ -1067,41 +1012,15 @@
   .ww-slide { transition: opacity 0.3s; }
   .about-img-wrap { display: flex; flex-direction: column; gap: 16px; }
   .about-stats-row {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 0;
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 2px;
-    overflow: hidden;
-    margin-top: 20px;
+    display: flex; align-items: center; justify-content: center;
+    gap: 12px; flex-wrap: wrap;
+    padding: 14px 0;
+    border-top: 1px solid rgba(255,255,255,0.07);
   }
-  .stat-block {
-    padding: 18px 12px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    border-right: 1px solid rgba(255,255,255,0.07);
-    background: rgba(255,255,255,0.02);
-    transition: background 0.2s;
-  }
-  .stat-block:last-child { border-right: none; }
-  .stat-block:hover { background: rgba(255,255,255,0.05); }
-  .stat-big {
-    font-family: 'Anton', 'Bebas Neue', sans-serif;
-    font-size: 36px;
-    color: var(--gold);
-    line-height: 1;
-    letter-spacing: 1px;
-  }
-  .stat-plus { font-size: 22px; color: var(--red); vertical-align: super; }
-  .stat-tag {
-    font-size: 9px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--muted);
-    font-weight: 600;
-  }
+  .stat-inline { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .stat-inline .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--gold); line-height: 1; }
+  .stat-inline .stat-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; }
+  .stat-pipe { color: rgba(255,255,255,0.15); font-size: 18px; }
 </style>
 
 <!-- Stripe -->
@@ -1139,40 +1058,55 @@
       const events = JSON.parse(localStorage.getItem('tt_events') || '[]');
       if (!events.length) return;
       const today = new Date(); today.setHours(0,0,0,0);
-      const future = events.filter(e => new Date(e.event_date + 'T12:00:00') >= today).sort((a,b) => new Date(a.event_date + 'T12:00:00') - new Date(b.event_date + 'T12:00:00'));
+      const future = events.filter(e => new Date(e.date + 'T12:00:00') >= today).sort((a,b) => new Date(a.date + 'T12:00:00') - new Date(b.date + 'T12:00:00'));
       if (!future.length) return;
 
       const next = future[0];
-      const d = new Date(next.event_date + 'T12:00:00');
+      const d = new Date(next.date + 'T12:00:00');
       const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
       const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
       const fullMonths = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-      // Update flyer — only override if Supabase has a flyer_url
+      // Update flyer
       const flyerImg = document.getElementById('nextFlyerImg');
       const flyerWrap = document.getElementById('nextFlyer');
       if (next.flyer_url) {
         flyerImg.src = next.flyer_url;
-        flyerImg.style.cssText = 'width:100%;height:100%;object-fit:contain;display:block;';
+        flyerImg.style.opacity = '1';
         flyerImg.alt = next.name;
         const tag = flyerWrap.querySelector('.coming-soon-tag');
         if (tag) tag.remove();
+      } else {
+        flyerImg.src = 'og-image.png';
+        flyerImg.style.opacity = '1';
+        flyerImg.alt = next.name;
+        if (!flyerWrap.querySelector('.coming-soon-tag')) {
+          const tag = document.createElement('div');
+          tag.className = 'coming-soon-tag';
+          tag.style.cssText = 'position:absolute;bottom:0;left:0;right:0;background:rgba(8,8,8,0.75);color:rgba(240,237,230,0.7);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-align:center;padding:10px;';
+          tag.textContent = 'More Details Coming Soon';
+          flyerWrap.style.position = 'relative';
+          flyerWrap.appendChild(tag);
+        }
       }
 
-      // Update date, name, details if Supabase has real venue data
+      // Update date line
       document.getElementById('nextDateLine').textContent = `${days[d.getDay()]}, ${fullMonths[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
-      document.getElementById('nextName').innerHTML = `<a href="${next.ticket_link||'http://Taptap.eventbrite.com'}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:2px solid var(--red);">${next.name}</a>`;
-      if (next.venue && next.venue !== 'TBA') {
-        document.getElementById('nextDetails').innerHTML = `
-          <div class="event-detail-row"><span class="dot"></span>${next.venue}, ${next.city}</div>
-          <div class="event-detail-row"><span class="dot"></span>DJ Bullet & Friends</div>
-          <div class="event-detail-row"><span class="dot"></span>Doors open at 9 PM</div>
-        `;
-      }
+
+      // Update name
+      document.getElementById('nextName').textContent = next.name;
+
+      // Update details
+      document.getElementById('nextDetails').innerHTML = `
+        ${next.venue ? `<div class="event-detail-row"><span class="dot"></span>${next.venue}${next.city ? ', ' + next.city : ''}</div>` : ''}
+        <div class="event-detail-row"><span class="dot"></span>DJ Bullet & Friends</div>
+      `;
+
+      // Update ticket link
       if (next.ticket_link) document.getElementById('nextTicketBtn').href = next.ticket_link;
 
       // Update sidebar with next 3 after the featured
-      const sidebar = future.slice(1, 4);
+      const sidebar = events.slice(1, 4);
       if (sidebar.length) {
         document.getElementById('sidebarEvents').innerHTML = sidebar.map(e => {
           const sd = new Date(e.event_date + 'T12:00:00');
@@ -1235,14 +1169,24 @@
       const el = document.getElementById('gthumb' + i);
       if (!el) return;
       el.innerHTML = '';
-      el.style.background = '#0d0d0d';
+      el.style.position = 'relative';
+      el.style.overflow = 'hidden';
 
+      // Blurred background
+      const bg = document.createElement('img');
+      bg.src = src;
+      bg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(12px) brightness(0.5);transform:scale(1.1);';
+      bg.onerror = () => {};
+
+      // Full image centered
       const img = document.createElement('img');
       img.src = src;
-      img.alt = 'TapTap Party';
+      img.alt = 'Tap Tap Party';
       img.loading = 'lazy';
-      img.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:center top;display:block;';
+      img.style.cssText = 'position:relative;z-index:1;width:100%;height:100%;object-fit:contain;display:block;';
       img.onerror = () => el.style.display = 'none';
+
+      el.appendChild(bg);
       el.appendChild(img);
     });
     // Update dots
@@ -1425,7 +1369,7 @@
   <div class="site-footer-inner">
     <div class="footer-top-wrap">
       <div>
-        <img src="logo.png" alt="TapTap Party" class="footer-logo">
+        <img src="logo.png" alt="Tap Tap Party" class="footer-logo">
         <p class="footer-tagline">Once a month. Every month. 🇭🇹</p>
       </div>
       <!-- Desktop columns -->
@@ -1468,7 +1412,7 @@
     </div>
 
     <div class="footer-bottom">
-      <p>© 2026 TapTap Party. All rights reserved.</p>
+      <p>© 2026 Tap Tap Party. All rights reserved.</p>
       <a href="https://instagram.com/itstaptapmiami" target="_blank" rel="noopener" class="footer-ig">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
           <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
@@ -1524,68 +1468,8 @@
   document.querySelectorAll('.tt-spray').forEach(drawSpray);
 })();
 </script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(() => {});
-      });
-    }
-  </script>
 
 <script>
-// Push notification subscription
-const VAPID_PUBLIC = 'BODexxFQuWya_x_Nbu-Lo7Mns1K4DrKVjMoq5rmwytY3ba14MzYleYaliwAAxhHesHYPn_tuPSuF36B1ckkSyyU';
-
-function urlBase64ToUint8Array(base64String) {
-  const padding = '='.repeat((4 - base64String.length % 4) % 4);
-  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-  const rawData = atob(base64);
-  return new Uint8Array([...rawData].map(c => c.charCodeAt(0)));
-}
-
-async function subscribeToPush() {
-  try {
-    const reg = await navigator.serviceWorker.ready;
-    const existing = await reg.pushManager.getSubscription();
-    if (existing) return;
-
-    const sub = await reg.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC)
-    });
-
-    await fetch('/api/save-subscription', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(sub)
-    });
-  } catch(e) {}
-}
-
-// Show notification bell button if supported and not yet granted
-if ('serviceWorker' in navigator && 'PushManager' in window) {
-  if (Notification.permission === 'granted') {
-    subscribeToPush();
-  } else if (Notification.permission !== 'denied') {
-    // Add a subtle bell button to footer
-    const bell = document.createElement('button');
-    bell.id = 'notifBell';
-    bell.innerHTML = '🔔 Get event alerts';
-    bell.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--red);color:#fff;border:none;padding:10px 20px;font-family:Inter,sans-serif;font-size:12px;font-weight:600;letter-spacing:1px;cursor:pointer;z-index:500;border-radius:2px;box-shadow:0 4px 20px rgba(212,32,39,0.4);white-space:nowrap;';
-    bell.onclick = () => {
-      Notification.requestPermission().then(p => {
-        if (p === 'granted') { subscribeToPush(); bell.remove(); }
-        else bell.remove();
-      });
-    };
-    document.body.appendChild(bell);
-
-  }
-}
-</script>
-
-<script>
-// HARDCODED events as fallback (Supabase will override)
 const HARDCODED_EVENTS = [
   { name: 'TapTap London', city: 'London, UK', event_date: '2026-08-30', ticket_link: 'http://Taptaplondon.frontlineticketing.com' },
   { name: 'TapTap New York', city: 'New York, NY', event_date: '2026-09-05', ticket_link: '' },
@@ -1593,61 +1477,45 @@ const HARDCODED_EVENTS = [
   { name: 'TapTap Miami', city: 'Miami, FL', event_date: '2026-11-29', ticket_link: '' },
   { name: 'TapTap Miami', city: 'Miami, FL', event_date: '2026-12-20', ticket_link: '' },
 ];
-
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function renderTicketItems(items) {
+  return items.map(e => {
+    const d = new Date(e.event_date + 'T12:00:00');
+    const dateStr = `${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+    const link = e.ticket_link || '';
+    const isLive = link.length > 0;
+    if (isLive) {
+      return `<a class="ticket-event-item" href="${link}" target="_blank" rel="noopener" onclick="closeTicketModal()">
+        <div class="ticket-event-info">
+          <div class="t-name">${e.name}</div>
+          <div class="t-meta"><span>📅 ${dateStr}</span><span>📍 ${e.city}</span></div>
+        </div>
+        <div class="ticket-event-arrow" style="color:var(--red);">🎟 →</div>
+      </a>`;
+    } else {
+      return `<div class="ticket-event-item" style="cursor:default;opacity:0.6;">
+        <div class="ticket-event-info">
+          <div class="t-name">${e.name}</div>
+          <div class="t-meta"><span>📅 ${dateStr}</span><span>📍 ${e.city}</span></div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Coming Soon</div>
+      </div>`;
+    }
+  }).join('');
+}
 
 async function openTicketModal() {
   document.getElementById('ticketModal').classList.add('open');
   document.body.style.overflow = 'hidden';
-
   const list = document.getElementById('ticketEventList');
   list.innerHTML = '<div class="ticket-modal-loading">Loading events...</div>';
-
   try {
     const today = new Date().toISOString().split('T')[0];
-    const { data: events } = await supa.from('events')
-      .select('*').gte('event_date', today).order('event_date', {ascending: true});
-
-    const items = (events?.length ? events : HARDCODED_EVENTS);
-
-    list.innerHTML = items.map(e => {
-      const d = new Date(e.event_date + 'T12:00:00');
-      const dateStr = `${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
-      const link = e.ticket_link || 'http://Taptap.eventbrite.com';
-      return `<a class="ticket-event-item" href="${link}" target="_blank" rel="noopener" onclick="closeTicketModal()">
-        <div class="ticket-event-info">
-          <div class="t-name">${e.name}</div>
-          <div class="t-meta">
-            <span>📅 ${dateStr}</span>
-            <span>📍 ${e.city}</span>
-          </div>
-        </div>
-        <div class="ticket-event-arrow">→</div>
-      </a>`;
-    }).join('');
+    const { data: events } = await supa.from('events').select('*').gte('event_date', today).order('event_date', {ascending: true});
+    list.innerHTML = renderTicketItems(events?.length ? events : HARDCODED_EVENTS);
   } catch(err) {
-    list.innerHTML = HARDCODED_EVENTS.map(e => {
-      const d = new Date(e.event_date + 'T12:00:00');
-      const dateStr = `${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
-      const isLive = e.ticket_link && e.ticket_link.length > 0;
-      if (isLive) {
-        return `<a class="ticket-event-item" href="${e.ticket_link}" target="_blank" rel="noopener" onclick="closeTicketModal()">
-          <div class="ticket-event-info">
-            <div class="t-name">${e.name}</div>
-            <div class="t-meta"><span>📅 ${dateStr}</span><span>📍 ${e.city}</span></div>
-          </div>
-          <div class="ticket-event-arrow" style="color:var(--red);">🎟 →</div>
-        </a>`;
-      } else {
-        return `<div class="ticket-event-item" style="cursor:default;opacity:0.6;">
-          <div class="ticket-event-info">
-            <div class="t-name">${e.name}</div>
-            <div class="t-meta"><span>📅 ${dateStr}</span><span>📍 ${e.city}</span></div>
-          </div>
-          <div style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Coming Soon</div>
-        </div>`;
-      }
-    }).join('');
+    list.innerHTML = renderTicketItems(HARDCODED_EVENTS);
   }
 }
 
@@ -1655,8 +1523,6 @@ function closeTicketModal() {
   document.getElementById('ticketModal').classList.remove('open');
   document.body.style.overflow = '';
 }
-
-// Close on Escape key
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTicketModal(); });
 </script>
 </body>
