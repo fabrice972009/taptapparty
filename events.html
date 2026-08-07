@@ -80,11 +80,21 @@
       padding: 0 48px 80px;
       border-bottom: 1px solid rgba(255,255,255,0.05);
     }
+    .next-city-tabs { display: none; gap: 10px; flex-wrap: wrap; padding: 0 48px; }
+    .next-city-tabs.show { display: flex; }
+    .city-tab {
+      background: transparent; border: 1px solid rgba(255,255,255,0.15); color: var(--muted);
+      padding: 8px 20px; font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+      border-radius: 20px; cursor: pointer; font-family: 'Inter', 'DM Sans', sans-serif; transition: all 0.2s;
+    }
+    .city-tab:hover { border-color: rgba(255,255,255,0.35); color: var(--white); }
+    .city-tab.active { background: var(--red); border-color: var(--red); color: var(--white); }
     .next-up-inner {
       max-width: 1000px; margin: 0 auto;
       display: grid; grid-template-columns: 1fr 1fr;
       gap: 64px; align-items: center;
     }
+    .event-img, .next-up-inner > div:last-child { transition: opacity 0.25s ease; }
     .event-img {
       background: var(--surface2);
       border-radius: 3px; overflow: hidden;
@@ -525,6 +535,7 @@
 
 <!-- Next Up -->
 <section class="next-up" style="padding-top:64px;">
+  <div class="next-city-tabs" id="nextCityTabs" style="max-width:1000px;margin:0 auto 24px;"></div>
   <div class="next-up-inner">
     <div class="event-img" id="evtFeatImg" style="position:relative;">
       <img src="flyer-london.jpg" alt="TapTap London Aug 30" id="evtFeatImgEl">
@@ -545,50 +556,116 @@
 </section>
 
 <script>
-  // Auto next event from Supabase
+  // Auto next event from Supabase (multi-city slideshow) — shows one upcoming
+  // event per city that has one. With just one active city this behaves
+  // exactly like before. Once a second city has a date on the books, tabs
+  // appear above the card and it auto-advances between cities, crossfading,
+  // and can be jumped to directly by clicking a city name.
   (async function() {
     try {
       const { data: events } = await supa.from('events').select('*').gte('event_date', new Date().toISOString().split('T')[0]).order('event_date',{ascending:true});
       if (!events?.length) return;
-      const next = events[0];
-      const d = new Date(next.event_date + 'T12:00:00');
       const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
       const fullMonths = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-      const fi = document.getElementById('evtFeatImgEl');
-      const fw = document.getElementById('evtFeatImg');
-      if (next.flyer_url) {
-        fi.src = next.flyer_url;
-        fi.style.cssText = 'width:100%;height:auto;display:block;';
-        const tag = fw.querySelector('.coming-soon-tag');
-        if (tag) tag.remove();
-      }
-      // Update date, name, and ticket link unconditionally — these should always
-      // reflect the real next event, even if venue/address aren't filled in yet.
-      document.getElementById('evtFeatDate').textContent = `${days[d.getDay()]}, ${fullMonths[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
-      // Title links through to the event's own details page — but only once
-      // there's a real ticket link. While it's still "Coming Soon," there's
-      // no public event page to send people to yet, so keep it plain text.
-      document.getElementById('evtFeatName').innerHTML = next.ticket_link
-        ? `<a href="/e/${next.id}" style="color:inherit;text-decoration:none;border-bottom:2px solid var(--red);">${next.name}</a>`
-        : next.name;
+      // One slide per city — the earliest upcoming event in each city that
+      // actually has a real ticket link (not the empty "Coming Soon" default).
+      // If nothing has a real link yet, fall back to showing the very next
+      // event overall so the section is never empty.
+      const seenCities = new Set();
+      const slides = [];
+      events.forEach(ev => {
+        const hasRealTicket = ev.ticket_link && ev.ticket_link !== 'http://Taptap.eventbrite.com';
+        if (!hasRealTicket) return;
+        const key = (ev.city || 'TBA').trim().toLowerCase();
+        if (!seenCities.has(key)) { seenCities.add(key); slides.push(ev); }
+      });
+      if (!slides.length) slides.push(events[0]);
 
-      let venueLine = '';
-      if (next.venue && next.venue !== 'TBA' && next.address) {
-        venueLine = `${next.venue} — ${next.address}`;
-      } else if (next.venue && next.venue !== 'TBA') {
-        venueLine = `${next.venue}${next.city ? ', ' + next.city : ''}`;
-      } else if (next.city) {
-        venueLine = next.city;
+      let activeSlide = 0;
+      let autoTimer = null;
+
+      function renderSlide(next) {
+        const d = new Date(next.event_date + 'T12:00:00');
+
+        const fi = document.getElementById('evtFeatImgEl');
+        const fw = document.getElementById('evtFeatImg');
+        if (next.flyer_url) {
+          fi.src = next.flyer_url;
+          fi.style.cssText = 'width:100%;height:auto;display:block;';
+          const tag = fw.querySelector('.coming-soon-tag');
+          if (tag) tag.remove();
+        }
+        document.getElementById('evtFeatDate').textContent = `${days[d.getDay()]}, ${fullMonths[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+        document.getElementById('evtFeatName').innerHTML = next.ticket_link
+          ? `<a href="/e/${next.id}" style="color:inherit;text-decoration:none;border-bottom:2px solid var(--red);">${next.name}</a>`
+          : next.name;
+
+        let venueLine = '';
+        if (next.venue && next.venue !== 'TBA' && next.address) {
+          venueLine = `${next.venue} — ${next.address}`;
+        } else if (next.venue && next.venue !== 'TBA') {
+          venueLine = `${next.venue}${next.city ? ', ' + next.city : ''}`;
+        } else if (next.city) {
+          venueLine = next.city;
+        }
+        if (venueLine) {
+          document.getElementById('evtFeatDetails').innerHTML = `
+            <div class="event-detail-row"><span class="dot"></span>${venueLine}</div>
+            <div class="event-detail-row"><span class="dot"></span>DJ Bullet & Friends</div>
+            <div class="event-detail-row"><span class="dot"></span>Doors open at 9 PM</div>
+          `;
+        }
+        const ticketBtn = document.getElementById('evtFeatTicket');
+        if (next.ticket_link) ticketBtn.href = next.ticket_link;
       }
-      if (venueLine) {
-        document.getElementById('evtFeatDetails').innerHTML = `
-          <div class="event-detail-row"><span class="dot"></span>${venueLine}</div>
-          <div class="event-detail-row"><span class="dot"></span>DJ Bullet & Friends</div>
-          <div class="event-detail-row"><span class="dot"></span>Doors open at 9 PM</div>
-        `;
+
+      function updateActiveTab() {
+        document.querySelectorAll('#nextCityTabs .city-tab').forEach((btn, idx) => {
+          btn.classList.toggle('active', idx === activeSlide);
+        });
       }
-      if (next.ticket_link) document.getElementById('evtFeatTicket').href = next.ticket_link;
+
+      function crossfadeToSlide(i) {
+        activeSlide = i;
+        const fw = document.getElementById('evtFeatImg');
+        const infoWrap = document.querySelector('.next-up-inner > div:last-child');
+        fw.style.opacity = '0';
+        infoWrap.style.opacity = '0';
+        setTimeout(() => {
+          renderSlide(slides[i]);
+          fw.style.opacity = '1';
+          infoWrap.style.opacity = '1';
+        }, 250);
+        updateActiveTab();
+      }
+
+      function resetAutoAdvance() {
+        if (autoTimer) clearInterval(autoTimer);
+        if (slides.length > 1) {
+          autoTimer = setInterval(() => {
+            crossfadeToSlide((activeSlide + 1) % slides.length);
+          }, 7000);
+        }
+      }
+
+      if (slides.length > 1) {
+        const tabsWrap = document.getElementById('nextCityTabs');
+        tabsWrap.innerHTML = slides.map((ev, i) =>
+          `<button type="button" class="city-tab${i === 0 ? ' active' : ''}" data-idx="${i}">${(ev.city || ev.name).split(',')[0]}</button>`
+        ).join('');
+        tabsWrap.classList.add('show');
+        tabsWrap.querySelectorAll('.city-tab').forEach(btn => {
+          btn.addEventListener('click', () => {
+            crossfadeToSlide(parseInt(btn.dataset.idx, 10));
+            resetAutoAdvance();
+          });
+        });
+      }
+
+      renderSlide(slides[0]);
+      updateActiveTab();
+      resetAutoAdvance();
     } catch(e) { console.error('Next event update error:', e); }
   })();
 </script>
