@@ -939,6 +939,8 @@
   @media (max-width: 800px) {
     .next-event-inner { grid-template-columns: 1fr; }
     .upcoming-sidebar { border-left: none; border-top: 1px solid rgba(255,255,255,0.07); padding-left: 0; padding-top: 32px; margin-top: 8px; }
+    .next-city-tabs { flex-wrap: nowrap; gap: 6px; }
+    .city-tab { flex: 1; padding: 7px 6px; font-size: 10px; letter-spacing: 0.5px; text-align: center; white-space: nowrap; }
   }
 </style>
 
@@ -1181,6 +1183,8 @@
 
       let activeSlide = 0;
       let autoTimer = null;
+      let fadeTimeout = null;
+      let targetSlide = 0;
 
       function renderSlide(next) {
         const d = new Date(next.event_date + 'T12:00:00');
@@ -1226,16 +1230,25 @@
       }
 
       function crossfadeToSlide(i) {
+        // Guard against overlapping fades — if a previous crossfade's swap
+        // hasn't fired yet (e.g. the tab lagged, or auto-advance and a manual
+        // tab click landed close together), cancel it first. Without this,
+        // two pending swaps could land out of order and briefly show two
+        // different events' content at once.
+        targetSlide = i;
         activeSlide = i;
+        if (fadeTimeout) clearTimeout(fadeTimeout);
+
         const flyerWrap = document.getElementById('nextFlyer');
         const infoWrap = document.querySelector('.featured-info');
         flyerWrap.style.opacity = '0';
         infoWrap.style.opacity = '0';
-        setTimeout(() => {
-          renderSlide(slides[i]);
+        fadeTimeout = setTimeout(() => {
+          fadeTimeout = null;
+          renderSlide(slides[targetSlide]);
           flyerWrap.style.opacity = '1';
           infoWrap.style.opacity = '1';
-        }, 250);
+        }, 300);
         updateActiveTab();
         renderSidebar();
       }

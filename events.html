@@ -249,6 +249,8 @@
       .page-title { font-size: 72px; }
 
       .next-up { padding: 0 20px 48px; }
+      .next-city-tabs { padding: 0 20px; flex-wrap: nowrap; gap: 6px; }
+      .city-tab { flex: 1; padding: 7px 6px; font-size: 10px; letter-spacing: 0.5px; text-align: center; white-space: nowrap; }
       .next-up-inner { grid-template-columns: 1fr; gap: 28px; }
       .event-name { font-size: 32px; }
       .ticket-box { padding: 20px; }
@@ -584,6 +586,8 @@
 
       let activeSlide = 0;
       let autoTimer = null;
+      let fadeTimeout = null;
+      let targetSlide = 0;
 
       function renderSlide(next) {
         const d = new Date(next.event_date + 'T12:00:00');
@@ -627,16 +631,25 @@
       }
 
       function crossfadeToSlide(i) {
+        // Guard against overlapping fades — if a previous crossfade's swap
+        // hasn't fired yet (e.g. lag, or auto-advance and a manual tab click
+        // landing close together), cancel it first. Without this, two
+        // pending swaps could land out of order and briefly show two
+        // different events' content at once.
+        targetSlide = i;
         activeSlide = i;
+        if (fadeTimeout) clearTimeout(fadeTimeout);
+
         const fw = document.getElementById('evtFeatImg');
         const infoWrap = document.querySelector('.next-up-inner > div:last-child');
         fw.style.opacity = '0';
         infoWrap.style.opacity = '0';
-        setTimeout(() => {
-          renderSlide(slides[i]);
+        fadeTimeout = setTimeout(() => {
+          fadeTimeout = null;
+          renderSlide(slides[targetSlide]);
           fw.style.opacity = '1';
           infoWrap.style.opacity = '1';
-        }, 250);
+        }, 300);
         updateActiveTab();
       }
 
