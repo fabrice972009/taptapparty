@@ -857,6 +857,7 @@
 <section class="next-event">
   <div style="max-width:1000px; margin:0 auto;">
     <p class="section-eyebrow" style="margin-bottom:28px;">Next Up</p>
+    <div class="next-city-tabs" id="nextCityTabs"></div>
     <div class="next-event-inner">
 
       <!-- Featured Flyer -->
@@ -900,6 +901,16 @@
 </section>
 
 <style>
+  .next-city-tabs { display: none; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+  .next-city-tabs.show { display: flex; }
+  .city-tab {
+    background: transparent; border: 1px solid rgba(255,255,255,0.15); color: var(--muted);
+    padding: 8px 20px; font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+    border-radius: 20px; cursor: pointer; font-family: 'Inter', 'DM Sans', sans-serif; transition: all 0.2s;
+  }
+  .city-tab:hover { border-color: rgba(255,255,255,0.35); color: var(--white); }
+  .city-tab.active { background: var(--red); border-color: var(--red); color: var(--white); }
+  .next-event-img, .featured-info { transition: opacity 0.25s ease; }
   .next-event-inner {
     display: grid;
     grid-template-columns: auto 1fr 280px;
@@ -1137,7 +1148,12 @@
 </section>
 
 <script>
-  // ── AUTO NEXT EVENT from Supabase ──
+  // ── AUTO NEXT EVENT from Supabase (multi-city slideshow) ──
+  // Shows one upcoming event per city that has one. If only one city has an
+  // upcoming event, this behaves exactly like before (single static card).
+  // Once a second (or third) city has a date on the books, city tabs appear
+  // and the featured card auto-advances between them, crossfading, and can
+  // also be jumped to directly by clicking a city name.
   (async function() {
     try {
       const todayStr = new Date().toISOString().split('T')[0];
@@ -1145,56 +1161,102 @@
         .select('*').gte('event_date', todayStr).order('event_date', {ascending: true});
       if (!future?.length) return;
 
-      const next = future[0];
-      const d = new Date(next.event_date + 'T12:00:00');
       const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
       const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
       const fullMonths = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-      // Update flyer — only override if Supabase has a flyer_url
-      const flyerImg = document.getElementById('nextFlyerImg');
-      const flyerWrap = document.getElementById('nextFlyer');
-      if (next.flyer_url) {
-        flyerImg.src = next.flyer_url;
-        flyerImg.style.cssText = 'width:100%;height:auto;display:block;';
-        flyerImg.alt = next.name;
-        const tag = flyerWrap.querySelector('.coming-soon-tag');
-        if (tag) tag.remove();
+      // One slide per city — the earliest upcoming event in each city that
+      // actually has a real ticket link (not the empty "Coming Soon" default).
+      // If nothing has a real link yet, fall back to showing the very next
+      // event overall so the section is never empty.
+      const seenCities = new Set();
+      const slides = [];
+      future.forEach(ev => {
+        const hasRealTicket = ev.ticket_link && ev.ticket_link !== 'http://Taptap.eventbrite.com';
+        if (!hasRealTicket) return;
+        const key = (ev.city || 'TBA').trim().toLowerCase();
+        if (!seenCities.has(key)) { seenCities.add(key); slides.push(ev); }
+      });
+      if (!slides.length) slides.push(future[0]);
+
+      let activeSlide = 0;
+      let autoTimer = null;
+
+      function renderSlide(next) {
+        const d = new Date(next.event_date + 'T12:00:00');
+
+        const flyerImg = document.getElementById('nextFlyerImg');
+        const flyerWrap = document.getElementById('nextFlyer');
+        if (next.flyer_url) {
+          flyerImg.src = next.flyer_url;
+          flyerImg.style.cssText = 'width:100%;height:auto;display:block;';
+          flyerImg.alt = next.name;
+          const tag = flyerWrap.querySelector('.coming-soon-tag');
+          if (tag) tag.remove();
+        }
+
+        document.getElementById('nextDateLine').textContent = `${days[d.getDay()]}, ${fullMonths[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+        document.getElementById('nextName').innerHTML = next.ticket_link
+          ? `<a href="/e/${next.id}" style="color:inherit;text-decoration:none;border-bottom:2px solid var(--red);">${next.name}</a>`
+          : next.name;
+
+        let venueLine = '';
+        if (next.venue && next.venue !== 'TBA' && next.address) {
+          venueLine = `${next.venue} — ${next.address}`;
+        } else if (next.venue && next.venue !== 'TBA') {
+          venueLine = `${next.venue}${next.city ? ', ' + next.city : ''}`;
+        } else if (next.city) {
+          venueLine = next.city;
+        }
+        if (venueLine) {
+          document.getElementById('nextDetails').innerHTML = `
+            <div class="event-detail-row"><span class="dot"></span>${venueLine}</div>
+            <div class="event-detail-row"><span class="dot"></span>DJ Bullet & Friends</div>
+            <div class="event-detail-row"><span class="dot"></span>Doors open at 9 PM</div>
+          `;
+        }
+        const ticketBtn = document.getElementById('nextTicketBtn');
+        if (next.ticket_link) ticketBtn.href = next.ticket_link;
       }
 
-      // Update date, name, and ticket link unconditionally — these should always
-      // reflect the real next event, even if venue/address aren't filled in yet.
-      document.getElementById('nextDateLine').textContent = `${days[d.getDay()]}, ${fullMonths[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
-      // Title links through to the event's own details page — but only once
-      // there's a real ticket link. While it's still "Coming Soon," there's
-      // no public event page to send people to yet, so keep it plain text.
-      document.getElementById('nextName').innerHTML = next.ticket_link
-        ? `<a href="/e/${next.id}" style="color:inherit;text-decoration:none;border-bottom:2px solid var(--red);">${next.name}</a>`
-        : next.name;
-
-      let venueLine = '';
-      if (next.venue && next.venue !== 'TBA' && next.address) {
-        venueLine = `${next.venue} — ${next.address}`;
-      } else if (next.venue && next.venue !== 'TBA') {
-        venueLine = `${next.venue}${next.city ? ', ' + next.city : ''}`;
-      } else if (next.city) {
-        venueLine = next.city;
+      function updateActiveTab() {
+        document.querySelectorAll('#nextCityTabs .city-tab').forEach((btn, idx) => {
+          btn.classList.toggle('active', idx === activeSlide);
+        });
       }
-      if (venueLine) {
-        document.getElementById('nextDetails').innerHTML = `
-          <div class="event-detail-row"><span class="dot"></span>${venueLine}</div>
-          <div class="event-detail-row"><span class="dot"></span>DJ Bullet & Friends</div>
-          <div class="event-detail-row"><span class="dot"></span>Doors open at 9 PM</div>
-        `;
-      }
-      if (next.ticket_link) document.getElementById('nextTicketBtn').href = next.ticket_link;
 
-      // Update sidebar with next 3 after the featured
-      const sidebar = future.slice(1, 4);
-      if (sidebar.length) {
-        document.getElementById('sidebarEvents').innerHTML = sidebar.map(e => {
+      function crossfadeToSlide(i) {
+        activeSlide = i;
+        const flyerWrap = document.getElementById('nextFlyer');
+        const infoWrap = document.querySelector('.featured-info');
+        flyerWrap.style.opacity = '0';
+        infoWrap.style.opacity = '0';
+        setTimeout(() => {
+          renderSlide(slides[i]);
+          flyerWrap.style.opacity = '1';
+          infoWrap.style.opacity = '1';
+        }, 250);
+        updateActiveTab();
+        renderSidebar();
+      }
+
+      // "Also Coming Up" lists every other upcoming event (not just the next
+      // few) so someone looking at one city's flyer can still see every date
+      // on the books and pick one. Whichever event is currently the active
+      // slide is skipped since it's already the main flyer. Any row that
+      // matches one of the slideshow cities is clickable and jumps straight
+      // to it; other rows (extra dates in a city already shown, or cities
+      // without a ticket link yet) are shown for reference only.
+      function renderSidebar() {
+        const activeEvent = slides[activeSlide];
+        const rest = future.filter(e => e !== activeEvent);
+        const el = document.getElementById('sidebarEvents');
+        if (!rest.length) { el.innerHTML = ''; return; }
+        el.innerHTML = rest.map(e => {
           const sd = new Date(e.event_date + 'T12:00:00');
-          return `<div class="sidebar-event">
+          const slideIdx = slides.indexOf(e);
+          const clickable = slideIdx !== -1;
+          return `<div class="sidebar-event"${clickable ? ` data-idx="${slideIdx}" style="cursor:pointer;"` : ''}>
             <div class="sidebar-date">
               <div class="ud-month">${months[sd.getMonth()].toUpperCase()}</div>
               <div class="ud-day">${sd.getDate()}</div>
@@ -1205,8 +1267,43 @@
             </div>
           </div>`;
         }).join('');
+        el.querySelectorAll('.sidebar-event[data-idx]').forEach(row => {
+          row.addEventListener('click', () => {
+            crossfadeToSlide(parseInt(row.dataset.idx, 10));
+            resetAutoAdvance();
+          });
+        });
       }
-    } catch(e) {}
+
+      function resetAutoAdvance() {
+        if (autoTimer) clearInterval(autoTimer);
+        if (slides.length > 1) {
+          autoTimer = setInterval(() => {
+            crossfadeToSlide((activeSlide + 1) % slides.length);
+          }, 7000);
+        }
+      }
+
+      // Only show city tabs / slideshow behavior once there's more than one city
+      if (slides.length > 1) {
+        const tabsWrap = document.getElementById('nextCityTabs');
+        tabsWrap.innerHTML = slides.map((ev, i) =>
+          `<button type="button" class="city-tab${i === 0 ? ' active' : ''}" data-idx="${i}">${(ev.city || ev.name).split(',')[0]}</button>`
+        ).join('');
+        tabsWrap.classList.add('show');
+        tabsWrap.querySelectorAll('.city-tab').forEach(btn => {
+          btn.addEventListener('click', () => {
+            crossfadeToSlide(parseInt(btn.dataset.idx, 10));
+            resetAutoAdvance();
+          });
+        });
+      }
+
+      renderSlide(slides[0]);
+      updateActiveTab();
+      resetAutoAdvance();
+      renderSidebar();
+    } catch(e) { console.error('Next event slideshow error:', e); }
   })();
 
   function getApprovedPhotos() {
