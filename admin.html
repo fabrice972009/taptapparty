@@ -512,8 +512,12 @@
       <div class="page-sub">Messages received through the Contact / Community form</div>
       <div class="section-head">
         <h3 id="msgCount">0 messages</h3>
-        <button class="btn-export" onclick="loadMessages()">Refresh</button>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-export" id="msgAlertBtn" onclick="subscribeAdminPush()" style="display:none;">🔔 Get alerts for new messages</button>
+          <button class="btn-export" onclick="loadMessages()">Refresh</button>
+        </div>
       </div>
+      <p id="msgAlertStatus" style="font-size:12px;color:var(--muted);margin-bottom:16px;display:none;"></p>
       <div id="messagesList"><div class="empty-state">No messages yet</div></div>
     </div>
 
@@ -877,7 +881,7 @@
 
   // ── MESSAGES ──
   async function loadMessages() {
-    const { data: messages, error } = await supa.from('community_messages').select('*').order('created_at',{ascending:false});
+    const { data: messages, error } = await supa.from('contact_messages').select('*').order('created_at',{ascending:false});
     const el = document.getElementById('messagesList');
     const countEl = document.getElementById('msgCount');
     const badge = document.getElementById('messagesBadge');
@@ -887,20 +891,104 @@
       badge.textContent = messages?.length||0;
       badge.style.display = messages?.length ? 'inline' : 'none';
     }
+    updateAdminPushButton();
     if (!messages?.length) { el.innerHTML = '<div class="empty-state">No messages yet</div>'; return; }
-    el.innerHTML = messages.map(m => `<div class="item-card">
+    el.innerHTML = messages.map(m => {
+      const fullName = [m.first_name, m.last_name].filter(Boolean).join(' ') || 'Anonymous';
+      const metaParts = [];
+      if (m.email) metaParts.push(`<a href="mailto:${m.email}" style="color:var(--muted);">${m.email}</a>`);
+      if (m.city) metaParts.push(m.city);
+      if (m.reason) metaParts.push(m.reason);
+      metaParts.push(new Date(m.created_at).toLocaleString());
+      return `<div class="item-card">
       <div class="item-info">
-        <div class="item-name">${m.name||'Anonymous'}</div>
-        <div class="item-meta">${m.email ? `<a href="mailto:${m.email}" style="color:var(--muted);">${m.email}</a> · ` : ''}${new Date(m.created_at).toLocaleString()}</div>
+        <div class="item-name">${fullName}</div>
+        <div class="item-meta">${metaParts.join(' · ')}</div>
         <div class="item-text">${(m.message||'').replace(/\n/g,'<br>')}</div>
       </div>
       <div class="item-actions"><button class="btn-remove" onclick="removeMessage('${m.id}')">Delete</button></div>
-    </div>`).join('');
+    </div>`;
+    }).join('');
   }
 
   async function removeMessage(id) {
-    await supa.from('community_messages').delete().eq('id',id);
+    await supa.from('contact_messages').delete().eq('id',id);
     loadMessages(); updateStats(); toast('Message deleted','error');
+  }
+
+  // ── ADMIN PUSH ALERTS (new-message notifications, admin devices only) ──
+  // Uses the same VAPID key + service worker as the visitor-facing push
+  // system, but subscriptions are saved to a separate admin_push_subscriptions
+  // table via /api/save-admin-subscription — so these alerts NEVER go out
+  // to regular site visitors, only to whichever admin device(s) opted in here.
+  const ADMIN_VAPID_PUBLIC = 'BODexxFQuWya_x_Nbu-Lo7Mns1K4DrKVjMoq5rmwytY3ba14MzYleYaliwAAxhHesHYPn_tuPSuF36B1ckkSyyU';
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(() => {}); });
+  }
+
+  function urlBase64ToUint8ArrayAdmin(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    const rawData = atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; ++i) outputArray[i] = rawData.charCodeAt(i);
+    return outputArray;
+  }
+
+  async function updateAdminPushButton() {
+    const btn = document.getElementById('msgAlertBtn');
+    const status = document.getElementById('msgAlertStatus');
+    if (!btn || !status) return;
+    if (!('Notification' in window) || !('serviceWorker' in navigator)) { btn.style.display = 'none'; return; }
+
+    if (Notification.permission === 'denied') {
+      btn.style.display = 'none';
+      status.style.display = 'block';
+      status.textContent = 'Notifications are blocked for this site in your browser settings.';
+      return;
+    }
+
+    if (Notification.permission === 'granted') {
+      try {
+        const reg = await navigator.serviceWorker.ready;
+        const existing = await reg.pushManager.getSubscription();
+        if (existing) {
+          btn.style.display = 'none';
+          status.style.display = 'block';
+          status.textContent = '🔔 Message alerts are on for this device.';
+          return;
+        }
+      } catch (e) {}
+    }
+
+    btn.style.display = 'inline-block';
+    status.style.display = 'none';
+  }
+
+  async function subscribeAdminPush() {
+    try {
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') { toast('Notifications permission not granted', 'error'); return; }
+      const reg = await navigator.serviceWorker.ready;
+      let sub = await reg.pushManager.getSubscription();
+      if (!sub) {
+        sub = await reg.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8ArrayAdmin(ADMIN_VAPID_PUBLIC)
+        });
+      }
+      await fetch('/api/save-admin-subscription', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(sub)
+      });
+      toast('Message alerts turned on ✓', 'success');
+      updateAdminPushButton();
+    } catch (e) {
+      console.error('Admin push subscribe failed:', e);
+      toast('Could not turn on alerts', 'error');
+    }
   }
 
   async function removeSub(id) {
