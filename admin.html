@@ -292,6 +292,7 @@
       <div class="nav-item" onclick="showPage('approved')"><span class="nav-icon">✅</span> Approved</div>
       <div class="nav-item" onclick="showPage('events')"><span class="nav-icon">📅</span> Events</div>
       <div class="nav-item" onclick="showPage('newsletter')"><span class="nav-icon">📧</span> Newsletter</div>
+      <div class="nav-item" onclick="showPage('messages')" id="navMessages"><span class="nav-icon">💬</span> Messages <span class="badge" id="messagesBadge" style="display:none;">0</span></div>
       <div class="nav-item" onclick="showPage('notifications')"><span class="nav-icon">🔔</span> Notifications</div>
       <div class="nav-item" onclick="showPage('scheduled')"><span class="nav-icon">⏰</span> Scheduled</div>
     </nav>
@@ -505,6 +506,17 @@
       <div id="subsList"><div class="empty-state">No subscribers yet</div></div>
     </div>
 
+    <!-- MESSAGES -->
+    <div class="page" id="pageMessages">
+      <div class="page-title">Messages</div>
+      <div class="page-sub">Messages received through the Contact / Community form</div>
+      <div class="section-head">
+        <h3 id="msgCount">0 messages</h3>
+        <button class="btn-export" onclick="loadMessages()">Refresh</button>
+      </div>
+      <div id="messagesList"><div class="empty-state">No messages yet</div></div>
+    </div>
+
   </div>
 </div>
 
@@ -578,7 +590,7 @@
 
   // ── DATA ──
   async function loadAll() {
-    await Promise.all([loadPending(), loadApproved(), loadEvents(), loadNewsletter(), loadScheduled()]);
+    await Promise.all([loadPending(), loadApproved(), loadEvents(), loadNewsletter(), loadScheduled(), loadMessages()]);
     await updateStats();
   }
 
@@ -861,6 +873,34 @@
         <button class="btn-remove" onclick="removeSub('${s.id}')">Remove</button>
       </div>
     </div>`).join('');
+  }
+
+  // ── MESSAGES ──
+  async function loadMessages() {
+    const { data: messages, error } = await supa.from('community_messages').select('*').order('created_at',{ascending:false});
+    const el = document.getElementById('messagesList');
+    const countEl = document.getElementById('msgCount');
+    const badge = document.getElementById('messagesBadge');
+    if (error) { el.innerHTML = '<div class="empty-state">Could not load messages</div>'; return; }
+    countEl.textContent = `${messages?.length||0} message${messages?.length!==1?'s':''}`;
+    if (badge) {
+      badge.textContent = messages?.length||0;
+      badge.style.display = messages?.length ? 'inline' : 'none';
+    }
+    if (!messages?.length) { el.innerHTML = '<div class="empty-state">No messages yet</div>'; return; }
+    el.innerHTML = messages.map(m => `<div class="item-card">
+      <div class="item-info">
+        <div class="item-name">${m.name||'Anonymous'}</div>
+        <div class="item-meta">${m.email ? `<a href="mailto:${m.email}" style="color:var(--muted);">${m.email}</a> · ` : ''}${new Date(m.created_at).toLocaleString()}</div>
+        <div class="item-text">${(m.message||'').replace(/\n/g,'<br>')}</div>
+      </div>
+      <div class="item-actions"><button class="btn-remove" onclick="removeMessage('${m.id}')">Delete</button></div>
+    </div>`).join('');
+  }
+
+  async function removeMessage(id) {
+    await supa.from('community_messages').delete().eq('id',id);
+    loadMessages(); updateStats(); toast('Message deleted','error');
   }
 
   async function removeSub(id) {
